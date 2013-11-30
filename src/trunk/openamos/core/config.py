@@ -25,7 +25,7 @@ class ConfigObject(object):
             
         # Approach to the default configuration file
         parser = etree.XMLParser(remove_blank_text=True)
-	pathDef = os.path.realpath('/workspace/openamos/configs/config_mag_full.xml')
+	pathDef = os.path.realpath('/workspace/simtravel/openamos/configs/mag_zone/config_after_malta.xml')
         self.default = etree.parse(pathDef,parser)        
 
 
@@ -54,18 +54,20 @@ class ConfigObject(object):
             modelnum = mapvals[2]
         #print modelnum
         compelt = self.protree.find(MODELCONFIG)
-        for comp in compelt.getiterator(COMP):
-            if compname.lower() == comp.get(NAME).lower():
-                modelcnt = 1
-                for model in comp.getiterator(MODEL): 
-                    if modelname.lower() == model.get(NAME).lower():
-                        if modelnum == 0:
-                            return model
-                        else:
-                            if modelcnt ==  modelnum:
+        components = [COMP, SUBCOMP]
+        for comps in components:
+            for comp in compelt.getiterator(comps):
+                if compname.lower() == comp.get(NAME).lower():
+                    modelcnt = 1
+                    for model in comp.getiterator(MODEL): 
+                        if modelname.lower() == model.get(NAME).lower():
+                            if modelnum == 0:
                                 return model
                             else:
-                                modelcnt += 1 
+                                if modelcnt ==  modelnum:
+                                    return model
+                                else:
+                                    modelcnt += 1 
                                 
     def modelSpecInDefault(self,modelkey):
         if modelkey not in MODELMAP.keys():
@@ -126,6 +128,11 @@ class ConfigObject(object):
     def getComponents(self):
         compelt = self.protree.find(MODELCONFIG)
         compelts = compelt.getiterator(COMP)
+        return compelts
+    
+    def getModelConfigChildren(self):
+        compelt = self.protree.find(MODELCONFIG)
+        compelts = compelt.getchildren()
         return compelts
     
     def getElement(self,index):
