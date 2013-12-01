@@ -25,8 +25,9 @@ class ConfigObject(object):
             
         # Approach to the default configuration file
         parser = etree.XMLParser(remove_blank_text=True)
-	pathDef = os.path.realpath('/workspace/simtravel/openamos/configs/mag_zone/config_after_malta.xml')
-        self.default = etree.parse(pathDef,parser)        
+        #pathDef = os.path.realpath('/workspace/simtravel/openamos/configs/mag_zone/config_after_malta.xml')
+        pathDef = str(os.getcwd()).replace('gui', 'configs/mag_zone/config_before_malta.xml')
+        self.default = etree.parse(pathDef,parser)
 
 
     def getConfigElement(self, elt, prop='text' ):
@@ -70,6 +71,7 @@ class ConfigObject(object):
                                     modelcnt += 1 
                                 
     def modelSpecInDefault(self,modelkey):
+        print "Model Key: %s" %(modelkey)
         if modelkey not in MODELMAP.keys():
             print "Model not found in the Map"
             return None
@@ -83,18 +85,20 @@ class ConfigObject(object):
             modelnum = mapvals[2]
         #print modelnum
         compelt = self.default.find(MODELCONFIG)
-        for comp in compelt.getiterator(COMP):
-            if compname.lower() == comp.get(NAME).lower():
-                modelcnt = 1
-                for model in comp.getiterator(MODEL): 
-                    if modelname.lower() == model.get(NAME).lower():
-                        if modelnum == 0:
-                            return model
-                        else:
-                            if modelcnt ==  modelnum:
+        components = [COMP, SUBCOMP]
+        for comps in components:
+            for comp in compelt.getiterator(comps):
+                if compname.lower() == comp.get(NAME).lower():
+                    modelcnt = 1
+                    for model in comp.getiterator(MODEL): 
+                        if modelname.lower() == model.get(NAME).lower():
+                            if modelnum == 0:
                                 return model
                             else:
-                                modelcnt += 1 
+                                if modelcnt ==  modelnum:
+                                    return model
+                                else:
+                                    modelcnt += 1 
 
 
     def getProjects(self):
