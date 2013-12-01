@@ -329,16 +329,20 @@ class MainWindow(QMainWindow):
             selitem.text(col) == COMPMODEL_2WEPISODE1 or selitem.text(col) == COMPMODEL_2WEPISODE2 or \
             selitem.text(col) == COMPMODEL_PRESCHEPISODES or selitem.text(col) == COMPMODEL_SCHEPISODES:
             self.models.show_fixed_activity_prism_models()
-        if selitem.text(col) == COMPMODEL_SCHSTATUS or selitem.text(col) == COMPMODEL_CHIDDEPEND:
-            self.models.show_child_model()
-        if selitem.text(col) == COMPMODEL_WRKDAILYSTATUS:
-            self.models.show_adult_model()
-        if selitem.text(col) == COMP_ACTSKELRECONCILIATION:
+        if selitem.text(col) == COMPMODEL_AFTSCHACTIVITY: #selitem.text(col) == COMPMODEL_SCHSTATUS or selitem.text(col) == COMPMODEL_CHIDDEPEND or selitem.text(col) == COMPMODEL_PERATTR:
+            #self.models.show_child_model()
+            self.models.show_after_school_model()
+        if selitem.text(col) == COMPMODEL_WRKDAILYSTATUS or selitem.text(col) == COMPMODEL_PERATTR:
+            self.models.show_child_status_model()
+        if selitem.text(col) == COMP_ACTSKELRECONCILIATION or selitem.text(col) == COMPMODEL_RECONCILENDADJ:
             self.models.show_skeleton_reconciliation_system()
-        if selitem.text(col) == COMP_ACTTRAVSIMULATOR:
+        if selitem.text(col) == COMP_ACTTRAVSIMULATOR or selitem.text(col) == COMPMODEL_NONMANDATORY:
             self.models.show_activity_travel_pattern_simulator()
-        if selitem.text(col) == COMP_ACTTRAVRECONCILIATION:
+        if selitem.text(col) == COMPMODEL_RECONCILSTRTADJ: #COMP_ACTTRAVRECONCILIATION:
             self.models.show_travel_reconciliation_system()
+            
+        if selitem.text(col) == COMPMODEL_SCHEPISODES:
+            self.models.show_work_status_model()
 
 
 # Call file functions

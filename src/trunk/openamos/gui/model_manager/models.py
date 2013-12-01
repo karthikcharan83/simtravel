@@ -5,6 +5,9 @@ from fixed_activity_prism_models import *
 from activity_skeleton_reconciliation_system import *
 from activity_travel_reconciliation_system import *
 from child_daily_status_and_allocation_model import *
+from child_daily_status_model import *
+from after_school_model import *
+from work_daily_status_model import *
 from adult_daily_status_model import *
 from activity_travel_pattern_simulator import *
 
@@ -43,10 +46,22 @@ class Models(QWidget):
     def show_child_model(self):
         self.child_model = Child_Model(model_widget, self.configobject)
         self.child_model.show()
+        
+    def show_child_status_model(self):
+        self.child_status_model = Child_Status_Model(model_widget, self.configobject)
+        self.child_status_model.show()
+        
+    def show_after_school_model(self):
+        self.after_school_model = After_School(model_widget, self.configobject)
+        self.after_school_model.show()
 
     def show_adult_model(self):
         self.adult_model = Adult_Model(model_widget, self.configobject)
         self.adult_model.show()
+        
+    def show_work_status_model(self):
+        self.work_status_model = Work_Status_Model(model_widget, self.configobject)
+        self.work_status_model.show()
 
     def show_activity_travel_pattern_simulator(self):
         self.activity_travel_pattern_simulator = Activity_Travel_Pattern_Simulator(model_widget, self.configobject)

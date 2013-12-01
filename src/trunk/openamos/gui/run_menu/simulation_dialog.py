@@ -101,44 +101,85 @@ class SimDialog(QDialog):
 
     def setTreeWidget(self):
         if self.proconfig != None:
-            compelts = self.proconfig.getComponents()
+            #compelts = self.proconfig.getComponents()
+            compelts = self.proconfig.getModelConfigChildren()
             for comp in compelts:
-
-                comtitle = str(comp.get(NAME))
-#                if comtitle in COMPONENTMAP.keys():
-#                    compname = COMPONENTMAP[comp.get(NAME)][0]
-#                else:
-#                    compname = comtitle
-                component_term = QTreeWidgetItem(self.treewidget)
-                component_term.setText(0, comtitle) #compname)
-                component_term.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
                 
-                for key in comp.keys():
-                    if key == "skip" or key == "completed":
-                        attr = "%s"%(comp.get(key))
-                        if key == "skip":
-                            if attr == "True":
+                if comp.tag == COMP:
+
+                    comtitle = str(comp.get(NAME))
+                    component_term = QTreeWidgetItem(self.treewidget)
+                    component_term.setText(0, comtitle) 
+                    component_term.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
+                    
+                    for key in comp.keys():
+                        self.sub_setTreeWidget(comp, key, component_term)
+#                         if key == "skip" or key == "completed":
+#                             attr = "%s"%(comp.get(key))
+#                             if key == "skip":
+#                                 if attr == "True":
+#                                     component_term.setText(2, "Yes")
+#                                     component_term.setTextColor(2,QColor("green"))
+#                                     component_term.setTextAlignment(2,Qt.AlignHCenter)
+#                                 else:
+#                                     component_term.setText(2, "No")
+#                                     component_term.setTextColor(2,QColor("red")) 
+#                                     component_term.setTextAlignment(2,Qt.AlignHCenter)                 
+#                             else:
+#                                 if attr == "True":
+#                                     component_term.setText(1, "Yes")
+#                                     component_term.setTextColor(1,QColor("green"))
+#                                     component_term.setTextAlignment(1,Qt.AlignHCenter)
+#                                 else:
+#                                     component_term.setText(1, "No")
+#                                     component_term.setTextColor(1,QColor("red")) 
+#                                     component_term.setTextAlignment(1,Qt.AlignHCenter)
+                                    
+                elif comp.tag.lower() == "componentlist":
+                    comtitle = comp.tag
+                    component_term = QTreeWidgetItem(self.treewidget)
+                    component_term.setText(0, comtitle) 
+                    
+                    subcompelts = comp.getchildren()
+                    for subcomp in subcompelts:
+                        if subcomp.tag.lower() == SUBCOMP.lower():
+                            
+                            subcomtitle = str(subcomp.get(NAME))
+                            subcomponent_term = QTreeWidgetItem(component_term)
+                            subcomponent_term.setText(0, subcomtitle) 
+                            subcomponent_term.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
+                            
+                            for key in subcomp.keys():
+                                self.sub_setTreeWidget(subcomp, key, subcomponent_term)
+                            
+
+    def sub_setTreeWidget(self, comp, key, component_term):
+        
+        if key == "skip" or key == "completed":
+            attr = "%s"%(comp.get(key))
+            if key == "skip":
+                if attr == "True":
 #                                component_term.setCheckState(2, Qt.Checked)
-                                component_term.setText(2, "Yes")
-                                component_term.setTextColor(2,QColor("green"))
-                                component_term.setTextAlignment(2,Qt.AlignHCenter)
-                            else:
+                    component_term.setText(2, "Yes")
+                    component_term.setTextColor(2,QColor("green"))
+                    component_term.setTextAlignment(2,Qt.AlignHCenter)
+                else:
 #                                component_term.setCheckState(2, Qt.Unchecked)
-                                component_term.setText(2, "No")
-                                component_term.setTextColor(2,QColor("red")) 
-                                component_term.setTextAlignment(2,Qt.AlignHCenter)                 
-                        else:
+                    component_term.setText(2, "No")
+                    component_term.setTextColor(2,QColor("red")) 
+                    component_term.setTextAlignment(2,Qt.AlignHCenter)                 
+            else:
 #                            component_term.setIcon(1, QIcon("./images/%s" %(attr)))
-                            if attr == "True":
-                                component_term.setText(1, "Yes")
-                                component_term.setTextColor(1,QColor("green"))
-                                component_term.setTextAlignment(1,Qt.AlignHCenter)
-                            else:
-                                component_term.setText(1, "No")
-                                component_term.setTextColor(1,QColor("red")) 
-                                component_term.setTextAlignment(1,Qt.AlignHCenter)
-
-
+                if attr == "True":
+                    component_term.setText(1, "Yes")
+                    component_term.setTextColor(1,QColor("green"))
+                    component_term.setTextAlignment(1,Qt.AlignHCenter)
+                else:
+                    component_term.setText(1, "No")
+                    component_term.setTextColor(1,QColor("red")) 
+                    component_term.setTextAlignment(1,Qt.AlignHCenter)
+        
+        
 
     def reject(self):
         if self.mythread != None:
@@ -152,8 +193,10 @@ class SimDialog(QDialog):
 #        pname = self.proconfig.getConfigElement(PROJECT,NAME)
 #        cmd = "python ../core/openamos_run.py %s/%s.xml" %(fileloc,pname)
         fileloc1 = self.proconfig.fileloc
-        cmd = "python ../core/openamos_run.py %s" %(fileloc1)
+        cmd = "python ../core/openamos_run.py -file %s" %(fileloc1)
         
+        self.runbutton.setDisabled(True)
+        self.cancelbutton.setDisabled(True)
         self.mythread = Worker(self,cmd)
         self.mythread.progress.connect(self.write_meg)
         self.mythread.start()

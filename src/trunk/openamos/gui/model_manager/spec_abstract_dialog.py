@@ -478,7 +478,8 @@ class AbtractSpecDialog(QDialog):
 
         conditions = modelelt.findall(RUNUNTIL)
         if len(conditions) > 0:
-            for i in range(len(conditions) - 1):
+            self.untilcondition.remove();
+            for i in range(len(conditions)):
                 self.untilcondition.addFiter()
             i = 0
             for filt in modelelt.getiterator(RUNUNTIL):
@@ -536,8 +537,10 @@ class AbtractSpecDialog(QDialog):
             
         filters = modelelt.findall(FILTER)
         if len(filters) > 0:
-            for i in range(len(filters) - 1):
+            self.filters.remove()
+            for i in range(len(filters)):
                 self.filters.addFiter()
+             
             i = 0
             for filt in modelelt.getiterator(FILTER):
                 tempkey = filt.keys()
@@ -652,9 +655,7 @@ class AbtractSpecDialog(QDialog):
                 disableitem.setBackgroundColor(Qt.darkGray)
             i = i+1
     
-    def changeModelWidget(self, idx=0):
-        self.filters.reset()
-        self.untilcondition.reset() 
+    def changeModelWidget(self, idx=0): 
           
         self.modwidget.setParent(None)
         formtext = self.modeltypecb.currentText()
@@ -1477,9 +1478,9 @@ class FilterWidget(QGroupBox):
         self.conditionlayout.setContentsMargins(0,0,0,0)
         
         self.conditions = []
-        condition = ConditionWidget(self)
-        self.conditions.append(condition)
-        self.conditionlayout.addWidget(condition)
+#         condition = ConditionWidget(self)
+#         self.conditions.append(condition)
+#         self.conditionlayout.addWidget(condition)
         subpoplayout.addWidget(conditionwidget)
         
         dummylabel3 = QLabel("")
@@ -1514,6 +1515,23 @@ class FilterWidget(QGroupBox):
         
         self.conditionlayout.update()
 #        temp.update()
+
+    def remove(self):
+        
+        numrow = len(self.conditions)
+        i = numrow
+        while i > 0:
+            print "i: %s"  %(i)
+            self.conditionlayout.removeWidget(self.conditions[i - 1])
+
+            f1 = self.conditions.pop(i - 1)
+            f1.hide()
+            f1.destroy()
+            
+            i -= 1
+        
+        self.conditionlayout.update()
+        
         
     def reset(self):
         self.logical.setCurrentIndex(0)

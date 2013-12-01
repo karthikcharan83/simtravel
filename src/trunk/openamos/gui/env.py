@@ -342,16 +342,14 @@ COMPMODEL_ATADJUST = 'Duration adjustment after arrival'
 
 #Daily School Status
 COMPMODEL_SCHSTATUSAGE = 'Daily Pre-school Status'
-#COMPMODEL_SCHSTATUSAGE1 = 'Daily Pre-school Status'
-#COMPMODEL_SCHSTATUSAGE2 = 'Daily Pre-school Status'
-#COMPMODEL_SCHSTATUSAGE3 = 'Daily Pre-school Status'
-#COMPMODEL_SCHSTATUSAGE4 = 'Daily Pre-school Status'
 COMPMODEL_SCHSTATUSNON = 'Daily School Status for Non-adults'
 COMPMODEL_SCHSTATUSADL = 'Daily School Status for Adults'
 #Daily Work Status
 COMPMODEL_WRKSTATUSADL = 'Daily Work Status for Adults'
 COMPMODEL_WRKSTATUSNON = 'Daily Work Status Non-adults'
 COMPMODEL_KIDDEPENDENT = 'Other Kids Dependency'
+COMPMODEL_KIDINDEPENDENT = 'Child (greater than 5 years old) Dependency'
+
 #After School Activity Type
 COMPMODEL_AFTSCHACTTYPEWRKR = 'Activity Type after School for Workers'
 COMPMODEL_AFTSCHACTTYPENON = 'Activity Type after School for Non-workers'
