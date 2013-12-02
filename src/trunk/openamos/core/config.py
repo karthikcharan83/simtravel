@@ -26,8 +26,16 @@ class ConfigObject(object):
         # Approach to the default configuration file
         parser = etree.XMLParser(remove_blank_text=True)
         #pathDef = os.path.realpath('/workspace/simtravel/openamos/configs/mag_zone/config_after_malta.xml')
-        pathDef = str(os.getcwd()).replace('gui', 'configs/mag_zone/config_before_malta.xml')
-        self.default = etree.parse(pathDef,parser)
+        pathDef_before = str(os.getcwd()).replace('gui', 'configs/mag_zone/config_before_malta.xml')
+        pathDef_malta = str(os.getcwd()).replace('gui', 'configs/mag_zone/config_mag_malta.xml')
+        pathDef_after = str(os.getcwd()).replace('gui', 'configs/mag_zone/config_after_malta.xml')
+        #self.default = etree.parse(pathDef_before,parser)
+        
+        before = etree.parse(pathDef_before, parser)
+        malta = etree.parse(pathDef_malta, parser)
+        after = etree.parse(pathDef_after, parser)
+        self.def_configs = [before, malta, after]
+        self.config_ind = 0
 
 
     def getConfigElement(self, elt, prop='text' ):
@@ -49,11 +57,11 @@ class ConfigObject(object):
         mapvals = MODELMAP[modelkey]
         compname = mapvals[0]
         modelname = mapvals[1]
-        #print compname, modelname
+        #print "component: %s, Model: %s" %(compname, modelname)
         modelnum = 0
         if len(mapvals) == 3:
             modelnum = mapvals[2]
-        #print modelnum
+
         compelt = self.protree.find(MODELCONFIG)
         components = [COMP, SUBCOMP]
         for comps in components:
@@ -71,7 +79,6 @@ class ConfigObject(object):
                                     modelcnt += 1 
                                 
     def modelSpecInDefault(self,modelkey):
-        print "Model Key: %s" %(modelkey)
         if modelkey not in MODELMAP.keys():
             print "Model not found in the Map"
             return None
@@ -79,12 +86,12 @@ class ConfigObject(object):
         mapvals = MODELMAP[modelkey]
         compname = mapvals[0]
         modelname = mapvals[1]
-        #print compname, modelname
+        #print "Default - component: %s, Model: %s" %(compname, modelname)
         modelnum = 0
         if len(mapvals) == 3:
             modelnum = mapvals[2]
         #print modelnum
-        compelt = self.default.find(MODELCONFIG)
+        compelt = self.def_configs[self.config_ind].find(MODELCONFIG) #self.default.find(MODELCONFIG)
         components = [COMP, SUBCOMP]
         for comps in components:
             for comp in compelt.getiterator(comps):
@@ -147,10 +154,22 @@ class ConfigObject(object):
         for i in range(len(index)-1):
             father = child
             childs = father.getchildren()
-#            index[i+1] = index[i+1]-1
             child = childs[index[i+1]]
             
         return child
+    
+    def getDElement(self,index):
+        father = self.def_configs[0].find(MODELCONFIG)
+        childs = father.getchildren()
+        child = childs[index[0]]
+        
+        for i in range(len(index)-1):
+            father = child
+            childs = father.getchildren()
+            child = childs[index[i+1]]
+            
+        return child
+    
     
     def getElements(self,key):
         compelt = self.protree.find(MODELCONFIG)
@@ -162,11 +181,13 @@ class ConfigObject(object):
         return elements
     
     def getDElements(self,key):
-        compelt = self.default.find(MODELCONFIG)
+        
         elements = []
-        for comp in compelt.getiterator(key):
-
-            elements.append(comp)
+        for each_config in self.def_configs:
+            compelt = each_config.find(MODELCONFIG) #self.default.find(MODELCONFIG)    
+            for comp in compelt.getiterator(key):
+    
+                elements.append(comp)
             
         return elements
 
