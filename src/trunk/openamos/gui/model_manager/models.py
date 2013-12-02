@@ -7,7 +7,6 @@ from activity_travel_reconciliation_system import *
 from child_daily_status_and_allocation_model import *
 from child_daily_status_model import *
 from after_school_model import *
-from work_daily_status_model import *
 from adult_daily_status_model import *
 from activity_travel_pattern_simulator import *
 
@@ -58,10 +57,6 @@ class Models(QWidget):
     def show_adult_model(self):
         self.adult_model = Adult_Model(model_widget, self.configobject)
         self.adult_model.show()
-        
-    def show_work_status_model(self):
-        self.work_status_model = Work_Status_Model(model_widget, self.configobject)
-        self.work_status_model.show()
 
     def show_activity_travel_pattern_simulator(self):
         self.activity_travel_pattern_simulator = Activity_Travel_Pattern_Simulator(model_widget, self.configobject)

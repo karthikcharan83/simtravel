@@ -23,7 +23,7 @@ class AbtractSpecDialog(QDialog):
     classdocs
     '''
 
-    def __init__(self, configobject, key, title = '', model=None, parent=None):
+    def __init__(self, configobject, key, title = '', index=None, parent=None):
         super(AbtractSpecDialog, self).__init__(parent)
         
         self.setWindowTitle(title)
@@ -31,9 +31,12 @@ class AbtractSpecDialog(QDialog):
         
         self.configobject = configobject
         self.modelkey = key
+        self.modelindex = index
         
-        if model == None:
+        if index == None:
             model = self.configobject.modelSpecInConfig(self.modelkey)
+        if index != None:
+            model = self.configobject.getElement(index)
     
             
         
@@ -1187,8 +1190,13 @@ class AbtractSpecDialog(QDialog):
         self.tablelist.append("runtime")
 
     def defaultModel(self):
-        modelspecified = self.configobject.modelSpecInDefault(self.modelkey)
-        self.loadFromConfigObject2(modelspecified)
+        print "Model Key - %s" %(self.modelkey)
+        if self.modelkey != '':
+            modelspecified = self.configobject.modelSpecInDefault(self.modelkey)
+            self.loadFromConfigObject2(modelspecified)
+        if self.modelindex != None:
+            modelspecified = self.configobject.getDElement(self.modelindex)
+            self.loadFromConfigObject2(modelspecified)
 
 
     def checkFloat(self,num):

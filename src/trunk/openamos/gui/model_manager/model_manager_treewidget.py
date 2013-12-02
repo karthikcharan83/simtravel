@@ -4,7 +4,7 @@ from models import *
 from spec_abstract_dialog import *
 from mixed_abstract_dialog import *
 from project_config_dialog import *
-from file_menu.databaseconfig import *
+from openamos.gui.file_menu.databaseconfig import *
 from openamos.gui.env import *
 
 
@@ -14,6 +14,7 @@ class Model_Manager_Treewidget(QTreeWidget):
     def __init__(self, parent = None):
         super(Model_Manager_Treewidget, self).__init__(parent)
         self.models = Models(parent)
+        self.father = parent
         self.setColumnCount(3)
         self.setHeaderLabels(["Model", "Completed", "Skip"])
         self.setColumnWidth(0, 260)
@@ -655,100 +656,103 @@ class Model_Manager_Treewidget(QTreeWidget):
         itemname = str(item.text(0))
         itemlower = itemname.lower()
         if itemlower.find("model") > -1:
-            model = self.find_model()
-            if model != None:
-                diag = AbtractSpecDialog(self.configobject,"","",model,self)
+            index = self.find_model()[1]
+            if len(index) > 0:
+                itemname = itemname.replace("Model: ","")
+                diag = AbtractSpecDialog(self.configobject,"",itemname,index,self)
                 diag.exec_()
+                
+                self.father.refreshflowchart()
         else:
-            model = self.find_model()
+            model = self.find_model()[0]
             if model != None:
                 diag = AbtractMixedDialog(self.configobject,model,1,self)
                 diag.exec_()   
 
     def openComponent(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             diag = AbtractMixedDialog(self.configobject,model,3,self)
             diag.exec_()
 
     def add_model(self):
-        model = self.find_model()
+        model = self.find_model()[0]
         if model != None:
             diag = AbtractSpecDialog(self.configobject,"","",model,self)
             diag.exec_()
                         
     def spatial_cons(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "SpatialConstraints"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
 
     def dynamic_spat(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "DynamicSpatialConstraints"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def consis_chek(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "ConsistencyChecks"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def dele_reco(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "DeleteRecords"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
 
     def analy_inter(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "AnalysisInterval"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def hist_info(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "HistoryInformation"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def aggregate(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "Aggregate"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def analysis_filter(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "AnalysisIntervalFilter"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def preprocess(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "PreProcessData"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def delete_basedon(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "DeleteBasedOn"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
             
     def dbtable(self):
-        model = self.find_model()        
+        model = self.find_model()[0]        
         if model != None:
             self.subcomponent = "DBTables"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
@@ -758,173 +762,173 @@ class Model_Manager_Treewidget(QTreeWidget):
         item = self.currentItem()
         index = self.findIndex(item)
         model = self.configobject.getElement(index)
-        return model
+        return [model, index] 
          
-
-    def treeItemSelected(self,item,col):
-        diagtitle = None
-        diag = None
-        modelkey = None
-        if str(item.text(col)).lower() == COMPMODEL_NUMVEHS.lower():
-            diagtitle = COMPMODEL_NUMVEHS
-            modelkey = MODELKEY_NUMVEHS
-        elif str(item.text(col)).lower() == COMPMODEL_NUMTYPES.lower():
-            diagtitle = COMPMODEL_NUMTYPES
-            modelkey = MODELKEY_VEHTYPE   
-
-        elif str(item.text(col)).lower() == ('Adult Workers').lower():
-            seg = str((item.parent()).text(0)).lower()
-            if seg == COMPMODEL_DAYSTART.lower():
-                diagtitle = COMPMODEL_DAYSTART
-                modelkey = MODELKEY_DAYSTART_AW
-            elif seg == COMPMODEL_DAYEND.lower():
-                diagtitle = COMPMODEL_DAYEND
-                modelkey = MODELKEY_DAYEND_AW
-        elif str(item.text(col)).lower() == ('Adult Non-workers').lower():
-            seg = str((item.parent()).text(0)).lower()
-            if seg == COMPMODEL_DAYSTART.lower():
-                diagtitle = COMPMODEL_DAYSTART
-                modelkey = MODELKEY_DAYSTART_AN
-            elif seg == COMPMODEL_DAYEND.lower():
-                diagtitle = COMPMODEL_DAYEND
-                modelkey = MODELKEY_DAYEND_AN                
-        elif str(item.text(col)).lower() == ('Children (5-17 years) and\nAdult Students').lower():
-            seg = str((item.parent()).text(0)).lower()
-            if seg == COMPMODEL_DAYSTART.lower():
-                diagtitle = COMPMODEL_DAYSTART
-                modelkey = MODELKEY_DAYSTART_NA
-            elif seg == COMPMODEL_DAYEND.lower():
-                diagtitle = COMPMODEL_DAYEND
-                modelkey = MODELKEY_DAYEND_NA  
-        elif str(item.text(col)).lower() == ('Pre-school Children\n(0-4 years)').lower():
-            seg = str((item.parent()).text(0)).lower()
-            if seg == COMPMODEL_DAYSTART.lower():
-                diagtitle = COMPMODEL_DAYSTART
-                modelkey = MODELKEY_DAYSTART_PS
-            elif seg == COMPMODEL_DAYEND.lower():
-                diagtitle = COMPMODEL_DAYEND
-                modelkey = MODELKEY_DAYEND_PS 
-
-        elif str(item.text(col)).lower() == COMPMODEL_WRKEPISODES.lower():
-            diagtitle = COMPMODEL_WRKEPISODES
-            modelkey = MODELKEY_WRKEPISODES
-        elif str(item.text(col)).lower() == COMPMODEL_WORKSTART.lower():
-            diagtitle = COMPMODEL_WORKSTART
-            modelkey = MODELKEY_WORKSTART
-        elif str(item.text(col)).lower() == COMPMODEL_WORKEND.lower():
-            diagtitle = COMPMODEL_WORKEND
-            modelkey = MODELKEY_WORKEND
-        elif str(item.text(col)).lower() == COMPMODEL_WORKSTART1.lower():
-            diagtitle = COMPMODEL_WORKSTART1
-            modelkey = MODELKEY_WORKSTART1
-        elif str(item.text(col)).lower() == COMPMODEL_WORKEND1.lower():
-            diagtitle = COMPMODEL_WORKEND1
-            modelkey = MODELKEY_WORKEND1
-        elif str(item.text(col)).lower() == COMPMODEL_WORKSTART2.lower():
-            diagtitle = COMPMODEL_WORKSTART2
-            modelkey = MODELKEY_WORKSTART2
-        elif str(item.text(col)).lower() == COMPMODEL_WORKEND2.lower():
-            diagtitle = COMPMODEL_WORKEND2
-            modelkey = MODELKEY_WORKEND2
-
-        elif str(item.text(col)).lower() == COMPMODEL_SCHSTART.lower():
-            diagtitle = COMPMODEL_SCHSTART
-            modelkey = MODELKEY_SCHSTART
-        elif str(item.text(col)).lower() == COMPMODEL_SCHEND.lower():
-            diagtitle = COMPMODEL_SCHEND
-            modelkey = MODELKEY_SCHEND     
-
-        elif str(item.text(col)).lower() == COMPMODEL_PRESCHSTART.lower():
-            diagtitle = COMPMODEL_PRESCHSTART
-            modelkey = MODELKEY_PRESCHSTART
-        elif str(item.text(col)).lower() == COMPMODEL_PRESCHEND.lower():
-            diagtitle = COMPMODEL_PRESCHEND
-            modelkey = MODELKEY_PRESCHEND           
-
-        elif str(item.text(col)).lower() == COMPMODEL_PRESCHDAILYSTATUS.lower():
-            diagtitle = COMPMODEL_PRESCHDAILYSTATUS
-            modelkey = MODELKEY_PRESCHDAILYSTATUS   
-        elif str(item.text(col)).lower() == COMPMODEL_SCHDAILYSTATUS.lower():
-            diagtitle = COMPMODEL_SCHDAILYSTATUS
-            modelkey = MODELKEY_SCHDAILYSTATUS  
-        elif str(item.text(col)).lower() == COMPMODEL_HMINDEP.lower():
-            diagtitle = COMPMODEL_HMINDEP
-            modelkey = MODELKEY_HMINDEP 
-        elif str(item.text(col)).lower() == COMPMODEL_SCHDAILYINDEP.lower():
-            diagtitle = COMPMODEL_SCHDAILYINDEP
-            modelkey = MODELKEY_SCHDAILYINDEP 
-        elif str(item.text(col)).lower() == COMPMODEL_AFTSCHDAILYINDEP.lower():
-            diagtitle = COMPMODEL_AFTSCHDAILYINDEP
-            modelkey = MODELKEY_AFTSCHDAILYINDEP 
-        elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTTYPE.lower():
-            diagtitle = COMPMODEL_AFTSCHACTTYPE
-            modelkey = MODELKEY_AFTSCHACTTYPE 
-        elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTDEST.lower():
-            diagtitle = COMPMODEL_AFTSCHACTDEST
-            modelkey = MODELKEY_AFTSCHACTDEST 
-        elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTDUR.lower():
-            diagtitle = COMPMODEL_AFTSCHACTDUR
-            modelkey = MODELKEY_AFTSCHACTDUR 
-        elif str(item.text(col)).lower() == COMPMODEL_AFTSCHJOINTACT.lower():
-            diagtitle = COMPMODEL_AFTSCHJOINTACT
-            modelkey = MODELKEY_AFTSCHJOINTACT 
-
-        elif str(item.text(col)).lower() == COMPMODEL_WRKDAILYSTATUS.lower():
-            diagtitle = COMPMODEL_WRKDAILYSTATUS
-            modelkey = MODELKEY_WRKDAILYSTATUS 
-            
-
-        elif item.text(col) == COMPMODEL_SMACTIVEPURSUE:
-            diagtitle = COMPMODEL_SMACTIVEPURSUE
-            modelkey = MODELKEY_SMACTIVEPURSUE
-        elif item.text(col) == COMPMODEL_SMACTIVEASSIGNED:
-            diagtitle = COMPMODEL_SMACTIVEASSIGNED
-            modelkey = MODELKEY_SMACTIVEASSIGNED
-        elif item.text(col) == COMPMODEL_SMASSIGNACTIVE:
-            diagtitle = COMPMODEL_SMASSIGNACTIVE
-            modelkey = MODELKEY_SMASSIGNACTIVE
-        elif item.text(col) == COMPMODEL_AFTSCHACTIVITYMODE:
-            diagtitle = COMPMODEL_AFTSCHACTIVITYMODE
-            modelkey = MODELKEY_AFTSCHACTIVITYMODE
-        elif item.text(col) == COMPMODEL_SMINDIVIDUAL:
-            diagtitle = COMPMODEL_SMINDIVIDUAL
-            modelkey = MODELKEY_SMINDIVIDUAL
-        elif item.text(col) == COMPMODEL_SMTRIPTIME:
-            diagtitle = COMPMODEL_SMTRIPTIME
-            modelkey = MODELKEY_SMTRIPTIME
-        elif item.text(col) == COMPMODEL_ACTIVITYTYPE:
-            diagtitle = COMPMODEL_ACTIVITYTYPE
-            modelkey = MODELKEY_ACTIVITYTYPE
-        elif item.text(col) == COMPMODEL_SMSTARTTIME:
-            diagtitle = COMPMODEL_SMSTARTTIME
-            modelkey = MODELKEY_SMSTARTTIME
-        elif item.text(col) == COMPMODEL_ACTIVITYDURATION:
-            diagtitle = COMPMODEL_ACTIVITYDURATION
-            modelkey = MODELKEY_ACTIVITYDURATION
-#        elif item.text(col) == COMPMODEL_SMPROCEED:
-#            diagtitle = COMPMODEL_SMPROCEED
-#            modelkey = MODELKEY_SMPROCEED
-        elif item.text(col) == COMPMODEL_FIXEDACTIVITYMODE:
-            diagtitle = COMPMODEL_FIXEDACTIVITYMODE
-            modelkey = MODELKEY_FIXEDACTIVITYMODE
-        elif item.text(col) == COMPMODEL_SMISHOV:
-            diagtitle = COMPMODEL_SMISHOV
-            modelkey = MODELKEY_SMISHOV
-        elif item.text(col) == COMPMODEL_SMACTIVEPURSED:
-            diagtitle = COMPMODEL_SMACTIVEPURSED
-            modelkey = MODELKEY_SMACTIVEPURSED
-        elif item.text(col) == COMPMODEL_JOINTACTIVITY:
-            diagtitle = COMPMODEL_JOINTACTIVITY
-            modelkey = MODELKEY_JOINTACTIVITY
-        elif item.text(col) == COMPMODEL_TRIPVEHICLE:
-            diagtitle = COMPMODEL_TRIPVEHICLE
-            modelkey = MODELKEY_TRIPVEHICLE
-
-
-
-        if diagtitle != None and self.configobject != None:
-            diag = AbtractSpecDialog(self.configobject,modelkey,diagtitle)
-            diag.exec_()
+# 
+#     def treeItemSelected(self,item,col):
+#         diagtitle = None
+#         diag = None
+#         modelkey = None
+#         if str(item.text(col)).lower() == COMPMODEL_NUMVEHS.lower():
+#             diagtitle = COMPMODEL_NUMVEHS
+#             modelkey = MODELKEY_NUMVEHS
+#         elif str(item.text(col)).lower() == COMPMODEL_NUMTYPES.lower():
+#             diagtitle = COMPMODEL_NUMTYPES
+#             modelkey = MODELKEY_VEHTYPE   
+# 
+#         elif str(item.text(col)).lower() == ('Adult Workers').lower():
+#             seg = str((item.parent()).text(0)).lower()
+#             if seg == COMPMODEL_DAYSTART.lower():
+#                 diagtitle = COMPMODEL_DAYSTART
+#                 modelkey = MODELKEY_DAYSTART_AW
+#             elif seg == COMPMODEL_DAYEND.lower():
+#                 diagtitle = COMPMODEL_DAYEND
+#                 modelkey = MODELKEY_DAYEND_AW
+#         elif str(item.text(col)).lower() == ('Adult Non-workers').lower():
+#             seg = str((item.parent()).text(0)).lower()
+#             if seg == COMPMODEL_DAYSTART.lower():
+#                 diagtitle = COMPMODEL_DAYSTART
+#                 modelkey = MODELKEY_DAYSTART_AN
+#             elif seg == COMPMODEL_DAYEND.lower():
+#                 diagtitle = COMPMODEL_DAYEND
+#                 modelkey = MODELKEY_DAYEND_AN                
+#         elif str(item.text(col)).lower() == ('Children (5-17 years) and\nAdult Students').lower():
+#             seg = str((item.parent()).text(0)).lower()
+#             if seg == COMPMODEL_DAYSTART.lower():
+#                 diagtitle = COMPMODEL_DAYSTART
+#                 modelkey = MODELKEY_DAYSTART_NA
+#             elif seg == COMPMODEL_DAYEND.lower():
+#                 diagtitle = COMPMODEL_DAYEND
+#                 modelkey = MODELKEY_DAYEND_NA  
+#         elif str(item.text(col)).lower() == ('Pre-school Children\n(0-4 years)').lower():
+#             seg = str((item.parent()).text(0)).lower()
+#             if seg == COMPMODEL_DAYSTART.lower():
+#                 diagtitle = COMPMODEL_DAYSTART
+#                 modelkey = MODELKEY_DAYSTART_PS
+#             elif seg == COMPMODEL_DAYEND.lower():
+#                 diagtitle = COMPMODEL_DAYEND
+#                 modelkey = MODELKEY_DAYEND_PS 
+# 
+#         elif str(item.text(col)).lower() == COMPMODEL_WRKEPISODES.lower():
+#             diagtitle = COMPMODEL_WRKEPISODES
+#             modelkey = MODELKEY_WRKEPISODES
+#         elif str(item.text(col)).lower() == COMPMODEL_WORKSTART.lower():
+#             diagtitle = COMPMODEL_WORKSTART
+#             modelkey = MODELKEY_WORKSTART
+#         elif str(item.text(col)).lower() == COMPMODEL_WORKEND.lower():
+#             diagtitle = COMPMODEL_WORKEND
+#             modelkey = MODELKEY_WORKEND
+#         elif str(item.text(col)).lower() == COMPMODEL_WORKSTART1.lower():
+#             diagtitle = COMPMODEL_WORKSTART1
+#             modelkey = MODELKEY_WORKSTART1
+#         elif str(item.text(col)).lower() == COMPMODEL_WORKEND1.lower():
+#             diagtitle = COMPMODEL_WORKEND1
+#             modelkey = MODELKEY_WORKEND1
+#         elif str(item.text(col)).lower() == COMPMODEL_WORKSTART2.lower():
+#             diagtitle = COMPMODEL_WORKSTART2
+#             modelkey = MODELKEY_WORKSTART2
+#         elif str(item.text(col)).lower() == COMPMODEL_WORKEND2.lower():
+#             diagtitle = COMPMODEL_WORKEND2
+#             modelkey = MODELKEY_WORKEND2
+# 
+#         elif str(item.text(col)).lower() == COMPMODEL_SCHSTART.lower():
+#             diagtitle = COMPMODEL_SCHSTART
+#             modelkey = MODELKEY_SCHSTART
+#         elif str(item.text(col)).lower() == COMPMODEL_SCHEND.lower():
+#             diagtitle = COMPMODEL_SCHEND
+#             modelkey = MODELKEY_SCHEND     
+# 
+#         elif str(item.text(col)).lower() == COMPMODEL_PRESCHSTART.lower():
+#             diagtitle = COMPMODEL_PRESCHSTART
+#             modelkey = MODELKEY_PRESCHSTART
+#         elif str(item.text(col)).lower() == COMPMODEL_PRESCHEND.lower():
+#             diagtitle = COMPMODEL_PRESCHEND
+#             modelkey = MODELKEY_PRESCHEND           
+# 
+#         elif str(item.text(col)).lower() == COMPMODEL_PRESCHDAILYSTATUS.lower():
+#             diagtitle = COMPMODEL_PRESCHDAILYSTATUS
+#             modelkey = MODELKEY_PRESCHDAILYSTATUS   
+#         elif str(item.text(col)).lower() == COMPMODEL_SCHDAILYSTATUS.lower():
+#             diagtitle = COMPMODEL_SCHDAILYSTATUS
+#             modelkey = MODELKEY_SCHDAILYSTATUS  
+#         elif str(item.text(col)).lower() == COMPMODEL_HMINDEP.lower():
+#             diagtitle = COMPMODEL_HMINDEP
+#             modelkey = MODELKEY_HMINDEP 
+#         elif str(item.text(col)).lower() == COMPMODEL_SCHDAILYINDEP.lower():
+#             diagtitle = COMPMODEL_SCHDAILYINDEP
+#             modelkey = MODELKEY_SCHDAILYINDEP 
+#         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHDAILYINDEP.lower():
+#             diagtitle = COMPMODEL_AFTSCHDAILYINDEP
+#             modelkey = MODELKEY_AFTSCHDAILYINDEP 
+#         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTTYPE.lower():
+#             diagtitle = COMPMODEL_AFTSCHACTTYPE
+#             modelkey = MODELKEY_AFTSCHACTTYPE 
+#         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTDEST.lower():
+#             diagtitle = COMPMODEL_AFTSCHACTDEST
+#             modelkey = MODELKEY_AFTSCHACTDEST 
+#         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTDUR.lower():
+#             diagtitle = COMPMODEL_AFTSCHACTDUR
+#             modelkey = MODELKEY_AFTSCHACTDUR 
+#         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHJOINTACT.lower():
+#             diagtitle = COMPMODEL_AFTSCHJOINTACT
+#             modelkey = MODELKEY_AFTSCHJOINTACT 
+# 
+#         elif str(item.text(col)).lower() == COMPMODEL_WRKDAILYSTATUS.lower():
+#             diagtitle = COMPMODEL_WRKDAILYSTATUS
+#             modelkey = MODELKEY_WRKDAILYSTATUS 
+#             
+# 
+#         elif item.text(col) == COMPMODEL_SMACTIVEPURSUE:
+#             diagtitle = COMPMODEL_SMACTIVEPURSUE
+#             modelkey = MODELKEY_SMACTIVEPURSUE
+#         elif item.text(col) == COMPMODEL_SMACTIVEASSIGNED:
+#             diagtitle = COMPMODEL_SMACTIVEASSIGNED
+#             modelkey = MODELKEY_SMACTIVEASSIGNED
+#         elif item.text(col) == COMPMODEL_SMASSIGNACTIVE:
+#             diagtitle = COMPMODEL_SMASSIGNACTIVE
+#             modelkey = MODELKEY_SMASSIGNACTIVE
+#         elif item.text(col) == COMPMODEL_AFTSCHACTIVITYMODE:
+#             diagtitle = COMPMODEL_AFTSCHACTIVITYMODE
+#             modelkey = MODELKEY_AFTSCHACTIVITYMODE
+#         elif item.text(col) == COMPMODEL_SMINDIVIDUAL:
+#             diagtitle = COMPMODEL_SMINDIVIDUAL
+#             modelkey = MODELKEY_SMINDIVIDUAL
+#         elif item.text(col) == COMPMODEL_SMTRIPTIME:
+#             diagtitle = COMPMODEL_SMTRIPTIME
+#             modelkey = MODELKEY_SMTRIPTIME
+#         elif item.text(col) == COMPMODEL_ACTIVITYTYPE:
+#             diagtitle = COMPMODEL_ACTIVITYTYPE
+#             modelkey = MODELKEY_ACTIVITYTYPE
+#         elif item.text(col) == COMPMODEL_SMSTARTTIME:
+#             diagtitle = COMPMODEL_SMSTARTTIME
+#             modelkey = MODELKEY_SMSTARTTIME
+#         elif item.text(col) == COMPMODEL_ACTIVITYDURATION:
+#             diagtitle = COMPMODEL_ACTIVITYDURATION
+#             modelkey = MODELKEY_ACTIVITYDURATION
+#         elif item.text(col) == COMPMODEL_SMPROCEED:
+#             diagtitle = COMPMODEL_SMPROCEED
+#             modelkey = MODELKEY_SMPROCEED
+#         elif item.text(col) == COMPMODEL_FIXEDACTIVITYMODE:
+#             diagtitle = COMPMODEL_FIXEDACTIVITYMODE
+#             modelkey = MODELKEY_FIXEDACTIVITYMODE
+#         elif item.text(col) == COMPMODEL_SMISHOV:
+#             diagtitle = COMPMODEL_SMISHOV
+#             modelkey = MODELKEY_SMISHOV
+#         elif item.text(col) == COMPMODEL_SMACTIVEPURSED:
+#             diagtitle = COMPMODEL_SMACTIVEPURSED
+#             modelkey = MODELKEY_SMACTIVEPURSED
+#         elif item.text(col) == COMPMODEL_JOINTACTIVITY:
+#             diagtitle = COMPMODEL_JOINTACTIVITY
+#             modelkey = MODELKEY_JOINTACTIVITY
+#         elif item.text(col) == COMPMODEL_TRIPVEHICLE:
+#             diagtitle = COMPMODEL_TRIPVEHICLE
+#             modelkey = MODELKEY_TRIPVEHICLE
+# 
+# 
+# 
+#         if diagtitle != None and self.configobject != None:
+#             diag = AbtractSpecDialog(self.configobject,modelkey,diagtitle)
+#             diag.exec_()
 
         
     def remove_element(self):

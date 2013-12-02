@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
         
         # Variable for a project properties; can be used to see if a project is open or not
         self.proconfig = None
+        self.currentflowindex = -1
         
         # Defining central widget
         self.centralwidgetscroll = QScrollArea()
@@ -87,7 +88,7 @@ class MainWindow(QMainWindow):
 
 
         # Defining model_management as a QTreeWidget
-        self.model_management = Model_Manager_Treewidget()
+        self.model_management = Model_Manager_Treewidget(self)
         self.model_management.setObjectName("model_management")
         self.model_management.headerItem().setText(0, "Model Management")
         self.connect(self.model_management, SIGNAL('itemClicked (QTreeWidgetItem *,int)'), self.showflowchart)
@@ -320,30 +321,60 @@ class MainWindow(QMainWindow):
         
         if selitem.text(col) == COMP_LONGTERM:
             self.models.show_long_term_models()
+            self.currentflowindex = 0
         if selitem.text(col) == COMP_FIXEDACTLOCATION:
             self.models.show_fixed_activity_models()
+            self.currentflowindex = 1
         if selitem.text(col) == COMPMODEL_NUMVEHS or selitem.text(col) == COMPMODEL_NUMTYPES:
             self.models.show_vehicle_ownership_models()
+            self.currentflowindex = 2
         if selitem.text(col) == COMPMODEL_WRKEPISODES or selitem.text(col) == COMPMODEL_DAYSTART or \
             selitem.text(col) == COMPMODEL_DAYEND or selitem.text(col) == COMPMODEL_1WEPISODE or \
             selitem.text(col) == COMPMODEL_2WEPISODE1 or selitem.text(col) == COMPMODEL_2WEPISODE2 or \
             selitem.text(col) == COMPMODEL_PRESCHEPISODES or selitem.text(col) == COMPMODEL_SCHEPISODES:
             self.models.show_fixed_activity_prism_models()
+            self.currentflowindex = 3
         if selitem.text(col) == COMPMODEL_AFTSCHACTIVITY: #selitem.text(col) == COMPMODEL_SCHSTATUS or selitem.text(col) == COMPMODEL_CHIDDEPEND or selitem.text(col) == COMPMODEL_PERATTR:
             #self.models.show_child_model()
             self.models.show_after_school_model()
+            self.currentflowindex = 4
         if selitem.text(col) == COMPMODEL_WRKDAILYSTATUS or selitem.text(col) == COMPMODEL_PERATTR:
             self.models.show_child_status_model()
+            self.currentflowindex = 5
         if selitem.text(col) == COMP_ACTSKELRECONCILIATION or selitem.text(col) == COMPMODEL_RECONCILENDADJ:
             self.models.show_skeleton_reconciliation_system()
+            self.currentflowindex = 6
         if selitem.text(col) == COMP_ACTTRAVSIMULATOR or selitem.text(col) == COMPMODEL_NONMANDATORY:
             self.models.show_activity_travel_pattern_simulator()
+            self.currentflowindex = 7
         if selitem.text(col) == COMPMODEL_RECONCILSTRTADJ: #COMP_ACTTRAVRECONCILIATION:
             self.models.show_travel_reconciliation_system()
-            
-        if selitem.text(col) == COMPMODEL_SCHEPISODES:
-            self.models.show_work_status_model()
+            self.currentflowindex = 8
+#         if selitem.text(col) == COMPMODEL_SCHEPISODES:
+#             self.models.show_work_status_model()
 
+    def refreshflowchart(self):
+        
+        print "Current Flow Index: %s" %(self.currentflowindex)
+        self.models.show_clear_widget()
+        if self.currentflowindex == 0:
+            self.models.show_long_term_models()
+        if self.currentflowindex == 1:
+            self.models.show_fixed_activity_models()
+        if self.currentflowindex == 2:
+            self.models.show_vehicle_ownership_models()
+        if self.currentflowindex == 3:
+            self.models.show_fixed_activity_prism_models()
+        if self.currentflowindex == 4:
+            self.models.show_after_school_model()
+        if self.currentflowindex == 5:
+            self.models.show_child_status_model()
+        if self.currentflowindex == 6:
+            self.models.show_skeleton_reconciliation_system()
+        if self.currentflowindex == 7:
+            self.models.show_activity_travel_pattern_simulator()
+        if self.currentflowindex == 8:
+            self.models.show_travel_reconciliation_system()
 
 # Call file functions
     def projectnew(self):

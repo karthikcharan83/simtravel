@@ -96,43 +96,43 @@ class Child_Status_Model(QWidget):
         # Child goes to\npre-school on\n travel day
         self.goto_preschool_button0 = QPushButton('0 Year Old', self)
         self.goto_preschool_button0.setGeometry((size.width()) / 2 + 160, size.height() / 2 - 420, 120, 20)
-        self.goto_preschool_button0.setStyleSheet(self.color.isUserModel(MODELKEY_PRESCHDAILYSTATUS))
+        self.goto_preschool_button0.setStyleSheet(self.color.isUserModel(MODELKEY_SCHSTATUSAGE0))
         self.connect(self.goto_preschool_button0, SIGNAL('clicked()'), self.goto_preschool0)
         
         self.goto_preschool_button1 = QPushButton('1 Year Old', self)
         self.goto_preschool_button1.setGeometry((size.width()) / 2 + 160, size.height() / 2 - 395, 120, 20)
-        self.goto_preschool_button1.setStyleSheet(self.color.isUserModel(MODELKEY_PRESCHDAILYSTATUS))
+        self.goto_preschool_button1.setStyleSheet(self.color.isUserModel(MODELKEY_SCHSTATUSAGE1))
         self.connect(self.goto_preschool_button1, SIGNAL('clicked()'), self.goto_preschool1)
         
         self.goto_preschool_button2 = QPushButton('2 Years Old', self)
         self.goto_preschool_button2.setGeometry((size.width()) / 2 + 160, size.height() / 2 - 370, 120, 20)
-        self.goto_preschool_button2.setStyleSheet(self.color.isUserModel(MODELKEY_PRESCHDAILYSTATUS))
+        self.goto_preschool_button2.setStyleSheet(self.color.isUserModel(MODELKEY_SCHSTATUSAGE2))
         self.connect(self.goto_preschool_button2, SIGNAL('clicked()'), self.goto_preschool2)
         
         self.goto_preschool_button3 = QPushButton('3 Years Old', self)
         self.goto_preschool_button3.setGeometry((size.width()) / 2 + 160, size.height() / 2 - 345, 120, 20)
-        self.goto_preschool_button3.setStyleSheet(self.color.isUserModel(MODELKEY_PRESCHDAILYSTATUS))
+        self.goto_preschool_button3.setStyleSheet(self.color.isUserModel(MODELKEY_SCHSTATUSAGE3))
         self.connect(self.goto_preschool_button3, SIGNAL('clicked()'), self.goto_preschool3)
         
         self.goto_preschool_button4 = QPushButton('4 Years Old', self)
         self.goto_preschool_button4.setGeometry((size.width()) / 2 + 160, size.height() / 2 - 320, 120, 20)
-        self.goto_preschool_button4.setStyleSheet(self.color.isUserModel(MODELKEY_PRESCHDAILYSTATUS))
+        self.goto_preschool_button4.setStyleSheet(self.color.isUserModel(MODELKEY_SCHSTATUSAGE4))
         self.connect(self.goto_preschool_button4, SIGNAL('clicked()'), self.goto_preschool4)
         
         # Work Status
         self.work_status1_button = QPushButton('Adult Work Status -\nfirst episode', self) 
         self.work_status1_button.setGeometry((size.width()) / 2 + 395, size.height() / 2 - 100,180, 50)
-        self.work_status1_button.setStyleSheet("background-color: #00C5CD")
+        self.work_status1_button.setStyleSheet(self.color.isUserModel(MODELKEY_WRKSTATUSADL1))
         self.connect(self.work_status1_button, SIGNAL('clicked()'), self.work_status1)
         
         self.work_status2_button = QPushButton('Adult Work Status -\nsecond episode', self) 
         self.work_status2_button.setGeometry((size.width()) / 2 + 395, size.height() / 2 - 20,180, 50)
-        self.work_status2_button.setStyleSheet("background-color: #00C5CD")
+        self.work_status2_button.setStyleSheet(self.color.isUserModel(MODELKEY_WRKSTATUSADL2))
         self.connect(self.work_status2_button, SIGNAL('clicked()'), self.work_status2)
 
         self.nonadult_work_status_button = QPushButton('Non-Adult Work Status', self) 
         self.nonadult_work_status_button.setGeometry((size.width()) / 2 + 395, size.height() / 2 + 60,180, 50)
-        self.nonadult_work_status_button.setStyleSheet("background-color: #00C5CD")
+        self.nonadult_work_status_button.setStyleSheet(self.color.isUserModel(MODELKEY_WRKSTATUSNON))
         self.connect(self.nonadult_work_status_button, SIGNAL('clicked()'), self.nonadult_work)
         
         Dummy  = QPushButton('', self)
