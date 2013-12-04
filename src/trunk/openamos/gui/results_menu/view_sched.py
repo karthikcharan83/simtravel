@@ -541,19 +541,22 @@ class MakeSchedPlot(QDialog):
                     temp = self.cursor.fetchall()
         
                     
-                    ind = []
-                    for i in range(50):
-                        ind.append(randint(0, len(temp)))
-                    
-                    tid = ''
-                    for i in range(50):
-                        id = temp[ind[i]]
-                        if self.segment1.isChecked():
-                            tid = str(id[0])
-                        else:
-                            tid = '%s,%s'%(str(id[0]),str(id[1]))
-                            
-                        self.idwidget.addItem(tid) 
+#                     ind = []
+#                     for i in range(50):
+#                         ind.append(randint(0, len(temp)))
+#                     
+#                     tid = ''
+#                     for i in range(50):
+#                         id = temp[ind[i]]
+#                         if self.segment1.isChecked():
+#                             tid = str(id[0])
+#                         else:
+#                             tid = '%s,%s'%(str(id[0]),str(id[1]))
+#                             
+#                         self.idwidget.addItem(tid) 
+
+                    for i in temp:
+                        self.idwidget.addItem(str(i[0]))
 
             
             except Exception, e:
