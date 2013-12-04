@@ -299,6 +299,7 @@ class Worker(QThread):
         father = self.parent()
         father.runbutton.setVisible(False)
         father.cancelbutton.setText("Finish")
+        father.cancelbutton.setEnabled(True)
         
 #        p = Popen(self.cmd, shell = True,
 #                                         stdout = PIPE,
