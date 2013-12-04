@@ -676,7 +676,7 @@ class Model_Manager_Treewidget(QTreeWidget):
             diag.exec_()
 
     def add_model(self):
-        model = self.find_model()[0]
+        model = self.find_model()[1]
         if model != None:
             diag = AbtractSpecDialog(self.configobject,"","",model,self)
             diag.exec_()

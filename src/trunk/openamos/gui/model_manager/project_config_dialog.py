@@ -128,7 +128,7 @@ class ProjectConfigDialog(QDialog):
       
         
     def attributes(self,eltname):
-        root = self.configobject.default.getroot()
+        root = self.configobject.def_configs[0].getroot()
         items = []
         for elt in root.getiterator(eltname): 
             for key in elt.keys():
@@ -138,7 +138,7 @@ class ProjectConfigDialog(QDialog):
         return items
 
     def titles(self,eltname):
-        elt = self.configobject.default.find(eltname)
+        elt = self.configobject.def_configs[0].find(eltname)
         items = []
         items.append(str(eltname))
         for child in elt.getchildren():
@@ -192,17 +192,38 @@ class ProjectConfigDialog(QDialog):
         self.showValues()
         
         for elt1 in self.elt.getchildren():
-            sets2 = []
-            values2 = []
-            tlabel = str(elt1.tag) + "-"
+            
+            subtreeelt1 = self.subreadtree(elt1, treeelt)
+            for subelt1 in elt1.getchildren():
+                subtreeelt2 = self.subreadtree(subelt1, subtreeelt1)
+#             sets2 = []
+#             values2 = []
+#             tlabel = str(elt1.tag) + "-"
+# 
+#             for key in elt1.keys():
+#                 sets2.append(str(key))
+#                 values2.append(str(elt1.get(key)))
+#                 tlabel = tlabel + str(key) + ":" + str(elt1.get(key)) + " "
+# 
+#             subitem = TreeWidgetItem(treeelt, sets2, values2)
+#             subitem.setText(0, tlabel) #str(elt1.tag))
+            
+    def subreadtree(self, elt, treeelt):
+        
+        sets2 = []
+        values2 = []
+        tlabel = str(elt.tag) + "-"
 
-            for key in elt1.keys():
-                sets2.append(str(key))
-                values2.append(str(elt1.get(key)))
-                tlabel = tlabel + str(key) + ":" + str(elt1.get(key)) + " "
+        for key in elt.keys():
+            sets2.append(str(key))
+            values2.append(str(elt.get(key)))
+            tlabel = tlabel + str(key) + ":" + str(elt.get(key)) + " "
 
-            subitem = TreeWidgetItem(treeelt, sets2, values2)
-            subitem.setText(0, tlabel) #str(elt1.tag)) 
+        subitem = TreeWidgetItem(treeelt, sets2, values2)
+        subitem.setText(0, tlabel) #str(elt1.tag))
+        
+        return subitem
+         
 
 
     def fillAttr(self):

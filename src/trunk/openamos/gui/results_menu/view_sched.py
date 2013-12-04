@@ -267,11 +267,11 @@ class MakeSchedPlot(QDialog):
             tables.append("Schedules: Daily Pattern after Child Allocation with only Joint Activities")
         if self.new_obj.check_if_table_exists("schedule_inctravelrec_r"):
             tables.append("Schedules: Reconciled Daily Pattern Skeleton with Child Allocation")
-        if self.new_obj.check_if_table_exists("schedule_full_r"):
-        #if self.new_obj.check_if_table_exists("schedule_full_r"):
-            tables.append("Schedules: Final Schedules")
         if self.new_obj.check_if_table_exists("schedule_aggregatefinal_r"):
             tables.append("Schedules: Aggregated in Home Final Schedules")
+        if self.new_obj.check_if_table_exists("schedule_full_r"):
+            tables.append("Schedules: Full Schedules")
+
 #        if self.new_obj.check_if_table_exists("schedule_nhts"):
 #            tables.append("Schedules: NHTS")
             

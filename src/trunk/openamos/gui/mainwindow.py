@@ -161,39 +161,39 @@ class MainWindow(QMainWindow):
                                         None,project_close_action,project_quit_action, ))
       
     # Defining Models
-        self.models_menu = self.menuBar().addMenu("&Models")
-
-#        models_interactive_ui_action = self.createaction("&Interactive UI", None, None, 
-#                                            None, "Chose a model in a visual form.")
-        component_long_term_choices_action = self.createaction(COMP_LONGTERM, self.models.show_long_term_models, None, 
-                                            None, None)
-        component_fixed_activity_location_choice_generator_action = self.createaction(COMP_FIXEDACTLOCATION, self.models.show_fixed_activity_models, None, 
-                                            None, None)
-        component_vehicle_ownership_model_action = self.createaction(COMP_VEHOWN, self.models.show_vehicle_ownership_models, None, 
-                                            None, None)
-        component_fixed_activity_prism_generator_action = self.createaction(COMP_FIXEDACTPRISM, self.models.show_fixed_activity_prism_models, None, 
-                                            None, None)
-        component_child_daily_status_and_allocation_model_action = self.createaction(COMP_CHILDSTATUS, self.models.show_child_model, None, 
-                                            None, None)
-        component_adult_daily_status_model_action = self.createaction(COMP_ADULTSTATUS, self.models.show_adult_model, None, 
-                                            None, None)
-        component_activity_skeleton_reconciliation_system_action = self.createaction(COMP_ACTSKELRECONCILIATION, self.models.show_skeleton_reconciliation_system, None, 
-                                            None, None)
-        component_activity_travel_pattern_simulator_action = self.createaction(COMP_ACTTRAVSIMULATOR, self.models.show_activity_travel_pattern_simulator, None, 
-                                            None, None)
-        component_activity_travel_reconciliation_system_action = self.createaction(COMP_ACTTRAVRECONCILIATION, self.models.show_travel_reconciliation_system, None, 
-                                            None, None)
-#        component_time_use_utility_calculator_action = self.createaction(COMP_TIMEUSEUTILITY, None, None, 
-#                                            None, None)
-
-        modelsComponentSubMenu = self.models_menu.addMenu("&Component")
-        modelsComponentSubMenu.setIcon(QIcon("./images/component.png"))
-#        self.addActions(self.models_menu, (models_interactive_ui_action, ))
-        self.addActions(modelsComponentSubMenu, (component_long_term_choices_action, component_fixed_activity_location_choice_generator_action,
-                                                      component_vehicle_ownership_model_action, component_fixed_activity_prism_generator_action,
-                                                       component_child_daily_status_and_allocation_model_action, component_adult_daily_status_model_action,
-                                                      component_activity_skeleton_reconciliation_system_action,component_activity_travel_pattern_simulator_action,
-                                                      component_activity_travel_reconciliation_system_action))#,component_time_use_utility_calculator_action))
+#         self.models_menu = self.menuBar().addMenu("&Models")
+# 
+# #        models_interactive_ui_action = self.createaction("&Interactive UI", None, None, 
+# #                                            None, "Chose a model in a visual form.")
+#         component_long_term_choices_action = self.createaction(COMP_LONGTERM, self.models.show_long_term_models, None, 
+#                                             None, None)
+#         component_fixed_activity_location_choice_generator_action = self.createaction(COMP_FIXEDACTLOCATION, self.models.show_fixed_activity_models, None, 
+#                                             None, None)
+#         component_vehicle_ownership_model_action = self.createaction(COMP_VEHOWN, self.models.show_vehicle_ownership_models, None, 
+#                                             None, None)
+#         component_fixed_activity_prism_generator_action = self.createaction(COMP_FIXEDACTPRISM, self.models.show_fixed_activity_prism_models, None, 
+#                                             None, None)
+#         component_child_daily_status_and_allocation_model_action = self.createaction(COMP_CHILDSTATUS, self.models.show_child_model, None, 
+#                                             None, None)
+#         component_adult_daily_status_model_action = self.createaction(COMP_ADULTSTATUS, self.models.show_adult_model, None, 
+#                                             None, None)
+#         component_activity_skeleton_reconciliation_system_action = self.createaction(COMP_ACTSKELRECONCILIATION, self.models.show_skeleton_reconciliation_system, None, 
+#                                             None, None)
+#         component_activity_travel_pattern_simulator_action = self.createaction(COMP_ACTTRAVSIMULATOR, self.models.show_activity_travel_pattern_simulator, None, 
+#                                             None, None)
+#         component_activity_travel_reconciliation_system_action = self.createaction(COMP_ACTTRAVRECONCILIATION, self.models.show_travel_reconciliation_system, None, 
+#                                             None, None)
+# #        component_time_use_utility_calculator_action = self.createaction(COMP_TIMEUSEUTILITY, None, None, 
+# #                                            None, None)
+# 
+#         modelsComponentSubMenu = self.models_menu.addMenu("&Component")
+#         modelsComponentSubMenu.setIcon(QIcon("./images/component.png"))
+# #        self.addActions(self.models_menu, (models_interactive_ui_action, ))
+#         self.addActions(modelsComponentSubMenu, (component_long_term_choices_action, component_fixed_activity_location_choice_generator_action,
+#                                                       component_vehicle_ownership_model_action, component_fixed_activity_prism_generator_action,
+#                                                        component_child_daily_status_and_allocation_model_action, component_adult_daily_status_model_action,
+#                                                       component_activity_skeleton_reconciliation_system_action,component_activity_travel_pattern_simulator_action,
+#                                                       component_activity_travel_reconciliation_system_action))#,component_time_use_utility_calculator_action))
 
     # Defining Data
 
