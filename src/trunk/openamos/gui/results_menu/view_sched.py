@@ -880,7 +880,7 @@ class MakeSchedPlot(QDialog):
             ind = 0.75
             height = 0.3
             if (self.stablecombo.currentText() == "Schedules: Daily Pattern with Child Allocation" or 
-		self.stablecombo.currentText() == "Schedules: Final Schedules" or 
+		self.stablecombo.currentText() == "Schedules: Full Schedules" or 
 		self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules"): 
                 ind = 0.6
             
@@ -896,7 +896,7 @@ class MakeSchedPlot(QDialog):
                 ind = ind + 1
 
             if (self.stablecombo.currentText() == "Schedules: Daily Pattern with Child Allocation" or 
-		self.stablecombo.currentText() == "Schedules: Final Schedules" or 
+		self.stablecombo.currentText() == "Schedules: Full Schedules" or 
 		self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules"):
                 ind1 = 0.3
                 trip_time = self.retrieve_trip(pid, 'Expected')
@@ -919,7 +919,7 @@ class MakeSchedPlot(QDialog):
                 
 	    # Also including the schedules before adjustment 
 	    
-            if self.stablecombo.currentText() == "Schedules: Final Schedules":
+            if self.stablecombo.currentText() == "Schedules: Full Schedules":
 		self.data = []
            	pid = self.retrieve_sched('schedule_skeleton_r')
 	    	ind2 = 0.9
@@ -972,7 +972,7 @@ class MakeSchedPlot(QDialog):
             bar_names = ['Home','In-Home','Work','School','Maintenance','Discretionary',
                         'Anchor','Pick Up','Drop Off','OH-Other']
             
-            if self.stablecombo.currentText() == "Schedules: Final Schedules" or self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules":
+            if self.stablecombo.currentText() == "Schedules: Full Schedules" or self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules":
                 bars.append(barh(0, 0, 0, left=0,color=self.colors(1000)))
                 bar_names.append('Expected Start Time')
                 
