@@ -358,10 +358,11 @@ class MakeResultPlot(QDialog):
             tables.append("Schedules: Daily Pattern with Child Allocation")
         if self.new_obj.check_if_table_exists("schedule_inctravelrec_r"):
             tables.append("Schedules: Reconciled Daily Pattern Skeleton with Child Allocation")
-        if self.new_obj.check_if_table_exists("schedule_full_r"):
-            tables.append("Schedules: Final Schedules")
         if self.new_obj.check_if_table_exists("schedule_aggregatefinal_r"):
             tables.append("Schedules: Aggregated in Home Final Schedules")
+        if self.new_obj.check_if_table_exists("schedule_full_r"):
+            tables.append("Schedules: Full Schedules")
+        
             
         self.stablecombo.addItems(tables)
 
@@ -879,7 +880,8 @@ class MakeResultPlot(QDialog):
         if self.show_nhts.isChecked():
             table = "persons_daily_status_nhts"
         else:
-            table = "persons_daily_status_r"
+            #table = "persons_daily_status_r"
+            table = "persons_r"
         
         if self.cmbworkstatus.currentIndex() == 1:
             state = "(select * from %s where wrkdailystatus = 1 order by houseid, personid) as c" %(table)
