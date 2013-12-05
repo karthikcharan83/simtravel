@@ -555,8 +555,13 @@ class MakeSchedPlot(QDialog):
 #                             
 #                         self.idwidget.addItem(tid) 
 
+                    tid = ''
                     for i in temp:
-                        self.idwidget.addItem(str(i[0]))
+                        if self.segment1.isChecked():
+                            tid = str(i[0])
+                        else:
+                            tid = '%s,%s' %(str(i[0]),str(i[1]))
+                        self.idwidget.addItem(tid)
 
             
             except Exception, e:
