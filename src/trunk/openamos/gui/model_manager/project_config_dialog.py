@@ -141,10 +141,15 @@ class ProjectConfigDialog(QDialog):
         elt = self.configobject.def_configs[0].find(eltname)
         items = []
         items.append(str(eltname))
-        for child in elt.getchildren():
-            cname = str(child.tag)
-            if cname not in items:
-                items.append(cname)
+        for subelt in elt.getchildren():
+            cname1 = str(subelt.tag)
+            if cname1 not in items:
+                items.append(cname1)
+                
+                for subsubelt in subelt.getchildren():
+                    cname2 = str(subsubelt.tag)
+                    if cname2 not in items:
+                        items.append(cname2)
    
         return items
             

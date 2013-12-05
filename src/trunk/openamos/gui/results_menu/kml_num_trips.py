@@ -207,7 +207,7 @@ class kml_trips(QDialog):
                 self.table = ""
                 self.zoneid = ""
                 if self.tripradio.isChecked():
-                    self.table = "trips_r"
+                    self.table = "trips_full_r"
                     if self.fromradio.isChecked():
                         self.zoneid = "fromzone"
                     else:
