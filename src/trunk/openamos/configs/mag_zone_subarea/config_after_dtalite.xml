@@ -1,104 +1,104 @@
 <ProjectConfig>
-  <Project name="mag_zone_dynamic" location="/workspace/projects/mag_zone_dynamic/" seed="0" iteration="3" subsample="40000"/>
+  <Project name="mag_zone_dynamic" location="C:/DTALite/New_PHXsubarea/" seed="0" iteration="3" subsample="40000"/>
   <DTAConnection value="True"/>
-  <DBConfig dbprotocol="postgres" dbhost="localhost" dbname="mag_zone_dynamic" dbusername="postgres" dbpassword="openamos"/>
-
+  <DBConfig dbprotocol="postgres" dbhost="localhost" dbname="mag_zone_dynamic_sub" dbusername="postgres" dbpassword="openamos"/>
+  
   <NetworkSkims>
-    <Period tablename="skim0" origin_var="origin" destination_var="destination" intervalStart="0" intervalEnd="60">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim0.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_0" origin_var="origin" destination_var="destination" intervalStart="0" intervalEnd="59">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim0.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim1" origin_var="origin" destination_var="destination" intervalStart="61" intervalEnd="120">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim1.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_1" origin_var="origin" destination_var="destination" intervalStart="60" intervalEnd="119">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim1.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim2" origin_var="origin" destination_var="destination" intervalStart="121" intervalEnd="180">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim2.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_2" origin_var="origin" destination_var="destination" intervalStart="120" intervalEnd="179">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim2.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim3" origin_var="origin" destination_var="destination" intervalStart="181" intervalEnd="240">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim3.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_3" origin_var="origin" destination_var="destination" intervalStart="180" intervalEnd="239">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim3.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim4" origin_var="origin" destination_var="destination" intervalStart="241" intervalEnd="300">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim4.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_4" origin_var="origin" destination_var="destination" intervalStart="240" intervalEnd="299">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim4.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim5" origin_var="origin" destination_var="destination" intervalStart="301" intervalEnd="360">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim5.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_5" origin_var="origin" destination_var="destination" intervalStart="300" intervalEnd="359">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim5.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim6" origin_var="origin" destination_var="destination" intervalStart="361" intervalEnd="420">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim6.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_6" origin_var="origin" destination_var="destination" intervalStart="360" intervalEnd="419">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim6.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim7" origin_var="origin" destination_var="destination" intervalStart="421" intervalEnd="480">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim7.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_7" origin_var="origin" destination_var="destination" intervalStart="420" intervalEnd="479">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim7.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim8" origin_var="origin" destination_var="destination" intervalStart="481" intervalEnd="540">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim8.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_8" origin_var="origin" destination_var="destination" intervalStart="480" intervalEnd="539">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim8.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim9" origin_var="origin" destination_var="destination" intervalStart="541" intervalEnd="600">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim9.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_9" origin_var="origin" destination_var="destination" intervalStart="540" intervalEnd="599">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim9.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim10" origin_var="origin" destination_var="destination" intervalStart="601" intervalEnd="660">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim10.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_10" origin_var="origin" destination_var="destination" intervalStart="600" intervalEnd="659">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim10.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim11" origin_var="origin" destination_var="destination" intervalStart="661" intervalEnd="720">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim11.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_11" origin_var="origin" destination_var="destination" intervalStart="660" intervalEnd="719">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim11.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim12" origin_var="origin" destination_var="destination" intervalStart="721" intervalEnd="780">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim12.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_12" origin_var="origin" destination_var="destination" intervalStart="720" intervalEnd="779">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim12.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim13" origin_var="origin" destination_var="destination" intervalStart="781" intervalEnd="840">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim13.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_13" origin_var="origin" destination_var="destination" intervalStart="780" intervalEnd="839">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim13.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim14" origin_var="origin" destination_var="destination" intervalStart="841" intervalEnd="900">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim14.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_14" origin_var="origin" destination_var="destination" intervalStart="840" intervalEnd="899">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim14.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim15" origin_var="origin" destination_var="destination" intervalStart="901" intervalEnd="960">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim15.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_15" origin_var="origin" destination_var="destination" intervalStart="900" intervalEnd="959">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim15.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim16" origin_var="origin" destination_var="destination" intervalStart="961" intervalEnd="1020">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim16.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_16" origin_var="origin" destination_var="destination" intervalStart="960" intervalEnd="1019">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim16.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim17" origin_var="origin" destination_var="destination" intervalStart="1021" intervalEnd="1080">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim17.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_17" origin_var="origin" destination_var="destination" intervalStart="1020" intervalEnd="1079">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim17.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim18" origin_var="origin" destination_var="destination" intervalStart="1081" intervalEnd="1140">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim18.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_18" origin_var="origin" destination_var="destination" intervalStart="1080" intervalEnd="1139">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim18.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim19" origin_var="origin" destination_var="destination" intervalStart="1141" intervalEnd="1200">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim19.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_19" origin_var="origin" destination_var="destination" intervalStart="1140" intervalEnd="1199">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim19.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim20" origin_var="origin" destination_var="destination" intervalStart="1201" intervalEnd="1260">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim20.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_20" origin_var="origin" destination_var="destination" intervalStart="1200" intervalEnd="1259">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim20.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim21" origin_var="origin" destination_var="destination" intervalStart="1261" intervalEnd="1320">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim21.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_21" origin_var="origin" destination_var="destination" intervalStart="1260" intervalEnd="1319">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim21.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim22" origin_var="origin" destination_var="destination" intervalStart="1321" intervalEnd="1380">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim22.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_22" origin_var="origin" destination_var="destination" intervalStart="1320" intervalEnd="1379">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim22.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
-    <Period tablename="skim23" origin_var="origin" destination_var="destination" intervalStart="1381" intervalEnd="1500">
-      <Time skim_var="tt" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/skim23.dat" delimiter=","/>
-      <Distance skim_var="dist" fileLocation="/workspace/projects/mag_zone_dynamic/skimOutput/dynamic/distance0.dat" delimiter=","/>
+    <Period tablename="network_skims_23" origin_var="origin" destination_var="destination" intervalStart="1380" intervalEnd="1500">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim23.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
     </Period>
   </NetworkSkims>
 
