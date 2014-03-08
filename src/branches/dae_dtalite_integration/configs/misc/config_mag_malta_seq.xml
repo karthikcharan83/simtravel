@@ -1,0 +1,389 @@
+<ProjectConfig>
+  <Project name="mag_zone_seq" location="/home/karthik/simtravel/test/mag_zone_dynamic/" seed="10" iteration="3" subsample="40000"/>
+  <DTAConnection value="True"/>
+  <DBConfig dbprotocol="postgres" dbhost="localhost" dbname="mag_zone_fulldata_seq" dbusername="postgres" dbpassword="1234"/>
+
+  <TravelSkims1 reference_tablename="travel_skims" indb="True">
+    <Period tablename="travel_skims_0" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="0" intervalEnd="59" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim0.dat" delimiter=","/>
+    <Period tablename="travel_skims_1" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="60" intervalEnd="119" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim1.dat" delimiter=","/>
+    <Period tablename="travel_skims_2" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="120" intervalEnd="179" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim2.dat" delimiter=","/>
+    <Period tablename="travel_skims_3" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="180" intervalEnd="239" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim3.dat" delimiter=","/>
+    <Period tablename="travel_skims_4" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="240" intervalEnd="299" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim4.dat" delimiter=","/>
+    <Period tablename="travel_skims_5" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="300" intervalEnd="359" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim5.dat" delimiter=","/>
+    <Period tablename="travel_skims_6" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="360" intervalEnd="419" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim6.dat" delimiter=","/>
+    <Period tablename="travel_skims_7" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="420" intervalEnd="479" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim7.dat" delimiter=","/>
+    <Period tablename="travel_skims_8" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="480" intervalEnd="539" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim8.dat" delimiter=","/>
+    <Period tablename="travel_skims_9" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="540" intervalEnd="599" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim9.dat" delimiter=","/>
+    <Period tablename="travel_skims_10" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="600" intervalEnd="659" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim10.dat" delimiter=","/>
+    <Period tablename="travel_skims_11" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="660" intervalEnd="719" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim11.dat" delimiter=","/>
+    <Period tablename="travel_skims_12" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="720" intervalEnd="779" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim12.dat" delimiter=","/>
+    <Period tablename="travel_skims_13" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="780" intervalEnd="839" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim13.dat" delimiter=","/>
+    <Period tablename="travel_skims_14" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="840" intervalEnd="899" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim14.dat" delimiter=","/>
+    <Period tablename="travel_skims_15" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="900" intervalEnd="959" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim15.dat" delimiter=","/>
+    <Period tablename="travel_skims_16" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="960" intervalEnd="1019" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim16.dat" delimiter=","/>
+    <Period tablename="travel_skims_17" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1020" intervalEnd="1079" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim17.dat" delimiter=","/>
+    <Period tablename="travel_skims_18" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1080" intervalEnd="1139" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim18.dat" delimiter=","/>
+    <Period tablename="travel_skims_19" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1140" intervalEnd="1199" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim19.dat" delimiter=","/>
+    <Period tablename="travel_skims_20" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1200" intervalEnd="1259" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim20.dat" delimiter=","/>
+    <Period tablename="travel_skims_21" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1260" intervalEnd="1319" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim21.dat" delimiter=","/>
+    <Period tablename="travel_skims_22" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1320" intervalEnd="1379" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim22.dat" delimiter=","/>
+    <Period tablename="travel_skims_23" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1380" intervalEnd="1439" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/sequential/skim23.dat" delimiter=","/>
+
+  </TravelSkims1>
+
+  <TravelSkims reference_tablename="travel_skims" indb="True">
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="0" intervalEnd="119" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_peak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="120" intervalEnd="299" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="300" intervalEnd="659" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_peak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="660" intervalEnd="899" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="900" intervalEnd="1439" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+  </TravelSkims>
+
+  <Locations reference_tablename="locations" tablename="locations" location_var="locationid" indb="True">
+    <LocationVariable var="retail_employment"/>
+    <LocationVariable var="public_employment"/>
+    <LocationVariable var="office_employment"/>
+    <LocationVariable var="industrial_employment"/>
+    <LocationVariable var="other_employment"/>
+    <LocationVariable var="residential_population"/>
+    <LocationVariable var="total_area"/>
+    <LocationVariable var="multi_family_dwelling"/>
+    <LocationVariable var="single_family_dwelling"/>
+    <LocationVariable var="institutional_population"/>
+  </Locations>
+
+
+  <ModelConfig>
+
+    <Component name="ArrivalTimeInformation" read_from_table="trips_arrival_from_malta_r" key="tripid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_arrival_from_malta_r" key="tripid"/>
+      </DBTables>
+
+      <Model1 name="TripID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripid"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="tripid" coeff="1"/>
+      </Model1>
+
+      <Model name="ArrivalTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="arrivaltime"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="arrivaltime" coeff="1"/>
+      </Model>
+
+
+   </Component>
+
+    <Component name="PersonsArrived" read_from_table="trips_arrival_from_malta_r" write_to_table="persons_arrived_r" key="tripid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_arrival_from_malta_r" key="tripid" order="1"/>
+	<Table table="trips_to_malta_r" key="tripid"/>
+    	<Table table="persons_arrived_r" key="tripid"/>
+
+      </DBTables>
+
+      <AnalysisIntervalFilter table="trips_arrival_from_malta_r" var="arrivaltime"/>
+
+      <Model name="Houseid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="houseid"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="houseid" coeff="1"/>
+      </Model>
+
+      <Model name="Personid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="personid"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="personid" coeff="1"/>
+      </Model>
+
+      <Model name="ActualStartTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="expectedstarttime"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="starttime" coeff="1"/>
+      </Model>
+
+      <Model name="ExpectedArrivalTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="expectedarrivaltime"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="endtime" coeff="1"/>
+      </Model>
+
+      <Model name="ActualArrivalTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="actualarrivaltime"/>
+	<Filter table="runtime" var="houseid" condition="greater than" value="0"/>
+	<Variance value="0"/>
+        <Variable table="trips_arrival_from_malta_r" var="arrivaltime" coeff="1"/>
+      </Model>
+
+
+   </Component>
+
+    <Component name="ExtractTravelEpisodes" read_from_table="schedule_final_r" write_to_table="trips_r" key="houseid,personid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons" key="houseid,personid" order="1"/>
+    	<Table table="trips_r" key="houseid,personid"/>
+    	<Table table="child_dependency_r" key="houseid,personid"/>
+    	<Table table="schedule_final_r" key="houseid,personid"/>
+      </DBTables>
+
+      <SpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_to" origin_var="origin" destination_var="destination">
+	<Start table="schedule_final_r" location_var="locationid" time_var="endtime"/>
+	<End table="schedule_final_r" location_var="locationid" time_var="starttime"/>
+      </SpatialConstraints>
+
+      <Model name="DummyLocationId" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="locationid"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="locationid" coeff="1"/>
+      </Model>
+
+      <Model name="VehicleID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="vehid"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ModeChoice" formulation="Probability Distribution" seed="1">
+        <DependentVariable var="tripmode"/>
+
+        <Alternative id="SOV" value="1">
+          <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+        <Alternative id="HOVD" value="2">
+          <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+        <Alternative id="HOVP" value="3">
+          <Variable table="persons" var="one" coeff="1.0"/>
+        </Alternative>
+      </Model>
+      <Model name="FromZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="fromzone"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_locationid" coeff="1"/>
+      </Model>
+      <Model name="ToZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tozone"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_locationid" coeff="1"/>
+      </Model>
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+      </Model>
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_starttime" coeff="1"/>
+      </Model>
+      <Model name="duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+      </Model>
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_activitytype" coeff="1"/>
+      </Model>
+
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+	<Filter table="runtime" var="st_locationid" condition="not equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Filter table="runtime" var="en_activitytype" condition="greater than equals" value="200"/>
+	<Filter table="runtime" var="duration" condition="greater than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="601"/>
+	<Filter table="runtime" var="en_activitytype" condition="equals" value="600"/>
+	<Filter table="runtime" var="duration" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="600"/>
+	<Filter table="runtime" var="en_activitytype" condition="equals" value="601"/>
+	<Filter1 table="runtime" var="duration" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="200"/>
+	<Filter table="runtime" var="en_activitytype" condition="equals" value="200"/>
+	<Filter table="runtime" var="duration" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="TripID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripid"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="tripind" condition="equals" value="1"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+    </Component>
+
+
+    <Component name="ExtractBackgroundTravelEpisodes" read_from_table="background_trips" write_to_table="trips_r" key="houseid,personid" skip="True" completed="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid"/>
+   	<Table table="background_trips" key="houseid,personid" order="1"/>
+      </DBTables>
+
+      <AnalysisIntervalFilter table="background_trips" var="start_min_indexedat4am"/>
+
+
+      <Model name="VehicleID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="vehid"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="vehid" coeff="1"/>
+      </Model>
+
+      <Model name="ModeChoice" formulation="Regression" type="Linear" seed="1">
+        <DependentVariable var="tripmode"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="mode" coeff="1"/>
+      </Model>
+
+      <Model name="FromZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="fromzone"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="origin_taz" coeff="1"/>
+      </Model>
+
+      <Model name="ToZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tozone"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="destination_taz" coeff="1"/>
+      </Model>
+
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="purpose" coeff="1"/>
+      </Model>
+
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="start_min_indexedat4am" coeff="1"/>
+      </Model>
+
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="arrive_min_indexedat4am" coeff="1"/>
+      </Model>
+
+      <Model name="Duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+        <FilterSet type="and"/>
+	<Filter table="background_trips" var="origin_region" condition="not equals" value="1"/>
+	<Filter table="background_trips" var="destination_region" condition="not equals" value="1"/>
+	<Filter table="background_trips" var="origin_taz" condition="less than" value="2900"/>
+	<Filter table="background_trips" var="destination_taz" condition="less than" value="2900"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+
+    </Component>
+
+    <Component name="ExtractAllTravelEpisodes" read_from_table="trips_r" write_to_table="trips_to_malta_r" key="houseid,personid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid" order="1"/>
+    	<Table table="trips_to_malta_r" key="houseid,personid"/>
+      </DBTables>
+
+      <AnalysisIntervalFilter table="trips_r" var="starttime"/>
+
+      <Model name="TripID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tripid" coeff="1"/>
+      </Model>
+
+
+      <Model name="VehicleID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="vehid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="vehid" coeff="1"/>
+      </Model>
+
+      <Model name="ModeChoice" formulation="Regression" type="Linear" seed="1">
+        <DependentVariable var="tripmode"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tripmode" coeff="1"/>
+      </Model>
+
+      <Model name="FromZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="fromzone"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="1"/>
+      </Model>
+
+      <Model name="ToZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tozone"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tozone" coeff="1"/>
+      </Model>
+
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="trippurpose" coeff="1"/>
+      </Model>
+
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="starttime" coeff="1"/>
+      </Model>
+
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="endtime" coeff="1"/>
+      </Model>
+
+      <Model name="Duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+
+
+    </Component>
+
+
+
+
+  </ModelConfig>
+</ProjectConfig>

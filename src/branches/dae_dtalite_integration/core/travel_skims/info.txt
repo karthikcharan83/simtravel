@@ -1,0 +1,31 @@
+Python script
+It takes offset and number of nodes as arguments.
+Offset - If location id start from 1 then offset is 1.
+         If location id start from 100 then offset is 100. 
+Nodes - Total number of nodes. If set to 0 the program will read the nodes from a .csv file. 
+        The .csv file should have two values in 2 different columns for nodes and edges. 
+        If the nodes are set to some value then the program will use that value. (For example temp_data_copy.csv)
+        
+Pass the file names for graph file and node files
+Create a graph using the method create_graph()
+
+Num_of_locations - Number of random locations the user wants
+arr_len - Length of array (origin, destination, tt)
+loc_len - Length of locations array (arr_len * num_of_locations)
+
+Create 4 numpy arrays, origin, destination, tt(travel times) and locations. tt and locations can set to zero
+Convert the arrays to carrays using numpy_to_carray(origin, arr_len, 0)
+
+Get the travel times using method get_travel_times(org_arr, dest_arr, tt_arr, arr_len). The travel times are stored in tt_arr carray
+
+initialize the locations graph, set it to zero, initialize the temp locations graph and set to zero
+
+Get the location choices using the method get_location_choices(org_arr, dest_arr, tt_arr, loc_arr, arr_len, offset, num_of_locations) 
+The locations are saved in loc_arr
+
+Convert the carray loc_arr and tt_arr to numpy array.
+
+Only after getting locations and travel times delete the carrays origin and destination. 
+When once loc_arr and tt_arr are converted to numpy and not needed delete the carrays.
+
+Delete the travel times graph and location graph in the end.

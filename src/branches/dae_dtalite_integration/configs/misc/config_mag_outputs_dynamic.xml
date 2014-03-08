@@ -1,0 +1,186 @@
+<ProjectConfig>
+  <Project name="mag_zone_dynamic" location="/home/karthik/simtravel/test/mag_zone_dynamic/" seed="10" iteration="3" subsample="40000"/>
+  <DTAConnection value="True"/>
+  <DBConfig dbprotocol="postgres" dbhost="localhost" dbname="mag_zone_fulldata_dynamic" dbusername="postgres" dbpassword="1234"/>
+
+  <TravelSkims reference_tablename="travel_skims" indb="True">
+    <Period tablename="travel_skims_0" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="0" intervalEnd="59" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim0.dat" delimiter=","/>
+    <Period tablename="travel_skims_1" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="60" intervalEnd="119" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim1.dat" delimiter=","/>
+    <Period tablename="travel_skims_2" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="120" intervalEnd="179" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim2.dat" delimiter=","/>
+    <Period tablename="travel_skims_3" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="180" intervalEnd="239" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim3.dat" delimiter=","/>
+    <Period tablename="travel_skims_4" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="240" intervalEnd="299" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim4.dat" delimiter=","/>
+    <Period tablename="travel_skims_5" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="300" intervalEnd="359" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim5.dat" delimiter=","/>
+    <Period tablename="travel_skims_6" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="360" intervalEnd="419" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim6.dat" delimiter=","/>
+    <Period tablename="travel_skims_7" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="420" intervalEnd="479" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim7.dat" delimiter=","/>
+    <Period tablename="travel_skims_8" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="480" intervalEnd="539" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim8.dat" delimiter=","/>
+    <Period tablename="travel_skims_9" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="540" intervalEnd="599" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim9.dat" delimiter=","/>
+    <Period tablename="travel_skims_10" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="600" intervalEnd="659" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim10.dat" delimiter=","/>
+    <Period tablename="travel_skims_11" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="660" intervalEnd="719" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim11.dat" delimiter=","/>
+    <Period tablename="travel_skims_12" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="720" intervalEnd="779" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim12.dat" delimiter=","/>
+    <Period tablename="travel_skims_13" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="780" intervalEnd="839" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim13.dat" delimiter=","/>
+    <Period tablename="travel_skims_14" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="840" intervalEnd="899" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim14.dat" delimiter=","/>
+    <Period tablename="travel_skims_15" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="900" intervalEnd="959" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim15.dat" delimiter=","/>
+    <Period tablename="travel_skims_16" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="960" intervalEnd="1019" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim16.dat" delimiter=","/>
+    <Period tablename="travel_skims_17" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1020" intervalEnd="1079" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim17.dat" delimiter=","/>
+    <Period tablename="travel_skims_18" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1080" intervalEnd="1139" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim18.dat" delimiter=","/>
+    <Period tablename="travel_skims_19" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1140" intervalEnd="1199" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim19.dat" delimiter=","/>
+    <Period tablename="travel_skims_20" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1200" intervalEnd="1259" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim20.dat" delimiter=","/>
+    <Period tablename="travel_skims_21" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1260" intervalEnd="1319" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim21.dat" delimiter=","/>
+    <Period tablename="travel_skims_22" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1320" intervalEnd="1379" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim22.dat" delimiter=","/>
+    <Period tablename="travel_skims_23" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1380" intervalEnd="1439" fileLocation="/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim23.dat" delimiter=","/>
+
+  </TravelSkims>
+
+  <TravelSkims1 reference_tablename="travel_skims" indb="True">
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="0" intervalEnd="119" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_peak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="120" intervalEnd="299" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="300" intervalEnd="659" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_peak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="660" intervalEnd="899" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="900" intervalEnd="1439" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+  </TravelSkims1>
+
+  <Locations reference_tablename="locations" tablename="locations" location_var="locationid" indb="True">
+    <LocationVariable var="retail_employment"/>
+    <LocationVariable var="public_employment"/>
+    <LocationVariable var="office_employment"/>
+    <LocationVariable var="industrial_employment"/>
+    <LocationVariable var="other_employment"/>
+    <LocationVariable var="residential_population"/>
+    <LocationVariable var="total_area"/>
+    <LocationVariable var="multi_family_dwelling"/>
+    <LocationVariable var="single_family_dwelling"/>
+    <LocationVariable var="institutional_population"/>
+  </Locations>
+
+  <ModelConfig>
+
+    <Component name="CalculateGapFunction" read_from_table="persons_arrived_r" write_to_table="gap_function_r" skip="True" completed="True">
+      <DBTables>
+    	<Table table="persons_arrived_r" key="tripid" order="1"/>
+    	<Table table="trips_r" key="tripid"/>
+    	<Table table="gap_function_r" key="tripid"/>
+      </DBTables>
+      <AnalysisInterval start="1440" end="1440" step="1"/>
+
+      <AnalysisIntervalFilter table="persons_arrived_r" var="expectedstarttime"/>
+
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="starttime" coeff="1"/>
+      </Model>
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="persons_arrived_r" var="actualarrivaltime" coeff="1"/>
+      </Model>
+      <Model name="from" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="from"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="1"/>
+      </Model>
+      <Model name="to" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="to"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tozone" coeff="1"/>
+      </Model>
+      <Model name="tt_experienced" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_experienced"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+      </Model>
+      <Model name="tt_expected" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_expected"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+        <Variable table="persons_arrived_r" var="expectedarrivaltime" coeff="1"/>
+      </Model>
+      <DynamicSpatialConstraints table="travel_skims" skim_var="tt" as_var="sp_tt" origin_var="origin" destination_var="destination" after_model="tt_expected" before_model="gap_after">
+	<Start table="runtime" location_var="from"/>
+	<End table="runtime" location_var="tozone"/>
+      </DynamicSpatialConstraints>
+      <Model name="gap_after" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="gap_after"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="sp_tt" coeff="-1"/>
+        <Variable table="runtime" var="tt_experienced" coeff="1"/>
+      </Model>
+      <Model name="gap_before" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="gap_before"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="tt_expected" coeff="-1"/>
+        <Variable table="runtime" var="tt_experienced" coeff="1"/>
+      </Model>
+
+
+      <Model1 name="gapValue" formulation="Column Operations" type="Absolute Sum" seed="1">
+	<DependentVariable var="gap"/>
+        <Variable table="runtime" var="diff_in_tt" coeff="1"/>
+      </Model1>
+
+    </Component>
+
+    <Component name="OD_OutputTable" read_from_table="trips_r" write_to_table="od_r" skip="True" completed="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid" order="1"/>
+    	<Table table="od_r" key="origin,destination"/>
+      </DBTables>
+      <Aggregate>	
+	<Variable table="trips_r" var="fromzone"/>
+	<Variable table="trips_r" var="tozone"/>
+      </Aggregate>
+      <Model name="origin" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="origin"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="1"/>
+      </Model>
+      <Model name="destination" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="destination"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tozone" coeff="1"/>
+      </Model>
+      <Model name="count" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="count"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="frequency" coeff="1"/>
+      </Model>
+
+    </Component>
+
+    <Component1 name="ODT_OutputTable" read_from_table="trips_r" write_to_table="odt_r" skip="True" completed="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid" order="1"/>
+    	<Table table="odt_r" key="origin,destination,time"/>
+      </DBTables>
+      <Aggregate>	
+	<Variable table="trips_r" var="fromzone"/>
+	<Variable table="trips_r" var="tozone"/>
+	<Variable table="trips_r" var="starttime"/>
+      </Aggregate>
+      <Model name="origin" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="origin"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="1"/>
+      </Model>
+      <Model name="destination" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="destination"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tozone" coeff="1"/>
+      </Model>
+      <Model name="time" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="time"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="starttime" coeff="1"/>
+      </Model>
+      <Model name="count" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="count"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="frequency" coeff="1"/>
+      </Model>
+
+    </Component1>
+
+
+  </ModelConfig>
+</ProjectConfig>

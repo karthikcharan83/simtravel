@@ -1,0 +1,1749 @@
+<ProjectConfig>
+  <Project name="mag_zone_dynamic" location="/home/karthik/simtravel/test/mag_zone_dynamic/" seed="10" iteration="3" subsample="40000"/>
+  <DTAConnection value="True"/>
+  <DBConfig dbprotocol="postgres" dbhost="localhost" dbname="mag_zone_dynamic" dbusername="postgres" dbpassword="1234"/>
+  <TravelSkims1 reference_tablename="travel_skims" indb="True">
+    <Period tablename="travel_skims_0" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="0" intervalEnd="59" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim0.dat" delimiter=","/>
+    <Period tablename="travel_skims_1" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="60" intervalEnd="119" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim1.dat" delimiter=","/>
+    <Period tablename="travel_skims_2" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="120" intervalEnd="179" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim2.dat" delimiter=","/>
+    <Period tablename="travel_skims_3" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="180" intervalEnd="239" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim3.dat" delimiter=","/>
+    <Period tablename="travel_skims_4" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="240" intervalEnd="299" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim4.dat" delimiter=","/>
+    <Period tablename="travel_skims_5" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="300" intervalEnd="359" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim5.dat" delimiter=","/>
+    <Period tablename="travel_skims_6" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="360" intervalEnd="419" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim6.dat" delimiter=","/>
+    <Period tablename="travel_skims_7" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="420" intervalEnd="479" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim7.dat" delimiter=","/>
+    <Period tablename="travel_skims_8" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="480" intervalEnd="539" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim8.dat" delimiter=","/>
+    <Period tablename="travel_skims_9" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="540" intervalEnd="599" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim9.dat" delimiter=","/>
+    <Period tablename="travel_skims_10" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="600" intervalEnd="659" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim10.dat" delimiter=","/>
+    <Period tablename="travel_skims_11" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="660" intervalEnd="719" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim11.dat" delimiter=","/>
+    <Period tablename="travel_skims_12" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="720" intervalEnd="779" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim12.dat" delimiter=","/>
+    <Period tablename="travel_skims_13" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="780" intervalEnd="839" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim13.dat" delimiter=","/>
+    <Period tablename="travel_skims_14" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="840" intervalEnd="899" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim14.dat" delimiter=","/>
+    <Period tablename="travel_skims_15" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="900" intervalEnd="959" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim15.dat" delimiter=","/>
+    <Period tablename="travel_skims_16" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="960" intervalEnd="1019" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim16.dat" delimiter=","/>
+    <Period tablename="travel_skims_17" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1020" intervalEnd="1079" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim17.dat" delimiter=","/>
+    <Period tablename="travel_skims_18" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1080" intervalEnd="1139" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim18.dat" delimiter=","/>
+    <Period tablename="travel_skims_19" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1140" intervalEnd="1199" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim19.dat" delimiter=","/>
+    <Period tablename="travel_skims_20" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1200" intervalEnd="1259" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim20.dat" delimiter=","/>
+    <Period tablename="travel_skims_21" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1260" intervalEnd="1319" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim21.dat" delimiter=","/>
+    <Period tablename="travel_skims_22" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1320" intervalEnd="1379" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim22.dat" delimiter=","/>
+    <Period tablename="travel_skims_23" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="1380" intervalEnd="1439" fileLocation="/home/karthik/simtravel/test/mag_zone/skimOutput/dynamic/skim23.dat" delimiter=","/>
+
+  </TravelSkims1>
+  <TravelSkims reference_tablename="travel_skims" indb="True">
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="0" intervalEnd="119" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_offpeak.dat" delimiter=","/>
+    <Period tablename="travel_skims_peak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="120" intervalEnd="299" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="300" intervalEnd="659" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_offpeak.dat" delimiter=","/>
+    <Period tablename="travel_skims_peak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="660" intervalEnd="899" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_peak.dat" delimiter=","/>
+    <Period tablename="travel_skims_offpeak" origin_var="origin" destination_var="destination" skim_var="tt" intervalStart="900" intervalEnd="1439" fileLocation="/home/karthik/simtravel/test/skimsInput/travel_skims_offpeak.dat" delimiter=","/>
+  </TravelSkims>
+
+  <Locations reference_tablename="locations" tablename="locations" location_var="locationid" indb="True">
+    <LocationVariable var="retail_employment"/>
+    <LocationVariable var="public_employment"/>
+    <LocationVariable var="office_employment"/>
+    <LocationVariable var="industrial_employment"/>
+    <LocationVariable var="other_employment"/>
+    <LocationVariable var="residential_population"/>
+    <LocationVariable var="total_area"/>
+    <LocationVariable var="multi_family_dwelling"/>
+    <LocationVariable var="single_family_dwelling"/>
+    <LocationVariable var="institutional_population"/>
+  </Locations>
+
+
+  <ModelConfig>
+
+    <Component name="ArrivalTimeInformation" read_from_table="trips_arrival_from_malta_r" key="tripid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_arrival_from_malta_r" key="tripid"/>
+      </DBTables>
+
+      <Model name="ArrivalTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="arrivaltime"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="arrivaltime" coeff="1"/>
+      </Model>
+
+
+   </Component>
+
+    <Component name="PersonsArrived" read_from_table="trips_arrival_from_malta_r" write_to_table="persons_arrived_r" key="tripid" skip="False" completed="True">
+      <DBTables>
+	<Table table="trips_to_malta_r" key="tripid" order="1"/>
+    	<Table table="trips_arrival_from_malta_r" key="tripid"/>
+    	<Table table="persons_arrived_r" key="tripid"/>
+
+
+      </DBTables>
+
+      <DeleteBasedOn table="trips_to_malta_r" var="tripid"/>
+      <AnalysisIntervalFilter table="trips_arrival_from_malta_r" var="arrivaltime"/>
+
+      <Model name="Houseid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="houseid"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="houseid" coeff="1"/>
+      </Model>
+
+      <Model name="Personid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="personid"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="personid" coeff="1"/>
+      </Model>
+
+      <Model name="ActualStartTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="expectedstarttime"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="starttime" coeff="1"/>
+      </Model>
+
+      <Model name="ExpectedArrivalTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="expectedarrivaltime"/>
+	<Variance value="0"/>
+        <Variable table="trips_to_malta_r" var="endtime" coeff="1"/>
+      </Model>
+
+      <Model name="ActualArrivalTime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="actualarrivaltime"/>
+	<Filter table="runtime" var="houseid" condition="greater than" value="0"/>
+	<Variance value="0"/>
+        <Variable table="trips_arrival_from_malta_r" var="arrivaltime" coeff="1"/>
+      </Model>
+
+
+   </Component>
+
+
+    <Component name="ArrivalTimeProcessing" read_from_table="schedule_final_r" key="houseid,personid" location="True" delete_and_append="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="schedule_final_r" key="houseid,personid" order="1"/>
+    	<Table table="persons_arrived_r" key="houseid,personid"/>
+    	<Table table="child_dependency_r" key="houseid,personid"/>
+    	<Table table="daily_school_status_r" key="houseid,personid"/>
+    	<Table table="daily_work_status_r" key="houseid,personid"/>
+      </DBTables>
+
+      <AnalysisIntervalFilter table="persons_arrived_r" var="actualarrivaltime"/>
+	
+      <DeleteBasedOn table="schedule_final_r" var="scheduleid"/>
+
+
+      <Model name="ArrivalInformationProcessing" formulation="Arrival Time Schedule Adjustment" seed="1">
+	<DependentVariable var="childdependencyallocation"/>
+
+	<ActivityAttributes>
+	  <HouseholdIdName table="schedule_final_r" var="houseid"/>
+	  <PersonIdName table="schedule_final_r" var="personid"/>
+	  <ScheduleIdName table="schedule_final_r" var="scheduleid"/>
+	  <ActivityTypeName table="schedule_final_r" var="activitytype"/>
+	  <LocationIdName table="schedule_final_r" var="locationid"/>
+	  <StartTimeName table="schedule_final_r" var="starttime"/>
+	  <EndTimeName table="schedule_final_r" var="endtime"/>
+	  <DurationName table="schedule_final_r" var="duration"/>
+	  <DependentPersonName table="schedule_final_r" var="dependentpersonid"/>
+	</ActivityAttributes>
+
+	<DailyStatus1>
+	  <DailySchoolStatus table="daily_school_status_r" var="schdailystatus"/>
+	  <DailyWorkStatus table="daily_work_status_r" var="wrkdailystatus"/>
+	</DailyStatus1>
+	
+	<Dependency1>
+	  <ChildDependency table="child_dependency_r" var="dependency"/>
+	</Dependency1>
+	
+	<ArrivalTime>
+	  <Actual table="persons_arrived_r" var="actualarrivaltime"/>
+	  <Expected table="persons_arrived_r" var="expectedarrivaltime"/>
+	</ArrivalTime>
+
+
+      </Model>
+
+    </Component>
+
+
+
+
+
+
+    <Component name="DynamicNonMandatoryActivities" read_from_table="schedule_final_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons" key="houseid,personid" order="1"/>
+    	<Table table="households" key="houseid" order="2"/>
+    	<Table table="households_vehicles_count_r" key="houseid"/>
+    	<Table table="workers_r" key="houseid,personid"/>		
+    	<Table table="schedule_final_r" key="houseid,personid"/>
+    	<Table table="child_dependency_r" key="houseid,personid"/>
+	<Table1 table="persons_arrived_r" key="houseid,personid" count_key="actualarrivaltime"/>
+	<Table table="trips_to_malta_r" key="houseid,personid"/>
+      </DBTables>
+
+      <SpatialConstraints table="travel_skims" sample_var="destination" skim_var="tt" as_var="tt_to" origin_var="origin" destination_var="destination" count="5" seed="1" threshold="120">
+        <ActivityFilter table="locations" var="retail_employment_ind" condition="equals" value="1"/>
+	<Start table="schedule_final_r" location_var="locationid" time_var="endtime"/>
+	<End table="schedule_final_r" location_var="locationid" time_var="starttime"/>
+
+	<ExtractLocationInformation table="locations" location_var="locationid">
+	  <LocationVariable var="retail_employment"/>
+	  <LocationVariable var="public_employment"/>
+	  <LocationVariable var="residential_population"/>
+	  <LocationVariable var="total_area"/>
+	  <LocationVariable var="multi_family_dwelling"/>
+	  <LocationVariable var="single_family_dwelling"/>
+	  <LocationVariable var="institutional_population"/>
+
+          <FilterSet type="or"/>
+	  <Filter1 table="runtime" var="locationid" condition="greater than" value="0"/>
+	  <Filter1 table="runtime" var="locationid" condition="less than equals" value="1995"/>
+	  <Filter table="runtime" var="retail_employment" condition="greater than" value="0"/>
+	  <Filter table="runtime" var="public_employment" condition="greater than" value="0"/>
+	  <Filter table="runtime" var="office_employment" condition="greater than" value="0"/>
+	  <Filter table="runtime" var="industrial_employment" condition="greater than" value="0"/>
+	  <Filter table="runtime" var="other_employment" condition="greater than" value="0"/>
+
+	</ExtractLocationInformation>
+      </SpatialConstraints>
+
+      <HistoryInformation table="schedule_final_r" history_var="duration">
+	<HistoryVar var="ih_history">
+	  <Aggregate condition_var="activitytype" value="100"/>
+	  <Aggregate condition_var="activitytype" value="101"/>
+	</HistoryVar>
+	<HistoryVar var="maintenance_history">
+	  <Aggregate condition_var="activitytype" value="411"/>
+	  <Aggregate condition_var="activitytype" value="412"/>
+	  <Aggregate condition_var="activitytype" value="415"/>
+	  <Aggregate condition_var="activitytype" value="416"/>
+	</HistoryVar>
+	<HistoryVar var="fixed_history">
+	  <Aggregate condition_var="activitytype" value="201"/>
+	  <Aggregate condition_var="activitytype" value="300"/>
+	</HistoryVar>
+	<HistoryVar var="discretionary_history">
+	  <Aggregate condition_var="activitytype" value="513"/>
+	  <Aggregate condition_var="activitytype" value="514"/>
+	</HistoryVar>
+      </HistoryInformation>
+
+      <ConsistencyChecks1 name="DynamicNonMandatoryChecks">
+	<Filter table="runtime" var="locationid" condition="greater than" value="0"/>
+	<Filter table="runtime" var="prismduration" condition="greater than" value="30"/>
+	<Filter table="runtime" var="endtime" condition="less than" valuetable="runtime" valuevar="en_starttime" percentage_threshold="" absolute_threshold=""/>
+	<Filter table="runtime" var="activitytravelend" condition="less than" valuetable="runtime" valuevar="en_starttime"/>
+      </ConsistencyChecks1>
+
+      <Model name="TODInd6to9" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="int6t9"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_endtime" condition="greater than equals" value="120"/>
+	<Filter table="runtime" var="st_endtime" condition="less than equals" value="299"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="TODInd9to12" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="int9t12"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_endtime" condition="greater than equals" value="300"/>
+	<Filter table="runtime" var="st_endtime" condition="less than equals" value="479"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="TODInd12to3" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="int12t3"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_endtime" condition="greater than equals" value="480"/>
+	<Filter table="runtime" var="st_endtime" condition="less than equals" value="659"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="TODInd3to5" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="int3t5"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_endtime" condition="greater than equals" value="660"/>
+	<Filter table="runtime" var="st_endtime" condition="less than equals" value="779"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="TODInd5to7" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="int5t7"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_endtime" condition="greater than equals" value="780"/>
+	<Filter table="runtime" var="st_endtime" condition="less than equals" value="899"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="TODIndAft7" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="intaft7"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_endtime" condition="greater than equals" value="900"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="DynamicNonMandatoryActivityTypeAdltWorkerNoSchool" formulation="Multinomial Logit" type="Alternative Specific" seed="1">
+        <DependentVariable var="activitytype"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="1"/>
+	<Filter table="persons" var="schstat" condition="equals" value="0"/>
+        <Alternative id="inhome" value="101">
+	  <Variable table="persons" var="one" coeff="3.1663"/>
+	  <Variable table="runtime" var="ih_history" coeff="-.0017"/>
+	  <Variable table="households" var="noc" coeff=".1506"/>
+	  <Variable table="runtime" var="int6t9" coeff="-.4797"/>
+	  <Variable table="runtime" var="int5t7" coeff=".5776"/>
+	  <Variable table="runtime" var="intaft7" coeff="1.5571"/>
+        </Alternative>
+        <Alternative id="perbus" value="411">
+	  <Variable table="persons" var="one" coeff=".2029"/>
+	  <Variable table="households" var="inclt35k" coeff="-.324"/>
+	  <Variable table="runtime" var="int6t9" coeff=".3787"/>
+	  <Variable table="runtime" var="int9t12" coeff=".2524"/>
+        </Alternative>
+        <Alternative id="shop" value="412">
+	  <Variable table="persons" var="one" coeff="1.7604"/>
+	  <Variable table="households" var="noc" coeff=".0863"/>
+	  <Variable table="households" var="nwrkcnt" coeff="-.0905"/>
+	  <Variable table="runtime" var="int12t3" coeff=".2345"/>
+	  <Variable table="runtime" var="int5t7" coeff="-.3137"/>
+        </Alternative>
+        <Alternative id="meal" value="415">
+	  <Variable table="persons" var="one" coeff=".7661"/>
+	  <Variable table="runtime" var="maintenance_history" coeff="-.0032"/>
+	  <Variable table="persons" var="female" coeff="-.2213"/>
+	  <Variable table="persons" var="agge65" coeff="-.3489"/>
+	  <Variable table="runtime" var="int12t3" coeff=".6147"/>
+	  <Variable table="runtime" var="int5t7" coeff=".4174"/>
+	  <Variable table="runtime" var="intaft7" coeff=".5097"/>
+        </Alternative>
+        <Alternative id="srvpax" value="416">
+	  <Variable table="persons" var="one" coeff=".1988"/>
+	  <Variable table="households" var="noc" coeff=".5872"/>
+	  <Variable table="persons" var="female" coeff=".2895"/>
+	  <Variable table="persons" var="agge65" coeff="-.542"/>
+	  <Variable table="runtime" var="int6t9" coeff="1.1919"/>
+	  <Variable table="runtime" var="int9t12" coeff="-.8352"/>
+	  <Variable table="runtime" var="int5t7" coeff="-.2418"/>
+        </Alternative>
+
+        <Alternative id="social" value="513">
+	  <Variable table="persons" var="one" coeff="-.0434"/>
+	  <Variable table="runtime" var="discretionary_history" coeff=".0024"/>
+	  <Variable table="households" var="urb" coeff="-.2999"/>
+	  <Variable table="runtime" var="int5t7" coeff=".7095"/>
+	  <Variable table="runtime" var="intaft7" coeff="1.0796"/>
+        </Alternative>
+        <Alternative id="sprec" value="514">
+	  <Variable table="persons" var="one" coeff=".6447"/>
+	  <Variable table="households" var="rur" coeff="-.209"/>
+	  <Variable table="runtime" var="int6t9" coeff=".6509"/>
+	  <Variable table="runtime" var="int3t5" coeff="-.5026"/>
+	  <Variable table="runtime" var="intaft7" coeff=".6915"/>
+        </Alternative>
+        <Alternative id="other" value="599">
+	  <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+      </Model>
+
+      <Model name="DynamicNonMandatoryActivityTypeAdltWorkerWITHSchool" formulation="Multinomial Logit" type="Alternative Specific" seed="1">
+        <DependentVariable var="activitytype"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="1"/>
+	<Filter table="persons" var="schstat" condition="equals" value="1"/>
+        <Alternative id="inhome" value="101">
+	  <Variable table="persons" var="one" coeff="3.1663"/>
+	  <Variable table="runtime" var="ih_history" coeff="-.0017"/>
+	  <Variable table="households" var="noc" coeff=".1506"/>
+	  <Variable table="runtime" var="int6t9" coeff="-.4797"/>
+	  <Variable table="runtime" var="int5t7" coeff=".5776"/>
+	  <Variable table="runtime" var="intaft7" coeff="1.5571"/>
+        </Alternative>
+        <Alternative id="school" value="301">
+	  <Variable table="persons" var="one" coeff="-3.708"/>
+	  <Variable table="runtime" var="fixed_history" coeff="-.003"/>
+	  <Variable table="households" var="numwrkr" coeff="1.2541"/>
+	  <Variable table="runtime" var="int12t3" coeff="-.7949"/>
+	  <Variable table="runtime" var="int3t5" coeff="-1.2051"/>
+        </Alternative>
+        <Alternative id="perbus" value="411">
+	  <Variable table="persons" var="one" coeff=".2029"/>
+	  <Variable table="households" var="inclt35k" coeff="-.324"/>
+	  <Variable table="runtime" var="int6t9" coeff=".3787"/>
+	  <Variable table="runtime" var="int9t12" coeff=".2524"/>
+        </Alternative>
+        <Alternative id="shop" value="412">
+	  <Variable table="persons" var="one" coeff="1.7604"/>
+	  <Variable table="households" var="noc" coeff=".0863"/>
+	  <Variable table="households" var="nwrkcnt" coeff="-.0905"/>
+	  <Variable table="runtime" var="int12t3" coeff=".2345"/>
+	  <Variable table="runtime" var="int5t7" coeff="-.3137"/>
+        </Alternative>
+        <Alternative id="meal" value="415">
+	  <Variable table="persons" var="one" coeff=".7661"/>
+	  <Variable table="runtime" var="maintenance_history" coeff="-.0032"/>
+	  <Variable table="persons" var="female" coeff="-.2213"/>
+	  <Variable table="persons" var="agge65" coeff="-.3489"/>
+	  <Variable table="runtime" var="int12t3" coeff=".6147"/>
+	  <Variable table="runtime" var="int5t7" coeff=".4174"/>
+	  <Variable table="runtime" var="intaft7" coeff=".5097"/>
+        </Alternative>
+        <Alternative id="srvpax" value="416">
+	  <Variable table="persons" var="one" coeff=".1988"/>
+	  <Variable table="households" var="noc" coeff=".5872"/>
+	  <Variable table="persons" var="female" coeff=".2895"/>
+	  <Variable table="persons" var="agge65" coeff="-.542"/>
+	  <Variable table="runtime" var="int6t9" coeff="1.1919"/>
+	  <Variable table="runtime" var="int9t12" coeff="-.8352"/>
+	  <Variable table="runtime" var="int5t7" coeff="-.2418"/>
+        </Alternative>
+
+        <Alternative id="social" value="513">
+	  <Variable table="persons" var="one" coeff="-.0434"/>
+	  <Variable table="runtime" var="discretionary_history" coeff=".0024"/>
+	  <Variable table="households" var="urb" coeff="-.2999"/>
+	  <Variable table="runtime" var="int5t7" coeff=".7095"/>
+	  <Variable table="runtime" var="intaft7" coeff="1.0796"/>
+        </Alternative>
+        <Alternative id="sprec" value="514">
+	  <Variable table="persons" var="one" coeff=".6447"/>
+	  <Variable table="households" var="rur" coeff="-.209"/>
+	  <Variable table="runtime" var="int6t9" coeff=".6509"/>
+	  <Variable table="runtime" var="int3t5" coeff="-.5026"/>
+	  <Variable table="runtime" var="intaft7" coeff=".6915"/>
+        </Alternative>
+        <Alternative id="other" value="599">
+	  <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+      </Model>
+
+
+      <Model name="DynamicNonMandatoryActivityTypeAdltNonWorkersWithNoSchool" formulation="Multinomial Logit" type="Alternative Specific" seed="1">
+        <DependentVariable var="activitytype"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="0"/>
+	<Filter table="persons" var="schstat" condition="equals" value="0"/>
+        <Alternative id="inhome" value="101">
+	  <Variable table="persons" var="one" coeff="2.538"/>
+	  <Variable table="runtime" var="ih_history" coeff="-.0025"/>
+	  <Variable table="households" var="noc" coeff=".3083"/>
+	  <Variable table="runtime" var="int12t3" coeff=".8588"/>
+	  <Variable table="runtime" var="int3t5" coeff="1.4922"/>
+	  <Variable table="runtime" var="int5t7" coeff="2.7743"/>
+	  <Variable table="runtime" var="intaft7" coeff="2.9049"/>
+        </Alternative>
+        <Alternative id="perbus" value="411">
+	  <Variable table="persons" var="one" coeff="-.4086"/>
+	  <Variable table="households" var="vdratio" coeff=".1855"/>
+	  <Variable table="persons" var="coled" coeff=".1656"/>
+	  <Variable table="households" var="urb" coeff="-.2161"/>
+	  <Variable table="runtime" var="int5t7" coeff="1.4751"/>
+        </Alternative>
+        <Alternative id="shop" value="412">
+	  <Variable table="persons" var="one" coeff="1.3181"/>
+	  <Variable table="households" var="noc" coeff=".1722"/>
+	  <Variable table="households" var="inclt35k" coeff=".204"/>
+	  <Variable table="households" var="urb" coeff="-.234"/>
+	  <Variable table="runtime" var="int12t3" coeff=".3661"/>
+	  <Variable table="runtime" var="int3t5" coeff=".3158"/>
+	  <Variable table="runtime" var="int5t7" coeff=".9481"/>
+        </Alternative>
+        <Alternative id="meal" value="415">
+	  <Variable table="persons" var="one" coeff="-.1298"/>
+	  <Variable table="runtime" var="maintenance_history" coeff="-.0014"/>
+	  <Variable table="persons" var="hispan" coeff="-.2772"/>
+	  <Variable table="runtime" var="int12t3" coeff=".2323"/>
+	  <Variable table="runtime" var="int5t7" coeff="2.3095"/>
+	  <Variable table="runtime" var="intaft7" coeff=".9265"/>
+        </Alternative>
+        <Alternative id="srvpax" value="416">
+	  <Variable table="persons" var="one" coeff=".3199"/>
+	  <Variable table="runtime" var="maintenance_history" coeff=".0016"/>
+	  <Variable table="households" var="noc" coeff=".9809"/>
+	  <Variable table="households" var="nwrkcnt" coeff="-.1988"/>
+	  <Variable table="runtime" var="int6t9" coeff=".3878"/>
+	  <Variable table="runtime" var="int9t12" coeff="-1.2044"/>
+	  <Variable table="runtime" var="int12t3" coeff="-.3227"/>
+	  <Variable table="runtime" var="int5t7" coeff=".6483"/>
+        </Alternative>
+        <Alternative id="social" value="513">
+	  <Variable table="persons" var="one" coeff="-.6658"/>
+	  <Variable table="runtime" var="discretionary_history" coeff=".002"/>
+	  <Variable table="persons" var="female" coeff=".3114"/>
+	  <Variable table="runtime" var="int5t7" coeff="1.9399"/>
+	  <Variable table="runtime" var="intaft7" coeff="1.0369"/>
+        </Alternative>
+        <Alternative id="sprec" value="514">
+	  <Variable table="persons" var="one" coeff="1.9285"/>
+	  <Variable table="runtime" var="discretionary_history" coeff=".0013"/>
+	  <Variable table="households" var="urb" coeff="-.2519"/>
+	  <Variable table="runtime" var="int6t9" coeff="-.6733"/>
+	  <Variable table="runtime" var="int9t12" coeff="-2.0817"/>
+	  <Variable table="runtime" var="int12t3" coeff="-2.1449"/>
+	  <Variable table="runtime" var="int3t5" coeff="-1.7553"/>
+	  <Variable table="runtime" var="intaft7" coeff="-.6604"/>
+        </Alternative>
+        <Alternative id="other" value="599">
+	  <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+      </Model>
+
+
+      <Model name="DynamicNonMandatoryActivityTypeAdltNonWorkersWithSchool" formulation="Multinomial Logit" type="Alternative Specific" seed="1">
+        <DependentVariable var="activitytype"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="0"/>
+	<Filter table="persons" var="schstat" condition="equals" value="1"/>
+
+        <Alternative id="inhome" value="101">
+	  <Variable table="persons" var="one" coeff="2.538"/>
+	  <Variable table="runtime" var="ih_history" coeff="-.0025"/>
+	  <Variable table="households" var="noc" coeff=".3083"/>
+	  <Variable table="runtime" var="int12t3" coeff=".8588"/>
+	  <Variable table="runtime" var="int3t5" coeff="1.4922"/>
+	  <Variable table="runtime" var="int5t7" coeff="2.7743"/>
+	  <Variable table="runtime" var="intaft7" coeff="2.9049"/>
+        </Alternative>
+        <Alternative id="school" value="301">
+	  <Variable table="persons" var="one" coeff="-3.2169"/>
+	  <Variable table="households" var="nwrkcnt" coeff=".5893"/>
+	  <Variable table="persons" var="coled" coeff="-.5183"/>
+	  <Variable table="households" var="incge35k" coeff=".4519"/>
+	  <Variable table="runtime" var="int12t3" coeff="-.9063"/>
+	  <Variable table="runtime" var="int3t5" coeff="-1.1233"/>
+        </Alternative>
+        <Alternative id="perbus" value="411">
+	  <Variable table="persons" var="one" coeff="-.4086"/>
+	  <Variable table="households" var="vdratio" coeff=".1855"/>
+	  <Variable table="persons" var="coled" coeff=".1656"/>
+	  <Variable table="households" var="urb" coeff="-.2161"/>
+	  <Variable table="runtime" var="int5t7" coeff="1.4751"/>
+        </Alternative>
+        <Alternative id="shop" value="412">
+	  <Variable table="persons" var="one" coeff="1.3181"/>
+	  <Variable table="households" var="noc" coeff=".1722"/>
+	  <Variable table="households" var="inclt35k" coeff=".204"/>
+	  <Variable table="households" var="urb" coeff="-.234"/>
+	  <Variable table="runtime" var="int12t3" coeff=".3661"/>
+	  <Variable table="runtime" var="int3t5" coeff=".3158"/>
+	  <Variable table="runtime" var="int5t7" coeff=".9481"/>
+        </Alternative>
+        <Alternative id="meal" value="415">
+	  <Variable table="persons" var="one" coeff="-.1298"/>
+	  <Variable table="runtime" var="maintenance_history" coeff="-.0014"/>
+	  <Variable table="persons" var="hispan" coeff="-.2772"/>
+	  <Variable table="runtime" var="int12t3" coeff=".2323"/>
+	  <Variable table="runtime" var="int5t7" coeff="2.3095"/>
+	  <Variable table="runtime" var="intaft7" coeff=".9265"/>
+        </Alternative>
+        <Alternative id="srvpax" value="416">
+	  <Variable table="persons" var="one" coeff=".3199"/>
+	  <Variable table="runtime" var="maintenance_history" coeff=".0016"/>
+	  <Variable table="households" var="noc" coeff=".9809"/>
+	  <Variable table="households" var="nwrkcnt" coeff="-.1988"/>
+	  <Variable table="runtime" var="int6t9" coeff=".3878"/>
+	  <Variable table="runtime" var="int9t12" coeff="-1.2044"/>
+	  <Variable table="runtime" var="int12t3" coeff="-.3227"/>
+	  <Variable table="runtime" var="int5t7" coeff=".6483"/>
+        </Alternative>
+
+        <Alternative id="social" value="513">
+	  <Variable table="persons" var="one" coeff="-.6658"/>
+	  <Variable table="runtime" var="discretionary_history" coeff=".002"/>
+	  <Variable table="persons" var="female" coeff=".3114"/>
+	  <Variable table="runtime" var="int5t7" coeff="1.9399"/>
+	  <Variable table="runtime" var="intaft7" coeff="1.0369"/>
+        </Alternative>
+        <Alternative id="sprec" value="514">
+	  <Variable table="persons" var="one" coeff="1.9285"/>
+	  <Variable table="runtime" var="discretionary_history" coeff=".0013"/>
+	  <Variable table="households" var="urb" coeff="-.2519"/>
+	  <Variable table="runtime" var="int6t9" coeff="-.6733"/>
+	  <Variable table="runtime" var="int9t12" coeff="-2.0817"/>
+	  <Variable table="runtime" var="int12t3" coeff="-2.1449"/>
+	  <Variable table="runtime" var="int3t5" coeff="-1.7553"/>
+	  <Variable table="runtime" var="intaft7" coeff="-.6604"/>
+        </Alternative>
+        <Alternative id="other" value="599">
+	  <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+      </Model>
+
+
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_300"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="300"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_101"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="101"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_411"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="411"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_412"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="412"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_415"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="415"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_513"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="513"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ActivityTypeInd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype_514"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="equals" value="514"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+
+      <Model name="DynamicNonMandatoryActDuration" formulation="Regression" type="Linear" vertex="start" lower_threshold="5" upper_threshold="240" seed="1">
+	<DependentVariable var="duration"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="1"/>
+	<Variance value="7596.29"/>
+        <Variable table="persons" var="one" coeff="50.89"/>
+        <Variable table="runtime" var="activitytype_101" coeff="72.38"/>
+        <Variable table="runtime" var="activitytype_300" coeff="94.07"/>
+        <Variable table="runtime" var="activitytype_411" coeff="7.19"/>
+        <Variable table="runtime" var="activitytype_412" coeff="-18.95"/>
+        <Variable table="households" var="noc" coeff="-8.03"/>
+        <Variable table="persons" var="fulltim" coeff="-7.20"/>
+        <Variable table="households" var="nwrkcnt" coeff="4.05"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_101" coeff="12.72" interaction="True"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_513" coeff="21.82" interaction="True"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_415" coeff="-11.42" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_513" coeff="49.44" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_514" coeff="14.19" interaction="True"/>
+        <Variable table="runtime,runtime" var="int5t7,activitytype_101" coeff="-55.45" interaction="True"/>
+        <Variable table="runtime,runtime" var="int5t7,activitytype_513" coeff="16.66" interaction="True"/>
+        <Variable table="runtime,runtime" var="int5t7,activitytype_514" coeff="17.29" interaction="True"/>
+        <Variable table="runtime" var="int6t9" coeff="16.81"/>
+        <Variable table="runtime" var="intaft7" coeff="-18.41"/>
+      </Model>
+
+      <Model1 name="DynamicNonMandatoryActDuration" formulation="Regression" type="Log Linear" seed="1">
+	<DependentVariable var="duration"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="1"/>
+	<Variance value="2.28"/>
+        <Variable table="persons" var="one" coeff="2.597"/>
+        <Variable table="runtime" var="activitytype_101" coeff="1.748"/>
+        <Variable table="runtime" var="activitytype_411" coeff="2.0335"/>
+        <Variable table="runtime" var="activitytype_412" coeff=".4881"/>
+        <Variable table="runtime" var="activitytype_513" coeff=".0825"/>
+        <Variable table="runtime" var="activitytype_415" coeff=".772"/>
+        <Variable table="households" var="noc" coeff="-.1382"/>
+        <Variable table="persons" var="fulltim" coeff="-.1451"/>
+        <Variable table="households" var="nwrkcnt" coeff=".074"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_101" coeff=".0773" interaction="True"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_412" coeff=".1116" interaction="True"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_513" coeff=".4568" interaction="True"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_415" coeff="-.2596" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_412" coeff=".0719" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_513" coeff="1.3208" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_514" coeff=".3126" interaction="True"/>
+        <Variable table="runtime,runtime" var="int5t7,activitytype_101" coeff="-.624" interaction="True"/>
+        <Variable table="runtime,runtime" var="int5t7,activitytype_513" coeff=".6305" interaction="True"/>
+        <Variable table="runtime,runtime" var="int5t7,activitytype_514" coeff=".3954" interaction="True"/>
+        <Variable table="runtime" var="int6t9" coeff="-.4385"/>
+        <Variable table="runtime" var="intaft7" coeff="-.4723"/>
+      </Model1>
+
+
+
+
+      <Model name="DynamicNonMandatoryActDuration" formulation="Regression" type="Linear" vertex="start" lower_threshold="5" upper_threshold="285" seed="1">
+	<DependentVariable var="duration"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="0"/>
+	<Variance value="7342.78"/>
+        <Variable table="persons" var="one" coeff="55.10"/>
+        <Variable table="runtime" var="activitytype_101" coeff="115.79"/>
+        <Variable table="runtime" var="activitytype_300" coeff="112.88"/>
+        <Variable table="runtime" var="activitytype_411" coeff="20.70"/>
+        <Variable table="runtime" var="activitytype_513" coeff="74.09"/>
+        <Variable table="runtime" var="activitytype_514" coeff="38.22"/>
+        <Variable table="runtime" var="activitytype_415" coeff="17.19"/>
+        <Variable table="persons" var="coled" coeff="-6.52"/>
+        <Variable table="households" var="noc" coeff="-1.11"/>
+        <Variable table="persons" var="white" coeff="-6.12"/>
+        <Variable table="households,runtime" var="urb,activitytype_412" coeff="-5.53" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_513" coeff="12.89" interaction="True"/>
+        <Variable table="runtime,runtime" var="int3t5,activitytype_101" coeff="-43.47" interaction="True"/>
+        <Variable table="runtime" var="int6t9" coeff="18.70"/>
+        <Variable table="runtime" var="int12t3" coeff="-13.66"/>
+        <Variable table="runtime" var="int3t5" coeff="-19.33"/>
+        <Variable table="runtime" var="int5t7" coeff="-23.99"/>
+        <Variable table="runtime" var="intaft7" coeff="-33.45"/>
+      </Model>
+
+
+
+      <Model1 name="DynamicNonMandatoryActDuration" formulation="Regression" type="Log Linear" seed="1">
+	<DependentVariable var="duration"/>
+        <FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="0"/>
+	<Variance value="2.19"/>
+        <Variable table="persons" var="one" coeff="3.0779"/>
+        <Variable table="runtime" var="activitytype_101" coeff="1.8414"/>
+        <Variable table="runtime" var="activitytype_411" coeff="1.9123"/>
+        <Variable table="runtime" var="activitytype_412" coeff=".4297"/>
+        <Variable table="runtime" var="activitytype_513" coeff="1.3854"/>
+        <Variable table="runtime" var="activitytype_514" coeff=".2959"/>
+        <Variable table="runtime" var="activitytype_415" coeff=".9144"/>
+        <Variable table="persons" var="driver" coeff="-.1831"/>
+        <Variable table="persons" var="coled" coeff="-.0639"/>
+        <Variable table="households" var="noc" coeff="-.0662"/>
+        <Variable table="persons" var="white" coeff="-.0775"/>
+        <Variable table="households,runtime" var="inclt35k,activitytype_415" coeff="-.1396" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_412" coeff=".1189" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_513" coeff=".1879" interaction="True"/>
+        <Variable table="households,runtime" var="urb,activitytype_514" coeff=".1763" interaction="True"/>
+        <Variable table="runtime,runtime" var="int3t5,activitytype_101" coeff="-.121" interaction="True"/>
+        <Variable table="runtime" var="int6t9" coeff="-.1289"/>
+        <Variable table="runtime" var="int12t3" coeff="-.1148"/>
+        <Variable table="runtime" var="int3t5" coeff="-.3594"/>
+        <Variable table="runtime" var="int5t7" coeff="-.2534"/>
+        <Variable table="runtime" var="intaft7" coeff="-.6132"/>
+      </Model1>
+
+
+      <Model name="DynamicLocationIDIHActs" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="locationid"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="activitytype" condition="less than" value="200"/>
+	<Filter table="runtime" var="activitytype" condition="greater than" value="100"/>
+	<Variance value="0"/>
+        <Variable table="households" var="htaz" coeff="1"/>
+      </Model>
+
+      <Model name="DynamicLocationIDIHActs" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="locationid"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="activitytype" condition="less than" value="400"/>
+	<Filter table="runtime" var="activitytype" condition="greater than equals" value="300"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="schtaz" coeff="1"/>
+      </Model>
+
+
+      <Model name="DynamicLocationIDOHActs" formulation="Multinomial Logit" seed="1">
+        <AlternativeSet count="5"/>
+	<DependentVariable var="locationid"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="greater than" value="400"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="1"/>
+        <Variable table="persons,travel_skims" var="one,tt_to" coeff="-.1753" interaction="True" repeat="tt_to"/>
+        <Variable table="persons,locations" var="one,retail_employment" coeff=".0006" interaction="True" repeat="retail_employment"/>
+        <Variable table="persons,locations" var="one,public_employment" coeff=".0003" interaction="True" repeat="public_employment"/>
+        <Variable table="persons,locations" var="one,institutional_population" coeff=".0014" interaction="True" repeat="institutional_population"/>
+        <Variable table="persons,locations" var="one,total_area" coeff=".0494" interaction="True" repeat="total_area"/>
+        <Variable table="persons,travel_skims" var="female,tt_to" coeff="-.0203" interaction="True" repeat="tt_to"/>
+        <Variable table="households,travel_skims" var="noc,tt_to" coeff="-.0159" interaction="True" repeat="tt_to"/>
+        <Variable table="persons,locations" var="one,single_family_dwelling" coeff=".0003" interaction="True" repeat="single_family_dwelling"/>	
+      </Model>
+      <Model name="DynamicLocationIDOHActs" formulation="Multinomial Logit" seed="1">
+        <AlternativeSet count="5"/>
+	<DependentVariable var="locationid"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="activitytype" condition="greater than" value="400"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="persons" var="wrkr" condition="equals" value="0"/>
+        <Variable table="persons,travel_skims" var="one,tt_to" coeff="-.2123" interaction="True" repeat="tt_to"/>
+        <Variable table="persons,locations" var="one,retail_employment" coeff=".0005" interaction="True" repeat="retail_employment"/>
+        <Variable table="persons,locations" var="one,institutional_population" coeff=".0012" interaction="True" repeat="institutional_population"/>
+        <Variable table="persons,locations" var="one,residential_population" coeff="-.0002" interaction="True" repeat="residential_population"/>
+        <Variable table="persons,locations" var="one,total_area" coeff=".0419" interaction="True" repeat="total_area"/>
+        <Variable table="persons,travel_skims" var="female,tt_to" coeff="-.0166" interaction="True" repeat="tt_to"/>
+        <Variable table="households,travel_skims" var="noc,tt_to" coeff="-.0423" interaction="True" repeat="tt_to"/>
+        <Variable table="households,travel_skims" var="inclt35k,tt_to" coeff="-.0232" interaction="True" repeat="tt_to"/>
+        <Variable table="households_vehicles_count_r,travel_skims" var="vehcount,tt_to" coeff=".0136" interaction="True" repeat="tt_to"/>
+        <Variable table="persons,locations" var="one,single_family_dwelling" coeff=".0008" interaction="True" repeat="single_family_dwelling"/>
+        <Variable table="persons,locations" var="one,multi_family_dwelling" coeff=".0006" interaction="True" repeat="multi_family_dwelling"/>
+      </Model>
+
+      <DynamicSpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_from_home" origin_var="origin" destination_var="destination" after_model="locationid" before_model="tt_from">
+	<Start table="households" location_var="htaz"/>
+	<End table="runtime" location_var="en_locationid"/>
+      </DynamicSpatialConstraints>
+
+      <DynamicSpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_home" origin_var="origin" destination_var="destination" after_model="locationid" before_model="tt_from">
+	<Start table="runtime" location_var="st_locationid"/>
+	<End table="households" location_var="htaz"/>
+      </DynamicSpatialConstraints>
+
+      <Model name="TTFrom" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="tt_from"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+ 	<Variance value="0"/>
+        <Variable table="runtime" var="tt_from_home" coeff="1"/>
+      </Model>
+
+      <Model name="StartTimeIHActs" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="starttime"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+	<Filter table="runtime" var="locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+ 	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="StartTimeIHActs" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="starttime"/>
+	<FilterSet type="and"/>
+ 	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+	<Filter table="runtime" var="locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+	<Filter table="runtime" var="activitytype" condition="greater than" value="400"/>
+ 	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="runtime" var="tt_to" coeff="1"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+
+      <Model name="StartTimeOHActs" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="starttime"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+	<Filter table="runtime" var="locationid" condition="not equals" valuetable="households" valuevar="htaz"/>
+ 	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="travel_skims" var="tt_to" coeff="1"/>
+      </Model>
+
+      <Model name="StartTimeOHActs" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="starttime"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="st_locationid" condition="not equals" valuetable="households" valuevar="htaz"/>
+	<Filter table="runtime" var="locationid" condition="not equals" valuetable="households" valuevar="htaz"/>
+ 	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="travel_skims" var="tt_to" coeff="1"/>
+      </Model>
+
+
+      <Model name="StartTimeOHActs" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="starttime"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="runtime" var="st_locationid" condition="not equals" valuetable="households" valuevar="htaz"/>
+	<Filter table="runtime" var="locationid" condition="equals" valuetable="households" valuevar="htaz"/>
+ 	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="runtime" var="tt_home" coeff="1"/>
+      </Model>
+
+      <Model name="EndTime" formulation="Regression" type="Linear" seed="1">
+ 	<DependentVariable var="endtime"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+ 	<Variance value="0"/>
+        <Variable table="runtime" var="starttime" coeff="1"/>
+        <Variable table="runtime" var="duration" coeff="1"/>
+      </Model>
+
+      <Model name="TempPrismDurationVar" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="prismduration"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_starttime" coeff="1"/>
+        <Variable table="runtime" var="st_endtime" coeff="-1"/>
+        <Variable table="persons" var="one" coeff="-1"/>
+      </Model>
+
+      <Model name="DependentPersonId" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="dependentpersonid"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="TempActivityTravelEnd" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytravelend"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="tt_from" coeff="1"/>
+        <Variable table="persons" var="one" coeff="-1"/>
+      </Model>
+
+
+      <Model name="AdjustActivityTravelChoice" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="adjustactivitytravelind"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="locationid" condition="not equals" value="0"/>
+	<Filter table="runtime" var="prismduration" condition="greater than" value="30"/>
+	<Filter table="runtime" var="endtime" condition="less than" valuetable="runtime" valuevar="en_starttime" percentage_threshold="" absolute_threshold=""/>
+	<Filter table="runtime" var="activitytravelend" condition="less than" valuetable="runtime" valuevar="en_starttime"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="-1"/>
+      </Model>
+
+
+
+      <Model name="DummyModelforCaching" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="dummy"/>
+	<FilterSet type="and"/>
+	<Filter1 table="persons" var="age" condition="greater than equals" value="18"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="trips_to_malta_r" var="tripid" condition="equals" value="0"/>
+	<Filter table="runtime" var="adjustactivitytravelind" condition="equals" value="-1"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+
+    </Component>
+
+
+	
+
+
+    <Component name="PersonPrismActivityInformation" read_from_table="schedule_final_r" write_to_table="persons_prism_activities_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons" key="houseid,personid" order="1"/>
+    	<Table table="persons_prism_activities_r" key="houseid,personid"/>
+    	<Table table="child_dependency_r" key="houseid,personid"/>
+    	<Table table="schedule_final_r" key="houseid,personid"/>
+	<Table table="trips_to_malta_r" key="houseid,personid"/>
+      </DBTables>
+	
+      <DeleteRecords value="False"/>	
+
+      <SpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_to" origin_var="origin" destination_var="destination">
+	<Start table="schedule_final_r" location_var="locationid" time_var="endtime"/>
+	<End table="schedule_final_r" location_var="locationid" time_var="starttime"/>
+      </SpatialConstraints>
+
+
+
+      <Model name="RepeatConditionVariableForEndVertex" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="repeat"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="FirstScheduleId" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="scheduleid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_scheduleid" coeff="1"/>
+      </Model>
+
+
+      <Model name="SecondScheduleId" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="scheduleid"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_scheduleid" coeff="1"/>
+      </Model>
+
+      <Model name="DummyLocationId" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="locationid"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+
+      <Model name="UpdateRepeat" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="repeat"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="trips_to_malta_r" var="tripid" condition="equals" value="0"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+        <Variable table="runtime" var="repeat" coeff="1"/>
+      </Model>
+
+
+    </Component>
+
+    <Component name="AdjustPrismEndsForInsufficientPrisms" read_from_table="schedule_final_r" write_to_table="schedule_final_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons" key="houseid,personid" order="1"/>
+    	<Table table="child_dependency_r" key="houseid,personid"/>
+    	<Table table="schedule_final_r" key="houseid,personid"/>
+	<Table table="trips_to_malta_r" key="houseid,personid"/>
+      </DBTables>
+      <DeleteRecords value="False"/>	
+
+      <DeleteBasedOn1 table="schedule_final_r" var="scheduleid"/>
+
+      <SpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_to" origin_var="origin" destination_var="destination">
+	<Start table="schedule_final_r" location_var="locationid" time_var="endtime"/>
+	<End table="schedule_final_r" location_var="locationid" time_var="starttime"/>
+      </SpatialConstraints>
+
+      <ConsistencyChecks name="DynamicNonMandatoryChecks">
+	<Filter table="runtime" var="starttime" condition="less than equals" valuetable="runtime" valuevar="endtime"/>
+      </ConsistencyChecks>
+
+
+      <Model name="RepeatConditionVariableForEndVertex" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="repeat"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <DynamicSpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_to" origin_var="origin" destination_var="destination" after_model="repeat" before_model="prismdur">
+	<Start table="runtime" location_var="st_locationid"/>
+	<End table="runtime" location_var="en_locationid"/>
+      </DynamicSpatialConstraints>
+
+
+      <Model name="PrismDuration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="prismdur"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="-1"/>
+        <Variable table="runtime" var="en_starttime" coeff="1"/>
+      </Model>
+
+
+      <Model name="TravelTimeRecode" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_to"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="less than" value="200"/>
+	<Filter table="runtime" var="en_activitytype" condition="less than" value="200"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="TravelTimeRecode" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_to"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="601"/>
+	<Filter table="runtime" var="en_activitytype" condition="less than" value="200"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="TravelTimeRecode" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_to"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="598"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="TravelTimeRecode" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_to"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="less than" value="200"/>
+	<Filter table="runtime" var="en_activitytype" condition="greater than equals" value="600"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="TravelTimeRecode" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_to"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="601"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+
+
+
+      <Model name="RandomAdjustmentFactor" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="adjfactor"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0.5"/>
+      </Model>
+
+
+      <Model name="RandomAdjustmentFactorRecode" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Recode the adjustment factor -->
+	<!-- Filter Description: Start activity is anything but the dummy anchor and end is a pick-up and drop-off act -->
+	<DependentVariable var="adjfactor"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="less than equals" value="597"/>
+	<Filter table="runtime" var="en_activitytype" condition="greater than equals" value="600"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="RandomAdjustmentFactorRecode" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Recode the adjustment factor -->
+	<!-- Filter Description: Start activity is of type OTHER and end is a pick-up and drop-off act -->
+	<DependentVariable var="adjfactor"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="599"/>
+	<Filter table="runtime" var="en_activitytype" condition="greater than equals" value="600"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+
+      <Model name="RandomAdjustmentFactorRecode" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Recode the adjustment factor -->
+	<!-- Filter Description: Start activity is a dummy anchor so only extend the subsequent activity -->
+	<DependentVariable var="adjfactor"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="598"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+
+
+
+      <Model name="RandomAdjustmentFactor" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Amount of adjustment to fill the insufficient prism -->
+	<!-- Filter Description: Only apply this when the prism duration greater than the travel time to next activity -->
+	<DependentVariable var="adjustment"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="prismdur" coeff="1"/>
+        <Variable table="runtime" var="tt_to" coeff="-1"/>
+      </Model>
+
+
+      <Model name="AdjustFirstActEndTime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Adjust the end of the first anchor activity of the prism -->
+	<!-- Filter Description:?? -->
+	<DependentVariable var="st_endtime"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="tt_to" condition="equals" value="0"/>
+	<Filter table="runtime" var="adjfactor" condition="equals" value="1"/>
+	<Filter table="runtime" var="prismdur" condition="less than" value="1"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+      </Model>
+
+
+      <Model name="AdjustFirstActEndTime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Adjust the end of the first anchor activity of the prism -->
+	<!-- Filter Description: Only apply this when the prism duration greater than the travel time to next activity -->
+	<DependentVariable var="st_endtime"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="runtime,runtime" var="adjustment,adjfactor" coeff="1" interaction="True"/>
+      </Model>
+
+
+      <Model name="AdjustFirstActEndTime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Adjust the end of the first anchor activity of the prism -->
+	<!-- Filter Description: ?? -->
+	<DependentVariable var="st_endtime"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="tt_to" condition="equals" value="0"/>
+	<Filter table="runtime" var="adjfactor" condition="equals" value="1"/>
+	<Filter table="runtime" var="prismdur" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="persons" var="one" coeff="-1"/>
+      </Model>
+
+
+
+
+      <Model name="AdjustSecondActStartTime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Adjust the start of the first anchor activity of the prism -->
+	<!-- Filter Description: Only apply this when the prism duration greater than the travel time to next activity; also when the tt_to is greater than one-->
+	<!-- 			 else the st_endtime and en_starttime become the same causing issues in the prism extraction step -->
+	<DependentVariable var="en_starttime"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Filter table="runtime" var="tt_to" condition="greater than" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="runtime" var="tt_to" coeff="1"/>
+      </Model>
+
+      <Model name="AdjustSecondActStartTime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Adjust the start of the first anchor activity of the prism -->
+	<!-- Filter Description: Only apply this when the prism duration greater than the travel time to next activity; also when the tt_to is greater than one-->
+	<!-- 			 else the st_endtime and en_starttime become the same causing issues in the prism extraction step -->
+	<DependentVariable var="en_starttime"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="prismdur" condition="greater than" valuetable="runtime" valuevar="tt_to"/>
+	<Filter table="runtime" var="tt_to" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+
+
+
+
+      <Model name="FirstActivityType" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the activittype of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="activitytype"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_activitytype" coeff="1"/>
+      </Model>
+      <Model name="FirstLocationID" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the locationid of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="locationid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_locationid" coeff="1"/>
+      </Model>
+      <Model name="Firststarttime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the starttime of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="starttime"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_starttime" coeff="1"/>
+      </Model>
+      <Model name="FirstEndtime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the endtime of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="endtime"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+      </Model>
+      <Model name="FirstDuration" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the duration of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="duration"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+      <Model name="FirstDependentPersonid" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the dependentpersonid of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="dependentpersonid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_dependentpersonid" coeff="1"/>
+      </Model>
+      <Model name="FirstScheduleId" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the scheduleid of the start anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored -->
+	<DependentVariable var="scheduleid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_scheduleid" coeff="1"/>
+      </Model>
+
+      <Model name="RepeatConditionVariableForEndVertex" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; updates the counter for storing the end anchor act of the prism in the next pass -->
+	<!-- Filter Description: In the first pass repeat=0, only the start anchor act attributes are stored-->
+	<DependentVariable var="repeat"/>
+	<FilterSet type="or"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+
+
+
+      <Model name="SecondActivityType" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the activitytype of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="activitytype"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_activitytype" coeff="1"/>
+      </Model>
+      <Model name="FirstLocationID" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the locationid of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="locationid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_locationid" coeff="1"/>
+      </Model>
+      <Model name="SecondStarttime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the starttime of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="starttime"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_starttime" coeff="1"/>
+      </Model>
+      <Model name="SecondEndtime" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the endtime of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="endtime"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_endtime" coeff="1"/>
+      </Model>
+      <Model name="SecondDuration" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the duration of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="duration"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+      <Model name="SecondScheduleId" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the scheduleid of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="scheduleid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_scheduleid" coeff="1"/>
+      </Model>
+      <Model name="SecondEpisodeDependentPersonId" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; stores the dependentpersonid of the end anchor act of the prism -->
+	<!-- Filter Description: In the first pass repeat=2, only the end anchor act attributes are stored -->
+	<DependentVariable var="dependentpersonid"/>
+	<Filter table="runtime" var="repeat" condition="equals" value="2"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_dependentpersonid" coeff="1"/>
+      </Model>
+
+
+
+      <Model name="UpdateRepeat" formulation="Regression" type="Linear" seed="1">
+	<!-- Model Description: Array based implementation; updates the counter for storing the start/end anchor act of the prism in subsequent passes of the component -->
+	<!-- Filter Description: Only adult info is processed and also only those that are not in the network-->
+	<DependentVariable var="repeat"/>
+	<FilterSet type="and"/>
+	<Filter table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="trips_to_malta_r" var="tripid" condition="equals" value="0"/>
+	<RunUntilCondition table="runtime" var="repeat" condition="less than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+        <Variable table="runtime" var="repeat" coeff="1"/>
+      </Model>
+
+    </Component>
+
+    <Component name="PersonPrismActivitiesOrigDelete" read_from_table="schedule_final_r" write_to_table="persons_prism_activities_r" key="scheduleid" skip="False" completed="True">
+      <DBTables>
+	<Table table="schedule_final_r" key="scheduleid"/>
+    	<Table table="persons_prism_activities_r" key="scheduleid" order="1"/>
+      </DBTables>
+
+      <DeleteBasedOn table="schedule_final_r" var="scheduleid"/>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="houseid"/>
+	<Variance value="0"/>
+        <Variable table="schedule_final_r" var="houseid" coeff="1"/>
+      </Model>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="personid"/>
+	<Variance value="0"/>
+        <Variable table="schedule_final_r" var="personid" coeff="1"/>
+      </Model>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="scheduleid"/>
+	<Filter table="runtime" var="houseid" condition="equals" value="-1"/>
+	<Variance value="0"/>
+        <Variable table="persons_prism_activities_r" var="scheduleid" coeff="1"/>
+      </Model>
+
+    </Component>
+
+
+    <Component name="DeleteScheduleIdsFromPersonsPrism" read_from_table="persons_prism_activities_r" key="scheduleid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons_prism_activities_r" key="scheduleid" order="1"/>
+      </DBTables>
+
+      <DeleteBasedOn table="persons_prism_activities_r" var="scheduleid"/>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="houseid"/>
+	<Variance value="0"/>
+        <Variable table="persons_prism_activities_r" var="houseid" coeff="1"/>
+      </Model>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="personid"/>
+	<Variance value="0"/>
+        <Variable table="persons_prism_activities_r" var="personid" coeff="1"/>
+      </Model>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="scheduleid"/>
+	<Filter table="runtime" var="houseid" condition="equals" value="-1"/>
+	<Variance value="0"/>
+        <Variable table="persons_prism_activities_r" var="scheduleid" coeff="1"/>
+      </Model>
+
+    </Component>
+
+
+    <Component name="ExtractTravelEpisodes" read_from_table="schedule_final_r" write_to_table="trips_r" key="houseid,personid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons" key="houseid,personid" order="1"/>
+    	<Table table="trips_r" key="houseid,personid"/>
+    	<Table table="child_dependency_r" key="houseid,personid"/>
+    	<Table table="schedule_final_r" key="houseid,personid"/>
+    	<Table table="trips_to_malta_r" key="houseid,personid"/>
+      </DBTables>
+
+      <SpatialConstraints table="travel_skims" skim_var="tt" as_var="tt_to" origin_var="origin" destination_var="destination">
+	<Start table="schedule_final_r" location_var="locationid" time_var="endtime"/>
+	<End table="schedule_final_r" location_var="locationid" time_var="starttime"/>
+      </SpatialConstraints>
+
+      <Model name="DummyLocationId" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="locationid"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="locationid" coeff="1"/>
+      </Model>
+
+      <Model name="VehicleID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="vehid"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+      <Model name="ModeChoice" formulation="Probability Distribution" seed="1">
+        <DependentVariable var="tripmode"/>
+
+        <Alternative id="SOV" value="1">
+          <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+        <Alternative id="HOVD" value="2">
+          <Variable table="persons" var="one" coeff="0.0"/>
+        </Alternative>
+        <Alternative id="HOVP" value="3">
+          <Variable table="persons" var="one" coeff="1.0"/>
+        </Alternative>
+      </Model>
+      <Model name="FromZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="fromzone"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_locationid" coeff="1"/>
+      </Model>
+      <Model name="ToZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tozone"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_locationid" coeff="1"/>
+      </Model>
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="st_endtime" coeff="1"/>
+      </Model>
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_starttime" coeff="1"/>
+      </Model>
+      <Model name="Duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="en_activitytype" coeff="1"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+	<Filter table="runtime" var="st_locationid" condition="not equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Filter table="runtime" var="en_activitytype" condition="greater than equals" value="200"/>
+	<Filter table="runtime" var="duration" condition="greater than equals" value="2"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_locationid" condition="equals" valuetable="runtime" valuevar="en_locationid"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="601"/>
+	<Filter table="runtime" var="en_activitytype" condition="equals" value="600"/>
+	<Filter table="runtime" var="duration" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="validtrip" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripind"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="st_activitytype" condition="equals" value="600"/>
+	<Filter table="runtime" var="en_activitytype" condition="equals" value="601"/>
+	<Filter1 table="runtime" var="duration" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+
+      <Model name="dummyforadult" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="adulttrips"/>
+        <FilterSet type="and"/>
+	<Filter table="runtime" var="tripind" condition="equals" value="1"/>
+	<Filter table="child_dependency_r" var="dependency" condition="equals" value="0"/>
+	<Filter table="trips_to_malta_r" var="tripid" condition="equals" value="0"/>
+	<Variance value="0"/>
+        <Variable table="persons" var="one" coeff="1"/>
+      </Model>
+
+    </Component>
+
+
+
+    <Component name="ExtractBackgroundTravelEpisodes" read_from_table="background_trips" write_to_table="trips_r" key="houseid,personid" skip="True" completed="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid"/>
+   	<Table table="background_trips" key="houseid,personid" order="1"/>
+      </DBTables>
+
+      <AnalysisIntervalFilter table="background_trips" var="start_min_indexedat4am"/>
+
+
+      <Model name="VehicleID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="vehid"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="vehid" coeff="1"/>
+      </Model>
+
+      <Model name="ModeChoice" formulation="Regression" type="Linear" seed="1">
+        <DependentVariable var="tripmode"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="mode" coeff="1"/>
+      </Model>
+
+      <Model name="FromZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="fromzone"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="origin_taz" coeff="1"/>
+      </Model>
+
+      <Model name="ToZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tozone"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="destination_taz" coeff="1"/>
+      </Model>
+
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="purpose" coeff="1"/>
+      </Model>
+
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="start_min_indexedat4am" coeff="1"/>
+      </Model>
+
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="background_trips" var="arrive_min_indexedat4am" coeff="1"/>
+      </Model>
+
+      <Model name="Duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+        <FilterSet type="and"/>
+	<Filter table="background_trips" var="origin_region" condition="not equals" value="1"/>
+	<Filter table="background_trips" var="destination_region" condition="not equals" value="1"/>
+	<Filter table="background_trips" var="origin_taz" condition="less than" value="2900"/>
+	<Filter table="background_trips" var="destination_taz" condition="less than" value="2900"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+
+      <Model1 name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+        <FilterSet type="and"/>
+	<Filter table="background_trips" var="origin_region" condition="not equals" value="1"/>
+	<Filter table="background_trips" var="destination_region" condition="not equals" value="1"/>
+	<Filter table="background_trips" var="origin_taz" condition="less than" value="2900"/>
+	<Filter table="background_trips" var="destination_taz" condition="less than" value="2900"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="trippurpose" coeff="1"/>
+      </Model1>
+
+    </Component>
+
+    <Component name="ExtractAllTravelEpisodes" read_from_table="trips_r" write_to_table="trips_to_malta_r" key="houseid,personid" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid" order="1"/>
+    	<Table table="trips_to_malta_r" key="houseid,personid"/>
+      </DBTables>
+
+      <AnalysisIntervalFilter table="trips_r" var="starttime"/>
+
+      <Model name="TripID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tripid" coeff="1"/>
+      </Model>
+
+
+      <Model name="VehicleID" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="vehid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="vehid" coeff="1"/>
+      </Model>
+
+      <Model name="ModeChoice" formulation="Regression" type="Linear" seed="1">
+        <DependentVariable var="tripmode"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tripmode" coeff="1"/>
+      </Model>
+
+      <Model name="FromZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="fromzone"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="1"/>
+      </Model>
+
+      <Model name="ToZone" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tozone"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tozone" coeff="1"/>
+      </Model>
+
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="trippurpose" coeff="1"/>
+      </Model>
+
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="starttime" coeff="1"/>
+      </Model>
+
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="endtime" coeff="1"/>
+      </Model>
+
+      <Model name="Duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="endtime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+      </Model>
+
+
+    </Component>
+
+
+
+
+
+  </ModelConfig>
+</ProjectConfig>
+
