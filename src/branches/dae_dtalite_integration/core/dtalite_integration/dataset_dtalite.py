@@ -49,12 +49,13 @@ class DB(object):
 			  'trips_with_nonhh_r':['houseid', 'personid', 'vehid', 'tripmode', 'fromzone', 'tozone', 'starttime', 'endtime', 'trippurposefrom', 
 				     'trippurpose', 'duration', 'occupancy', 'dependentpersonid'],
 
-			  'trips_to_malta_r':['tripid', 'houseid', 'personid', 'vehid', 'tripmode', 
+			  'trips_to_dta_r':['tripid', 'houseid', 'personid', 'vehid', 'tripmode', 
 					      'fromzone', 'tozone', 'starttime', 'endtime', 'trippurpose', 'duration', 
-					      'dependentpersonid', 'persononnetworkflag'],
+					      'dependentpersonid', 'persononnetworkflag','valueoftime', 'informationtype',
+                                   'pricingtype','vehicletype','vehicleage'],
 			  'current_occupancy_r':['houseid', 'personid', 'tripid', 'occupancy', 'dependentpersonid', 'tripcount'],
 			  'trips_invalid_r':['tripid', 'tripind'],
-			  'trips_arrival_from_malta_r':['tripid', 'arrivaltime', 'distance'],
+			  'trips_arrival_from_dta_r':['tripid', 'arrivaltime', 'distance'],
 			  'trips_arrival_from_openamos_r':['tripid', 'arrivaltime'],
 			  'persons_arrived_r':['houseid', 'personid', 'tripid', 'expectedstarttime', 
 					       'expectedarrivaltime', 'actualarrivaltime', 'tripdependentpersonid', 'fromzone', 'tozone', 'tripcount'],
@@ -76,7 +77,7 @@ class DB(object):
 			  'daily_work_satus_r':['houseid', 'personid', 'wrkdailystatus'],
 			  'persons_history_r':['houseid', 'personid', 'personuniqueid', 'ih_history', 'discretionary_history', 'maintenance_history', 'fixed_history']
 			   }
-
+              #'valueoftime', 'informationtype'
 
 
 	self.colDef = {'houseid':int64, 'personid':int32, 'dependency':int32, 'schdailystatus':int32,
@@ -107,7 +108,8 @@ class DB(object):
 			'dependentpersonid':int64, 'ih_history':int32, 'discretionary_history':int32, 
 			'maintenance_history':int32, 'fixed_history':int32, 
 			'tripcount':int64, 'lasttripcount':int64, 'starttripcount':int64, 'endtripcount':int64,
-			'startdependentpersonid':int64, 'enddependentpersonid':int64, 'tripcount':int64, 'lasttripcount':int64, 'distance':float64}
+			'startdependentpersonid':int64, 'enddependentpersonid':int64, 'tripcount':int64, 'lasttripcount':int64, 'distance':float64,
+                 'valueoftime':float32, 'informationtype':int32, 'pricingtype':int32, 'vehicletype':int32, 'vehicleage':int32}
 
 	
 

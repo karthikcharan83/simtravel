@@ -143,7 +143,7 @@ class RunAmosDtalite(object):
                     
                     
                     
-                    #self.temp_create_dtalite(i-1)       # Just For Testing
+                    self.temp_create_dtalite(i-1)       # Just For Testing
                     
                     
                     tripInfoArrivals = self.arrival_from_dtalite(i-1, dtal_output_name)
@@ -152,7 +152,7 @@ class RunAmosDtalite(object):
                     self.manager.run_selected_components_for_dtalite(i, tripInfoArrivals, openamos_output_name)             
                      
                     
-                    #self.temp_trips_from_openamos(i)  # Just For Testing
+                    self.temp_trips_from_openamos(i)  # Just For Testing
                     
                 
                 elif openamos_output_name == '' and i > 1:
