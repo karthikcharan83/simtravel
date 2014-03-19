@@ -97,7 +97,7 @@ class DB(object):
         self.fileh.createTable(output_grp, "current_occupancy_r", Occupancy_R)
         #self.fileh.createTable(output_grp, "current_occupancy_dup_r", Occupancy_R)
         #self.fileh.createTable(output_grp, "trips_inc_expected_to_malta_r", Trips_R)
-        self.fileh.createTable(output_grp, "trips_to_malta_r", Trips_Final_R)
+        self.fileh.createTable(output_grp, "trips_to_dta_r", Trips_Final_R)
         self.fileh.createTable(output_grp, "persons_location_r", Persons_Location_R)
         self.fileh.createTable(output_grp, "persons_history_r", Persons_History_R)
         self.fileh.createTable(output_grp, "gap_function_r", Gap_Function_R)
@@ -112,7 +112,7 @@ class DB(object):
         self.fileh.createTable(output_grp, "persons_arrived_id_r", Persons_Arrived_Id_R)
         self.fileh.createTable(output_grp, "persons_leaving_id_r", Persons_Leaving_Id_R)
         self.fileh.createTable(output_grp, "persons_leaving_valid_trips_id_r", Persons_Leaving_Valid_Trips_Id_R)
-        self.fileh.createTable(output_grp, "trips_arrival_from_malta_r", Trips_Arrival_R)
+        self.fileh.createTable(output_grp, "trips_arrival_from_dta_r", Trips_Arrival_R)
         self.fileh.createTable(output_grp, "trips_arrival_from_openamos_r", Trips_Arrival_R)
         self.fileh.createTable(output_grp, "trips_occupant_origin_invalid_r", Trips_Occupant_Origin_Invalid_R)
 
@@ -172,8 +172,8 @@ class DB(object):
         self.fileh.createTable(output_grp, "daily_school_status_r", Daily_School_Status_R)
         self.fileh.createTable(output_grp, "daily_work_status_r", Daily_Work_Status_R)
         self.fileh.createTable(output_grp, "trips_r", Trips_R)
-        self.fileh.createTable(output_grp, "trips_to_expected_to_malta_r", Trips_R)
-        self.fileh.createTable(output_grp, "trips_to_malta_r", Trips_Final_R)
+        self.fileh.createTable(output_grp, "trips_to_expected_to_dta_r", Trips_R)
+        self.fileh.createTable(output_grp, "trips_to_dta_r", Trips_Final_R)
 
 
 

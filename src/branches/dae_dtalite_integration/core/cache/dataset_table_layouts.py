@@ -127,6 +127,7 @@ class Persons_R(t.IsDescription):
     episodes = t.Int32Col()
     hhwagerate = t.Float32Col()
     valueoftime = t.Float32Col()
+    informationtype = t.Int32Col()
 
 
 class Child_Dependency_R(t.IsDescription):
