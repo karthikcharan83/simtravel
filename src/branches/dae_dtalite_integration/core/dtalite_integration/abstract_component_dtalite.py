@@ -39,7 +39,8 @@ class AbstractComponent(object):
 		 delete_dict={},
 		 writeToTable2 = None,
 		 key2=None,
-		 pre_run_filter=None):
+		 pre_run_filter=None,
+            loop_component=None):
 
         for i in model_list:
             if not isinstance(i, SubModel):
@@ -69,6 +70,7 @@ class AbstractComponent(object):
 	self.pre_run_filter = pre_run_filter
 
         self.keyColsList()
+        self.loop_component = loop_component
         #self.dependencyAllocationFlag = dependencyAllocationFlag
     #TODO: check for names in the variable list
     #TODO: check for varnames in model specs and in the data
@@ -130,6 +132,7 @@ class AbstractComponent(object):
         data = self.process_data_for_locs(data, self.spatialConst_list, 
                                           self.analysisInterval, 
 					  skimsMatrix, fileLoc)
+
 
         if data == None or data.rows == 0:
             return None
@@ -819,6 +822,8 @@ class AbstractComponent(object):
 	    # Updating the location columns
             colName = '%s%s' %(sampleVarName, i+1)
             data.setcolumn(colName, sampleLocColVals)
+            print "colName"
+            print colName
 
 
 	    # Also updating skim values for sampled locations: here the travel time TO sampled location is updated
@@ -829,6 +834,8 @@ class AbstractComponent(object):
             skimLocColName = '%s%s' %(colName, i+1)
 	
             data.setcolumn(skimLocColName, tt_to)
+            print "skimLocColName"
+            print skimLocColName
 
 
 	    # Also updating skim values for sampled locations: here the travel time FROM sampled location is updated
@@ -844,6 +851,8 @@ class AbstractComponent(object):
                     locVarVals = locationsTable.columns([j]).data[sampleLocColVals]
                     data.setcolumn(locationVarName, locVarVals)
                     #print locVarVals
+                    print "locationVarName"
+                    print locationVarName
 
 
         return data

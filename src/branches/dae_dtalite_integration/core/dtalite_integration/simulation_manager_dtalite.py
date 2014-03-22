@@ -37,8 +37,7 @@ class SimulationManager(object):
         
         #, configObject=None, fileLoc=None, component=None):
         #TODO: REMOVE PLACEHOLDER 
-        #fileLoc = 'C:/DTALite/Phoenix_MAG_Network/config_mag_malta.xml'
-        fileLoc = 'C:/DTALite/New_PHXsubarea/config_mag_dtalite.xml'
+        fileLoc = 'C:/DTALite/New_PHXsubarea/config_mag_dtalite_pretrip.xml'
         configObject = None
         
 
@@ -77,6 +76,7 @@ class SimulationManager(object):
         self.idCount = 0
         self.idList = []
         self.lastTtTableLoc = None
+        self.lastCurTtTableLoc = None
         self.skimsMatrix = SkimsProcessor(1, 175) #1995)
         self.uniqueIds = None
         self.trips = 0
@@ -215,79 +215,112 @@ class SimulationManager(object):
             comp.analysisInterval = analysisInterval - 1
             print '\nRunning Component - %s; Analysis Interval - %s' %(comp.component_name,
                                                                        comp.analysisInterval)
-
-            if comp.component_name == 'ArrivalTimeInformation':
-                comp.db = self.db
             
-            else:
-                if comp.skipFlag:
-                    print '\tSkipping the run for this component'
-                    continue
-
-                # Reset seed 
-                for mod in comp.model_list:
-                    mod.seed = self.modSeedDict[(comp.component_name, mod.dep_varname)] + analysisInterval - 1
-
-                #Load skims matrix outside so that when there is temporal aggregation
-                # of tod skims then loading happens only so many times
-
-                t_sk = time.time()
-                ttTableLoc, distTableLoc = self.identify_skims_matrix(comp)
-
-
-                if ttTableLoc <> self.lastTtTableLoc and (len(comp.spatialConst_list) > 0 or 
-							len(comp.dynamicspatialConst_list) > 0):
-                    #raw_input("check size before ...") 
-
-                    #self.skimsMatrix, self.uniqueIds = self.load_skims_matrix(comp, tableName)
-                    self.load_skims_matrix(comp, ttTableLoc, distTableLoc)
-                    self.lastTtTableLoc = ttTableLoc
-                    #raw_input("check size after ...") 
-                elif ttTableLoc == self.lastTtTableLoc:
-                    pass
-
-                print '\tTime taken to process skims %.4f' %(time.time()-t_sk)
-                data = comp.pre_process(self.queryBrowser, 
-                                        self.skimsMatrix, self.db, fileLoc)
-
-
-            if data is not None:
-                #print 'inside here for component - ', comp.component_name
-                if comp.component_name == "ExtractAllTravelEpisodes":
-                    tripInfo = comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
-                    print 'Origin Zone Ids Before - ', tripInfo[:5,5]
-                    print 'Destination Zone Ids Before - ', tripInfo[:5,6]
-                    #tripInfo[:,5] += 11
-                    #tripInfo[:,6] += 11
-                    #print 'Origin Zone Ids After Mod - ', tripInfo[:5,5]
-                    #print 'Destination Zone Ids After Mod - ', tripInfo[:5,6]
-                    self.add_header_for_dtalite(fileLoc, analysisInterval, tripInfo, filename)
-                    #raw_input()
+            loop_num = 1
+            if len(comp.loop_component) > 0:
+                
+                loop_num = comp.loop_component[1]
+                
+                                               
+            for loop in range(loop_num):
+                
+                if loop_num > 1 and comp.pre_run_filter is not None:
+                    print "Run two times for this component: %s - %s" %(comp.component_name, loop_num)
+                    (comp.pre_run_filter[0]).value = loop                    
+                
+            
+                if comp.component_name == 'ArrivalTimeInformation':
+                    comp.db = self.db
+            
                 else:
-                    comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
+                    if comp.skipFlag:
+                        print '\tSkipping the run for this component'
+                        continue
+
+                    # Reset seed 
+                    for mod in comp.model_list:
+                        mod.seed = self.modSeedDict[(comp.component_name, mod.dep_varname)] + analysisInterval - 1
+    
+                    #Load skims matrix outside so that when there is temporal aggregation
+                    # of tod skims then loading happens only so many times
+    
+                    t_sk = time.time()
+                    ttTableLoc, distTableLoc = self.identify_skims_matrix(comp)
 
 
-            elif data is None and comp.component_name == "ExtractAllTravelEpisodes":
-                tripInfo = zeros((1,11))
-                self.create_csv_to_dtalite(fileLoc, analysisInterval, filename)
-                """
-                tripInfo = zeros((3,11))
+                    if ttTableLoc <> self.lastTtTableLoc and (len(comp.spatialConst_list) > 0 or 
+    							len(comp.dynamicspatialConst_list) > 0):
+                        #raw_input("check size before ...") 
+    
+                        #self.skimsMatrix, self.uniqueIds = self.load_skims_matrix(comp, tableName)
+                        self.load_skims_matrix(comp, ttTableLoc, distTableLoc)
+                        self.lastTtTableLoc = ttTableLoc
+                        #raw_input("check size after ...") 
+                    elif ttTableLoc == self.lastTtTableLoc:
+                        pass
+    
+                    ttCurTableLoc, distCurTableLoc = self.identify_currentskims_matrix(comp.analysisInterval)
 
-                self.trips += 1
-		        tripInfo[0,0] = self.trips
-		        tripInfo[0,5] = 1850 + 11
-		        tripInfo[0,6] = 1075 + 11 
-
-		        self.trips += 1
-		        tripInfo[1,0] = self.trips
-		        tripInfo[1,5] = 1488 + 11
-		        tripInfo[1,6] = 1074 + 11 
-
-		        self.trips += 1
-		        tripInfo[2,0] = self.trips
-		        tripInfo[2,5] = 28 + 11
-		        tripInfo[2,6] = 1995 + 11 
-		        """
+                    if ttCurTableLoc <> self.lastCurTtTableLoc and (len(comp.spatialConst_list) > 0 or 
+    							len(comp.dynamicspatialConst_list) > 0):
+                        self.load_currentskims_matrix(comp, ttCurTableLoc, distCurTableLoc)
+                        self.lastCurTtTableLoc = ttCurTableLoc
+                    elif ttCurTableLoc == self.lastCurTtTableLoc:
+                        pass
+                        
+    
+                    print '\tTime taken to process skims %.4f' %(time.time()-t_sk)
+                    
+                    if loop_num == 0:
+                        data = comp.pre_process(self.queryBrowser, 
+                                                self.skimsMatrix, self.db, fileLoc)
+                    else:
+                        data = comp.pre_process(self.queryBrowser, 
+                                                self.currentSkimsMatrix, self.db, fileLoc)
+    
+                if data is not None:
+                    #print 'inside here for component - ', comp.component_name
+                    if comp.component_name == "ExtractAllTravelEpisodes":
+                        if loop_num == 0:
+                            tripInfo = comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
+                        else:
+                            tripInfo = comp.run(data, self.queryBrowser, self.currentSkimsMatrix, self.uniqueIds, fileLoc)
+                        print 'Origin Zone Ids Before - ', tripInfo[:5,5]
+                        print 'Destination Zone Ids Before - ', tripInfo[:5,6]
+                        #tripInfo[:,5] += 11
+                        #tripInfo[:,6] += 11
+                        #print 'Origin Zone Ids After Mod - ', tripInfo[:5,5]
+                        #print 'Destination Zone Ids After Mod - ', tripInfo[:5,6]
+                        self.add_header_for_dtalite(fileLoc, analysisInterval, tripInfo, filename)
+                        #raw_input()
+                    else:
+                        if loop_num == 0:
+                            comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
+                        else:
+                            comp.run(data, self.queryBrowser, self.currentSkimsMatrix, self.uniqueIds, fileLoc)
+    
+    
+                elif data is None and comp.component_name == "ExtractAllTravelEpisodes":
+                    tripInfo = zeros((1,18))
+                    self.create_csv_to_dtalite(fileLoc, analysisInterval, filename)
+                    """
+                    tripInfo = zeros((3,11))
+    
+                    self.trips += 1
+    		        tripInfo[0,0] = self.trips
+    		        tripInfo[0,5] = 1850 + 11
+    		        tripInfo[0,6] = 1075 + 11 
+    
+    		        self.trips += 1
+    		        tripInfo[1,0] = self.trips
+    		        tripInfo[1,5] = 1488 + 11
+    		        tripInfo[1,6] = 1074 + 11 
+    
+    		        self.trips += 1
+    		        tripInfo[2,0] = self.trips
+    		        tripInfo[2,5] = 28 + 11
+    		        tripInfo[2,6] = 1995 + 11 
+    		        """
             print '\t-- Finished simulating component; time taken %.4f --' %(time.time()-t)
 
 
@@ -311,7 +344,7 @@ class SimulationManager(object):
         c.writerow(['trip_id','house_id','person_id','vehicle_id','demand_type','from_zone_id','to_zone_id','start_time_in_min','end_time_in_min', \
                     'trip_purpose','duration_in_min','dependent_person_id','person_on_network_flag','value_of_time','information_type','pricing_type', \
                     'vehicle_type','vehicle_age']) 
-        #c.writerow([0,0,0,0,0,0,0,0,0,0,0,0,0])
+        c.writerow([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0])
         
         wfile.close()
         
@@ -383,28 +416,32 @@ class SimulationManager(object):
         print 'Check generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
 
 
-#    def load_currentskims_matrix(self, comp):
-#        
-#        if comp.analysisInterval is not None:
-#            analysisInterval = comp.analysisInterval
-#            numSkim = analysisInterval/15
-#                       
-#            ttTableLocation = "C:/DTALite/New_PHXsubarea/Skims/skim%s.csv" %numSkim;
-#            distTableLocation = "C:/DTALite/New_PHXsubarea/Skims/distance0.dat";
-# 
-#            print 'tt Table Location - ', ttTableLocation
-#            print 'dist Table Location - ', distTableLocation
-#
-#            #raw_input("check memory before creating travel skims -- ")
-#            self.currentSkimsMatrix.set_tt_fileString(ttTableLocation)
-#            self.currentSkimsMatrix.set_dist_fileString(distTableLocation)
-#            self.currentSkimsMatrix.create_graph()
-#        
-#            print 'TRAVEL Skims object created --'
-#            #raw_input("check memory after distance skims -- ")
-#            print 'Check travel times -- ', self.currentSkimsMatrix.get_travel_times(array([1,1,1,1]), array([1,2,3,4]))
-#            print 'Check distances -- ', self.currentSkimsMatrix.get_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
-#            print 'Check generalized cost tt + dist*2 -- ', self.currentSkimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
+    def identify_currentskims_matrix(self, analysisInterval):
+        
+        numSkim = analysisInterval/15
+        print "numSkim: %s" %numSkim
+        ttTableLocation = "C:/DTALite/New_PHXsubarea/Skims/skim%s.csv" %numSkim;
+        distTableLocation = "C:/DTALite/New_PHXsubarea/Skims/distance0.dat";
+
+        return ttTableLocation, distTableLocation 
+
+
+    def load_currentskims_matrix(self, comp, ttTableLocation, distTableLocation):
+        
+
+        print 'tt Table Location - ', ttTableLocation
+        print 'dist Table Location - ', distTableLocation
+
+        #raw_input("check memory before creating travel skims -- ")
+        self.currentSkimsMatrix.set_tt_fileString(ttTableLocation)
+        self.currentSkimsMatrix.set_dist_fileString(distTableLocation)
+        self.currentSkimsMatrix.create_graph()
+    
+        print 'Real-Time TRAVEL Skims object created --'
+        #raw_input("check memory after distance skims -- ")
+        print 'Check real-time travel times -- ', self.currentSkimsMatrix.get_travel_times(array([1,1,1,1]), array([1,2,3,4]))
+        print 'Check distances -- ', self.currentSkimsMatrix.get_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
+        print 'Check real-time generalized cost tt + dist*2 -- ', self.currentSkimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
             
             
 

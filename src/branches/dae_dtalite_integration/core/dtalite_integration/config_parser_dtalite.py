@@ -61,7 +61,7 @@ from openamos.core.models.emigration import Emigration
 from openamos.core.models.immigration import Immigration
 from openamos.core.models.column_operations_model import ColumnOperationsModel
 from openamos.core.models.model import SubModel
-from openamos.core.malta_integration.abstract_component_malta import AbstractComponent
+from openamos.core.dtalite_integration.abstract_component_dtalite import AbstractComponent
 from openamos.core.activity_travel.activity_travel_components import HistoryInfo, HouseholdStructureInfo
 from openamos.core.spatial_analysis.spatial_query_components import SpatioTemporalConstraint, PrismConstraints
 from openamos.core.travel_skims.travel_skims_components import TravelSkimsInfo
@@ -443,6 +443,20 @@ class ConfigParser(object):
         else:
             pre_run_filter = None
 
+            
+        
+        loopComponent = component_element.find('LoopComponent')
+        loop_element = []
+        if loopComponent is not None:
+            startInterval = loopComponent.get("start")
+            startInterval = int(startInterval)
+
+            endInterval = loopComponent.get("end")
+            endInterval = int(endInterval)
+            
+            loop_element.append(startInterval)
+            loop_element.append(endInterval)
+        
 
 
         consistencyChecks_element = component_element.find("ConsistencyChecks")
@@ -530,7 +544,8 @@ class ConfigParser(object):
 				      delete_dict = delete_dict,
 				      writeToTable2=comp_write_to_table2,
 				      key2 = key2,
-				      pre_run_filter = pre_run_filter)
+				      pre_run_filter = pre_run_filter,
+                             loop_component = loop_element)
         return component
 
 
