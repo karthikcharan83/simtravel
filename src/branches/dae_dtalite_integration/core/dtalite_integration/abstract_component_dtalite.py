@@ -822,8 +822,8 @@ class AbstractComponent(object):
 	    # Updating the location columns
             colName = '%s%s' %(sampleVarName, i+1)
             data.setcolumn(colName, sampleLocColVals)
-            print "colName"
-            print colName
+            #print "colName"
+            #print colName
 
 
 	    # Also updating skim values for sampled locations: here the travel time TO sampled location is updated
@@ -834,8 +834,8 @@ class AbstractComponent(object):
             skimLocColName = '%s%s' %(colName, i+1)
 	
             data.setcolumn(skimLocColName, tt_to)
-            print "skimLocColName"
-            print skimLocColName
+            #print "skimLocColName"
+            #print skimLocColName
 
 
 	    # Also updating skim values for sampled locations: here the travel time FROM sampled location is updated
@@ -851,8 +851,8 @@ class AbstractComponent(object):
                     locVarVals = locationsTable.columns([j]).data[sampleLocColVals]
                     data.setcolumn(locationVarName, locVarVals)
                     #print locVarVals
-                    print "locationVarName"
-                    print locationVarName
+                    #print "locationVarName"
+                    #print locationVarName
 
 
         return data
