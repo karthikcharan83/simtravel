@@ -69,66 +69,13 @@ class RunAmosDtalite(object):
         
     def run_openamos_simulation(self):
         
-
-                
-        #simulationObject = SimulationManager()
         
         numRuns = len(self.data_in_real_time)
+        read_realtime_skim = False
+        realtime_time_path = ""
+        realtime_dist_path = ""
         for i in range(numRuns):
-            
-            #if i > 25:
-            #    continue
-            
-            
-            # Before 1/29/2014
-#             if i == 0:
-#                 print "============================ Start Running Simulation ==============================="
-#                 #inds = self.findindexbyname(self.data_in_real_time[i])
-#             elif i == 1:
-#                 
-#                 time = i
-#                 
-#                 
-#                 
-#                 self.data_in_real_time[i+1][inds[1]] = "open_amos_trip_min%s.csv" %(time)        
-#                 self.write_Real_Time_Setting_CSV()
-#                 
-#                 tripInfoArrivals = array([-1])
-#                 self.manager.run_selected_components_for_dtalite(time, tripInfoArrivals)
-#                 self.temp_trips_from_openamos(time)
-#                 self.temp_create_dtalite(time)
-#                 
-#                 
-#             elif i > 1:
-#                 
-#                 if len(self.data_in_real_time[i]) >= inds[0] and len(self.data_in_real_time[i]) >= inds[1]:
-#                     #if i < 10:
-#                     #    print "%s - %s" %(self.data_in_real_time[inds[0]], self.data_in_real_time[inds[1]])
-#                     
-#                     time = i
-#                     isFind = False
-#                     out_dtalite_name = self.data_in_real_time[i+1][self.column_index_for_dtalite]
-#                     out_dtalite_name = "C:/openamos_project/openamos_test/%s" %(out_dtalite_name)
-#                     print "What time is it trying to find? --- %s" %(out_dtalite_name)
-#                     while not isFind:
-#                         
-#                         if os.path.exists(out_dtalite_name) == True:
-#                             isFind = True
-#                             
-#                             #self.read_Real_Time_Setting_CSV()
-#                             
-#                             print "It is done to find %s" %(out_dtalite_name)
-#                             
-#                             self.data_in_real_time[i+1][inds[1]] = "open_amos_trip_min%s.csv" %(i) 
-#                             #self.write_Real_Time_Setting_CSV()
-#                             
-#                             
-#                             tripInfoArrivals = self.temp_arrivals_from_dtalite(time)
-#                             self.manager.run_selected_components_for_dtalite(time, tripInfoArrivals)
-#                             self.temp_trips_from_openamos(time)
-#                             self.temp_create_dtalite(time)
 
-            # After 1/29/2014
             
             if i == 0:
                 print "============================ Start Running Simulation ==============================="
@@ -140,7 +87,7 @@ class RunAmosDtalite(object):
                 if openamos_output_name <> '' and i > 0:
                     print "%s - %s " %(i, openamos_output_name)
                     dtal_output_name = self.data_in_real_time[i][self.column_index_for_dtalite]
-                    
+                    realtime_skim_name = self.data_in_real_time[i][self.column_index_for_realtimeskim]
                     
                     
                     self.temp_create_dtalite(i-1)       # Just For Testing
@@ -153,7 +100,20 @@ class RunAmosDtalite(object):
                      
                     
                     self.temp_trips_from_openamos(i)  # Just For Testing
-                    
+
+
+
+                    if realtime_skim_name != "":
+                        realtime_time_path = "%s%s"%(self.proj_path, realtime_skim_name)
+                        realtime_dist_path = "%sdistance0.dat"%(self.proj_path)
+                        read_realtime_skim = True
+                        
+                    if read_realtime_skim:
+                        if os.path.exists(realtime_time_path):
+                            self.manager.load_currentskims_matrix(realtime_time_path, realtime_dist_path)
+                            read_realtime_skim = False
+                        else:
+                            print "%s does not exist" %(realtime_time_path)
                 
                 elif openamos_output_name == '' and i > 1:
                     print """Please check the control file called as input_real_time_simulation_settings.csv""" 
@@ -324,7 +284,7 @@ class RunAmosDtalite(object):
                 inds.append(i)
                 self.column_index_for_openamos = i
                 
-            if row[i].lower() == 'output_od_moe_file':
+            if row[i].lower() == 'output_td_skim_file':
                 inds.append(i)
                 self.column_index_for_realtimeskim = i
                 

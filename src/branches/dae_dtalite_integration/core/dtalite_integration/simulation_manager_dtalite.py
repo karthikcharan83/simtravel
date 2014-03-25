@@ -206,9 +206,9 @@ class SimulationManager(object):
 
         fileLoc = self.projectConfigObject.location
         print ('Starting to process...')
-        if analysisInterval > 180 and analysisInterval <= 359:
+        #if analysisInterval > 180 and analysisInterval <= 359:
             #self.lastTableName = None
-            pass
+        #    pass
 
         for comp in self.componentList:
             t = time.time()
@@ -225,7 +225,7 @@ class SimulationManager(object):
             for loop in range(loop_num):
                 
                 if loop_num > 1 and comp.pre_run_filter is not None:
-                    print "Run two times for this component: %s - %s" %(comp.component_name, loop_num)
+                    print "Run two times for this component: %s - %s" %(comp.component_name, loop)
                     (comp.pre_run_filter[0]).value = loop                    
                 
             
@@ -259,14 +259,14 @@ class SimulationManager(object):
                     elif ttTableLoc == self.lastTtTableLoc:
                         pass
     
-                    ttCurTableLoc, distCurTableLoc = self.identify_currentskims_matrix(comp.analysisInterval)
-
-                    if ttCurTableLoc <> self.lastCurTtTableLoc and (len(comp.spatialConst_list) > 0 or 
-    							len(comp.dynamicspatialConst_list) > 0):
-                        self.load_currentskims_matrix(comp, ttCurTableLoc, distCurTableLoc)
-                        self.lastCurTtTableLoc = ttCurTableLoc
-                    elif ttCurTableLoc == self.lastCurTtTableLoc:
-                        pass
+#                    ttCurTableLoc, distCurTableLoc = self.identify_currentskims_matrix(comp.analysisInterval)
+#
+#                    if ttCurTableLoc <> self.lastCurTtTableLoc and (len(comp.spatialConst_list) > 0 or 
+#    							len(comp.dynamicspatialConst_list) > 0):
+#                        self.load_currentskims_matrix(comp, ttCurTableLoc, distCurTableLoc)
+#                        self.lastCurTtTableLoc = ttCurTableLoc
+#                    elif ttCurTableLoc == self.lastCurTtTableLoc:
+#                        pass
                         
     
                     print '\tTime taken to process skims %.4f' %(time.time()-t_sk)
@@ -416,17 +416,16 @@ class SimulationManager(object):
         print 'Check generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
 
 
-    def identify_currentskims_matrix(self, analysisInterval):
-        
-        numSkim = analysisInterval/15
-        print "numSkim: %s" %numSkim
-        ttTableLocation = "C:/DTALite/New_PHXsubarea/Skims/skim%s.csv" %numSkim;
-        distTableLocation = "C:/DTALite/New_PHXsubarea/Skims/distance0.dat";
+#    def identify_currentskims_matrix(self, analysisInterval):
+#        
+#        numSkim = analysisInterval/15
+#        ttTableLocation = "C:/DTALite/New_PHXsubarea/Skims/skim%s.csv" %numSkim;
+#        distTableLocation = "C:/DTALite/New_PHXsubarea/Skims/distance0.dat";
+#
+#        return ttTableLocation, distTableLocation 
 
-        return ttTableLocation, distTableLocation 
 
-
-    def load_currentskims_matrix(self, comp, ttTableLocation, distTableLocation):
+    def load_currentskims_matrix(self, ttTableLocation, distTableLocation=None):
         
 
         print 'tt Table Location - ', ttTableLocation
@@ -485,7 +484,7 @@ class SimulationManager(object):
 if __name__ == '__main__':
     simulationObject = SimulationManager()
 
-    simulationObject.run_selected_components_for_dtalite(39)
+    simulationObject.run_selected_components_for_dtalite(84)
     
     #simulationObject.load_currentskims_matrix(151)    
     #for i in range(1400):
