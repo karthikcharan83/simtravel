@@ -12,12 +12,18 @@
 char *tt_file_name;
 char *dist_file_name;
 
+char *real_tt_file_name;
+char *real_dist_file_name;
+
 char *locations_file = "locations.txt";
 
 
 //dynamic array
 float **tt_graph;
 float **dist_graph;
+
+float **real_tt_graph;
+float **real_dist_graph;
 
 int **location_choices;
 
@@ -88,6 +94,24 @@ void set_dist_file(char *s, int length){
 }
 
 
+void set_real_tt_file(char *s, int length){
+   //if flag is 1 then nodes of the graph were not provided
+   //set the file name to the node_file_name(function needs to be called twice)
+   //if flag is 0 nodes are already known 
+   //set the file name to the graph_file_name
+   real_tt_file_name = (char *)malloc(length*sizeof(char));
+   real_tt_file_name = s;
+}
+
+void set_real_dist_file(char *s, int length){
+   //if flag is 1 then nodes of the graph were not provided
+   //set the file name to the node_file_name(function needs to be called twice)
+   //if flag is 0 nodes are already known 
+   //set the file name to the graph_file_name
+   real_dist_file_name = (char *)malloc(length*sizeof(char));
+   real_dist_file_name = s;
+}
+
 /* Print the file location */
 void print_string()
 {
@@ -157,12 +181,17 @@ void initialize_array(int nodes_temp)
     tt_graph = (float **)malloc(nodes*sizeof(float *));
     dist_graph = (float **)malloc(nodes*sizeof(float *));
 
+    real_tt_graph = (float **)malloc(nodes*sizeof(float *));
+    real_dist_graph = (float **)malloc(nodes*sizeof(float *));
         
     //create all the nodes
     for(x = 0; x < nodes; x++)
     {
-	tt_graph[x] = (float *)malloc(nodes*sizeof(float));
-	dist_graph[x] = (float *)malloc(nodes*sizeof(float));
+		tt_graph[x] = (float *)malloc(nodes*sizeof(float));
+		dist_graph[x] = (float *)malloc(nodes*sizeof(float));
+
+		real_tt_graph[x] = (float *)malloc(nodes*sizeof(float));
+		real_dist_graph[x] = (float *)malloc(nodes*sizeof(float));
     }
     //printf("C--> Graph created\n");
 }
@@ -218,6 +247,31 @@ void set_array(int offset)
     */
 }
 
+void set_real_array(int offset)
+{
+    int i;
+
+    //open the file to read data
+    FILE *fileTt = fopen(real_tt_file_name, "r");
+    if( real_tt_file_name != NULL )
+    {
+        for(i = 0; i < edges; i++)
+        {
+            //read the origin, destination and tt and save it
+            fscanf(fileTt, "%d, %d, %f, %f", &start, &end, &tt, &dist);
+			//printf("%f, %f, %d, %d", tt, dist, start-offset, end-offset);
+            //set the value of tt to the graph
+            real_tt_graph[start-offset][end-offset] = tt;
+			real_dist_graph[start-offset][end-offset] = dist/5280.0;
+        }
+        fclose(fileTt);
+    }
+    else
+    {
+        //error if file is null
+        perror(real_tt_file_name);
+    }
+}
 
 /*
 This function is used to get the travel times from the graph.
@@ -245,6 +299,38 @@ void get_tt(int org[], int dest[], float tt[], int arr_len, int offset )
         else
         {
             temp = tt_graph[st-offset][en-offset];
+	    //printf("Dist - %f\n", temp);
+	    if (temp < 3)
+	    {
+             	tt[i] = 3;
+	    }
+	    tt[i] = temp;
+        }
+    }
+    //printf("C--> Travel times retrieved\n");
+}
+
+void get_real_tt(int org[], int dest[], float tt[], int arr_len, int offset )
+{
+    //local variables
+    int i;
+    int st, en;
+    float temp;
+
+    //get the travel times using the origin and destination
+    for ( i = 0; i < arr_len; i++ )
+    {
+        st = org[i];
+        en = dest[i];
+        
+        //if origin or destination are zero the location is invalid. set travel time to 0
+        if (st == 0 || en == 0) 
+        {
+            tt[i] = 0;
+        }
+        else
+        {
+            temp = real_tt_graph[st-offset][en-offset];
 	    //printf("Dist - %f\n", temp);
 	    if (temp < 3)
 	    {
@@ -288,6 +374,37 @@ void get_dist(int org[], int dest[], float dist[], int arr_len, int offset )
     //printf("C--> Travel distances retrieved\n");
 }
 
+void get_real_dist(int org[], int dest[], float dist[], int arr_len, int offset )
+{
+    //local variables
+    int i;
+    int st, en;
+    float temp;
+    
+    //get the travel times using the origin and destination
+    for ( i = 0; i < arr_len; i++ )
+    {
+        st = org[i];
+        en = dest[i];
+        
+        //if origin or destination are zero the location is invalid. set travel time to 0
+        if (st == 0 || en == 0) 
+        {
+            dist[i] = 0;
+        }
+        else
+        {
+            temp = real_dist_graph[st-offset][en-offset];
+	    //printf("Dist - %f\n", temp);
+	    if (temp == 0)
+	    {
+		dist[i] = 0.5;
+	    }
+	    dist[i] = temp;
+        }
+    }
+    //printf("C--> Travel distances retrieved\n");
+}
 
 void get_generalized_time(int org[], int dest[], float votd[], float gentt[], int arr_len, int offset )
 {
@@ -325,6 +442,41 @@ void get_generalized_time(int org[], int dest[], float votd[], float gentt[], in
     //printf("C--> Travel distances retrieved\n");
 }
 
+void get_generalized_real_time(int org[], int dest[], float votd[], float gentt[], int arr_len, int offset )
+{
+    //local variables
+    int i;
+    int st, en;
+    float temptt, tempdist;
+    
+    //get the travel times using the origin and destination
+    for ( i = 0; i < arr_len; i++ )
+    {
+        st = org[i];
+        en = dest[i];
+        
+        //if origin or destination are zero the location is invalid. set travel time to 0
+        if (st == 0 || en == 0) 
+        {
+            gentt[i] = 0;
+        }
+        else
+        {
+            temptt = real_tt_graph[st-offset][en-offset];
+            tempdist = real_dist_graph[st-offset][en-offset];
+
+	    gentt[i] = temptt + tempdist*votd[i];
+
+	    if (gentt[i] < 3) {
+		gentt[i] = 3;
+	    }
+
+
+	    //printf("Generalized travel time - %f\n", gentt[i]);
+        }
+    }
+    //printf("C--> Travel distances retrieved\n");
+}
 
 /*
 This function is used to delete the original graph 

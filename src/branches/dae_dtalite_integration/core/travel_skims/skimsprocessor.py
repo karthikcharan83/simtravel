@@ -34,6 +34,17 @@ class SkimsProcessor(object):
     def create_graph(self):
         skimsquery.set_array(self.offset)
         
+    def set_real_tt_fileString(self, file_path):
+	self.ttFilePath = file_path
+        skimsquery.set_real_tt_file(file_path, len(self.ttFilePath))
+        
+    def set_real_dist_fileString(self, file_path):
+	self.distFilePath = file_path
+        skimsquery.set_real_dist_file(file_path, len(self.distFilePath))
+
+    def create_real_graph(self):
+        skimsquery.set_real_array(self.offset)
+        
     def numpy_to_carray(self, numpy_arr, arr_len, data_type):
         """
         This method converts the numpy array to a carray
@@ -119,6 +130,31 @@ class SkimsProcessor(object):
         #return the travel times numpy array
 	#print 'tt', new_tt
         return new_tt
+        
+    def get_real_travel_times(self, origin, destination):
+        #get the array length and initialize the tt array
+        arr_len = origin.size
+        tt = zeros(arr_len)
+        
+        #convert the arrays to carrays
+        org_arr = self.numpy_to_carray(origin, arr_len, 0)
+        dest_arr = self.numpy_to_carray(destination, arr_len, 0)
+        tt_arr = self.numpy_to_carray(tt, arr_len, 1)
+        
+        #start retrieving travel times
+        skimsquery.get_real_tt(org_arr, dest_arr, tt_arr, arr_len, self.offset)
+        
+        #conversion from carray to numpy
+        new_tt = self.carray_to_numpy(tt_arr, arr_len, 1)
+
+        #deleting all the carrays
+        self.delete_carray(org_arr, 0)
+        self.delete_carray(dest_arr, 0)
+        self.delete_carray(tt_arr, 1)
+        
+        #return the travel times numpy array
+	#print 'tt', new_tt
+        return new_tt
 
     def get_travel_distances(self, origin, destination):
         #get the array length and initialize the tt array
@@ -144,6 +180,30 @@ class SkimsProcessor(object):
         #return the travel times numpy array
         return new_dist
 
+    def get_real_travel_distances(self, origin, destination):
+        #get the array length and initialize the tt array
+        arr_len = origin.size
+        dist = zeros(arr_len)
+        
+        #convert the arrays to carrays
+        org_arr = self.numpy_to_carray(origin, arr_len, 0)
+        dest_arr = self.numpy_to_carray(destination, arr_len, 0)
+        dist_arr = self.numpy_to_carray(dist, arr_len, 1)
+        
+        #start retrieving travel times
+        skimsquery.get_real_dist(org_arr, dest_arr, dist_arr, arr_len, self.offset)
+        
+        #conversion from carray to numpy
+        new_dist = self.carray_to_numpy(dist_arr, arr_len, 1)
+
+        #deleting all the carrays
+        self.delete_carray(org_arr, 0)
+        self.delete_carray(dest_arr, 0)
+        self.delete_carray(dist_arr, 1)
+        
+        #return the travel times numpy array
+        return new_dist
+        
     def get_generalized_time(self, origin, destination, votd=None):
         #get the array length and initialize the tt array
         arr_len = origin.size
@@ -173,7 +233,34 @@ class SkimsProcessor(object):
         #return the travel times numpy array
         return new_gentt
 
+    def get_generalized_real_time(self, origin, destination, votd=None):
+        #get the array length and initialize the tt array
+        arr_len = origin.size
+        gentt = zeros(arr_len)
 
+	if votd == None:
+	    votd_arr = self.numpy_to_carray(2 + zeros(arr_len), arr_len, 1)
+	else:
+	    votd_arr = self.numpy_to_carray(votd, arr_len, 1)	   
+        
+        #convert the arrays to carrays
+        org_arr = self.numpy_to_carray(origin, arr_len, 0)
+        dest_arr = self.numpy_to_carray(destination, arr_len, 0)
+        gentt_arr = self.numpy_to_carray(gentt, arr_len, 1)
+        
+        #start retrieving travel times
+        skimsquery.get_generalized_real_time(org_arr, dest_arr, votd_arr, gentt_arr, arr_len, self.offset)
+        
+        #conversion from carray to numpy
+        new_gentt = self.carray_to_numpy(gentt_arr, arr_len, 1)
+
+        #deleting all the carrays
+        self.delete_carray(org_arr, 0)
+        self.delete_carray(dest_arr, 0)
+        self.delete_carray(gentt_arr, 1)
+        
+        #return the travel times numpy array
+        return new_gentt
 
     def create_carray(self, num):
         """
@@ -373,84 +460,104 @@ class TestSkimsProcessor(unittest.TestCase):
     def setUp(self):
         self.numarr = 'numarr'
         self.offset = 1
-        self.nodes = 1995
+        self.nodes = 175
 
     def testEx(self):
+        
         ext_obj = SkimsProcessor(self.offset, self.nodes)
         
-	ext_obj.set_tt_fileString("/home/karthik/simtravel/test/mag_zone_dynamic/skimOutput/dynamic/skim0.dat")
-	ext_obj.set_dist_fileString("/home/karthik/simtravel/test/skimsInput/distance0.dat")
-	print 'paths set'
-	ext_obj.create_graph()
-	print 'graph created'
+        ext_obj.set_tt_fileString("C:/DTALite/New_PHXsubarea/output_skim_dtalite.csv")
+        ext_obj.set_dist_fileString("C:/DTALite/New_PHXsubarea/distance0.dat")
+        print 'paths set'
+        ext_obj.create_graph()
+        print 'graph created'
+        
+        print '1111'
+        ext_obj.set_real_tt_fileString("C:/DTALite/New_PHXsubarea/output_td_skim_min30.csv")
+        print '2222'
+        ext_obj.set_real_dist_fileString("C:/DTALite/New_PHXsubarea/distance0.dat")
+        print 'paths set 3333'
+        ext_obj.create_real_graph()
+        print 'graph created 4444'
+        
+#        ext_obj2 = SkimsProcessor(self.offset, self.nodes)
+#        
+#        ext_obj2.set_tt_fileString("C:/DTALite/New_PHXsubarea/output_td_skim_min30.csv")
+#        ext_obj2.set_dist_fileString("C:/DTALite/New_PHXsubarea/distance0.dat")
+#        print 'paths set'
+#        ext_obj2.create_graph()
+#        print 'graph created'
 
-	o_arr = array([200,223,312,445])
-	d_arr = array([120,160,453,234])
-	ava_tt = array([175,200,123,144])
-	loc_ava = array(arange(1995))+1
+        o_arr = array([100,100,100,100])
+        d_arr = array([120,134,153,160])
+        ava_tt = array([175,200,123,144])
+        
+        loc_ava = array(arange(1995))+1
 
-	#loc_ava = array(arange(1000))+1
-	
-	numsampllocs = 5
-	votd = array([2.,2.,2.,2.])
-	print votd
+        #loc_ava = array(arange(1000))+1
+        numsampllocs = 5
+        votd = array([2.,2.,2.,2.])
+        print votd
+        votd_def = array([0,0,0,0])
 
-	votd_def = array([0,0,0,0])
+        print 'Check tt -- ', ext_obj.get_travel_times(o_arr, d_arr)
+        print 'Check distances -- ', ext_obj.get_travel_distances(o_arr, d_arr)
+        print 'Check generalized distances -- ', ext_obj.get_generalized_time(o_arr, d_arr, votd)
+        
+        print 'Check real tt -- ', ext_obj.get_real_travel_times(o_arr, d_arr)
+        print 'Check real distances -- ', ext_obj.get_real_travel_distances(o_arr, d_arr)
+        print 'Check generalized real distances -- ', ext_obj.get_generalized_real_time(o_arr, d_arr, votd)
 
-	print 'Check tt -- ', ext_obj.get_travel_times(o_arr, d_arr)
-	print 'Check distances -- ', ext_obj.get_travel_distances(o_arr, d_arr)
-	print 'Check generalized distances -- ', ext_obj.get_generalized_time(o_arr, d_arr, votd)
-
-	ext_obj.create_location_array(4)
-	choices = ext_obj.get_location_choices(o_arr, d_arr, ava_tt, votd, 1995, loc_ava)
-	print choices
-	nonzerochoices = choices <> 0
-	print nonzerochoices.sum(-1)
-
-	for i in range(5):
-	    print "LOCATION CHOICES - ", i + 1
-	    dests = choices[:,i]
-	    tt_to = ext_obj.get_travel_times(o_arr, dests)
-	    tt_from = ext_obj.get_travel_times(dests, d_arr)
-
-	    gen_tt_to = ext_obj.get_generalized_time(o_arr, dests, votd)
-	    gen_tt_from = ext_obj.get_generalized_time(dests, d_arr, votd)
-
-
-	    print "\tAva TT", ava_tt
-	    print "\t-----"
-	    print "\tTT to", tt_to
-	    print "\tTT from", tt_from
-	    print "\tCheck", tt_to + tt_from > ava_tt
-	    print "\t-----"
-	    print "\tGen TT to", gen_tt_to
-	    print "\tGen TT from", gen_tt_from
-	    print "\tCheck", gen_tt_to + gen_tt_from > ava_tt
-
-	ext_obj.create_location_array(4)
-	choices = ext_obj.get_location_choices(o_arr, d_arr, ava_tt, votd_def, 1995, loc_ava)
-	nonzerochoices = choices <> 0
-	print nonzerochoices.sum(-1)
-
-	for i in range(5):
-	    print "LOCATION CHOICES no VOTD - ", i + 1
-	    dests = choices[:,i]
-	    tt_to = ext_obj.get_travel_times(o_arr, dests)
-	    tt_from = ext_obj.get_travel_times(dests, d_arr)
-
-	    gen_tt_to = ext_obj.get_generalized_time(o_arr, dests, votd_def)
-	    gen_tt_from = ext_obj.get_generalized_time(dests, d_arr, votd_def)
-
-
-	    print "\tAva TT", ava_tt
-	    print "\t-----"
-	    print "\tTT to", tt_to
-	    print "\tTT from", tt_from
-	    print "\tCheck", tt_to + tt_from > ava_tt
-	    print "\t-----"
-	    print "\tGen TT to", gen_tt_to
-	    print "\tGen TT from", gen_tt_from
-	    print "\tCheck", gen_tt_to + gen_tt_from > ava_tt
+#	ext_obj.create_location_array(4)
+#	choices = ext_obj.get_location_choices(o_arr, d_arr, ava_tt, votd, 1995, loc_ava)
+#	print choices
+#	nonzerochoices = choices <> 0
+#	print nonzerochoices.sum(-1)
+#
+#	for i in range(5):
+#	    print "LOCATION CHOICES - ", i + 1
+#	    dests = choices[:,i]
+#	    tt_to = ext_obj.get_travel_times(o_arr, dests)
+#	    tt_from = ext_obj.get_travel_times(dests, d_arr)
+#
+#	    gen_tt_to = ext_obj.get_generalized_time(o_arr, dests, votd)
+#	    gen_tt_from = ext_obj.get_generalized_time(dests, d_arr, votd)
+#
+#
+#	    print "\tAva TT", ava_tt
+#	    print "\t-----"
+#	    print "\tTT to", tt_to
+#	    print "\tTT from", tt_from
+#	    print "\tCheck", tt_to + tt_from > ava_tt
+#	    print "\t-----"
+#	    print "\tGen TT to", gen_tt_to
+#	    print "\tGen TT from", gen_tt_from
+#	    print "\tCheck", gen_tt_to + gen_tt_from > ava_tt
+#
+#	ext_obj.create_location_array(4)
+#	choices = ext_obj.get_location_choices(o_arr, d_arr, ava_tt, votd_def, 1995, loc_ava)
+#	nonzerochoices = choices <> 0
+#	print nonzerochoices.sum(-1)
+#
+#	for i in range(5):
+#	    print "LOCATION CHOICES no VOTD - ", i + 1
+#	    dests = choices[:,i]
+#	    tt_to = ext_obj.get_travel_times(o_arr, dests)
+#	    tt_from = ext_obj.get_travel_times(dests, d_arr)
+#
+#	    gen_tt_to = ext_obj.get_generalized_time(o_arr, dests, votd_def)
+#	    gen_tt_from = ext_obj.get_generalized_time(dests, d_arr, votd_def)
+#
+#
+#	    print "\tAva TT", ava_tt
+#	    print "\t-----"
+#	    print "\tTT to", tt_to
+#	    print "\tTT from", tt_from
+#	    print "\tCheck", tt_to + tt_from > ava_tt
+#	    print "\t-----"
+#	    print "\tGen TT to", gen_tt_to
+#	    print "\tGen TT from", gen_tt_from
+#	    print "\tCheck", gen_tt_to + gen_tt_from > ava_tt
 
 
 

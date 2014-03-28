@@ -15,6 +15,8 @@
 
 void set_tt_file(char *s, int length);
 void set_dist_file(char *s, int length);
+void set_real_tt_file(char *s, int length);
+void set_real_dist_file(char *s, int length);
 void print_string();
 
 void print_array(int a[], int n);
@@ -24,9 +26,13 @@ void write_locations(int index);
 
 void initialize_array(int nodes_temp);
 void set_array(int offset);
+void set_real_array(int offset);
 void get_tt(int org[], int dest[], float tt[], int arr_len, int offset );
 void get_dist(int org[], int dest[], float tt[], int arr_len, int offset );
 void get_generalized_time(int org[], int dest[], float votd[], float gentt[], int arr_len, int offset );
+void get_real_tt(int org[], int dest[], float tt[], int arr_len, int offset );
+void get_real_dist(int org[], int dest[], float tt[], int arr_len, int offset );
+void get_generalized_real_time(int org[], int dest[], float votd[], float gentt[], int arr_len, int offset );
 void delete_array();
 
 void print_tt_array(int org[], int dest[], float tt[], int len);
