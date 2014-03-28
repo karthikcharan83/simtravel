@@ -1,4 +1,4 @@
-from numpy import ndarray, array, zeros, ones, hstack, rec, lexsort
+from numpy import ndarray, array, zeros, ones, hstack, rec, lexsort, where
 from scipy import exp
 import numexpr as ne
 import re
@@ -453,6 +453,12 @@ class DataFilter(object):
         valid_rows.shape = (valid_rows.shape[0], )
         #print "\t\t\t\tExtracting for one filter took - %.4f" %(time.time()-ti)
         return valid_rows            
+
+    def row_indice(self, data):
+
+        valueCheck = self.value        
+        return where(data.columns([self.varname]) < valueCheck)[0]
+        
 
     def __repr__(self):
 	return '%s %s %s' %(self.varname, self.filter_string, self.value)
