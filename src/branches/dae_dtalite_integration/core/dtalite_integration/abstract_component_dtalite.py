@@ -205,7 +205,7 @@ class AbstractComponent(object):
 	    else:
 	    	trips = self.reflectToDatabase(valid_data_rows, tableNamesKeyDict, queryBrowser, fileLoc)
 
-
+            
         return trips
 
     def pre_process_data(self):
@@ -807,6 +807,7 @@ class AbstractComponent(object):
 	locValidCount = (locationChoices <> 0).sum(-1)
 	data.setcolumn('count', locValidCount)
 
+        row_index = self.update_skim_by_current(data)
 	#print locationChoices
 	
 	for i in range(spatialconst.countChoices):
@@ -814,6 +815,9 @@ class AbstractComponent(object):
 
 	    tt_to = skimsMatrix2.get_generalized_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
 	    tt_from = skimsMatrix2.get_generalized_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
+     
+	    tt_to2 = skimsMatrix2.get_generalized_real_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
+	    tt_from2 = skimsMatrix2.get_generalized_real_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
 	
 	    #print 'Sampled locations - ', sampleLocColVals
 	    #print 'Travel time to - ', tt_to
@@ -825,14 +829,17 @@ class AbstractComponent(object):
             #print "colName"
             #print colName
 
-
+            if row_index <> None:
+                tt_to[row_index] = tt_to2[row_index]
+                tt_from[row_index] = tt_from2[row_index]
+                
 	    # Also updating skim values for sampled locations: here the travel time TO sampled location is updated
             if spatialconst.asField:
                 colName = spatialconst.asField
             else:
                 colName = spatialconst.skimField
-            skimLocColName = '%s%s' %(colName, i+1)
-	
+            skimLocColName = '%s%s' %(colName, i+1)           
+            
             data.setcolumn(skimLocColName, tt_to)
             #print "skimLocColName"
             #print skimLocColName
@@ -862,33 +869,42 @@ class AbstractComponent(object):
         # location pair
         originLocColName = spatialconst.startConstraint.locationField
         destinationLocColName = spatialconst.endConstraint.locationField
-	votdColName = spatialconst.votdField        
+        votdColName = spatialconst.votdField        
 
         originLocColVals = array(data.columns([originLocColName]).data, dtype=int)
         destinationLocColVals = array(data.columns([destinationLocColName]).data, dtype=int)
-	votdColVals = array(data.columns([votdColName]).data)
+        votdColVals = array(data.columns([votdColName]).data)
 
-	#print '\tVOTD ColName - ', votdColName
-	#print data.columns([votdColName]).data[:5,:]
+        #print '\tVOTD ColName - ', votdColName
+        #print data.columns([votdColName]).data[:5,:]
 
-	#print '\tIDS - '
-	#print data.columns(['houseid','personid']).data[:5,:].astype(int)
+        #print '\tIDS - '
+        #print data.columns(['houseid','personid']).data[:5,:].astype(int)
 
+        #tt = skimsMatrix.get_travel_times(originLocColVals[:,0], destinationLocColVals[:,0])
+        dist = skimsMatrix.get_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
+        tt = skimsMatrix.get_generalized_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
 
-	#tt = skimsMatrix.get_travel_times(originLocColVals[:,0], destinationLocColVals[:,0])
-	dist = skimsMatrix.get_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
-	tt = skimsMatrix.get_generalized_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
-
-	#if (tt < 3).any():
-	#    print 'TTS', tt[tt<3]
-	#    print 'IDS', data.columns(['houseid','personid']).data.astype(int)[tt<3]
-	#    print 'Origin', originLocColVals[tt<3]
-	#   print 'Destination', destinationLocColVals[tt<3]
+        dist2 = skimsMatrix.get_real_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
+        tt2 = skimsMatrix.get_generalized_real_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
+        
+        
+        row_index = self.update_skim_by_current(data)
+        if row_index <> None:
+            dist[row_index] = dist2[row_index]
+            tt[row_index] = tt2[row_index]
+ 
+         
+         #if (tt < 3).any():
+         #    print 'TTS', tt[tt<3]
+         #    print 'IDS', data.columns(['houseid','personid']).data.astype(int)[tt<3]
+         #    print 'Origin', originLocColVals[tt<3]
+         #   print 'Destination', destinationLocColVals[tt<3]
 	    #raw_input('Travel time less 3')
 
 
-	#print 'gen tt', tt
-	#print 'distance', dist
+        #print 'gen tt', tt
+        #print 'distance', dist
 
         if spatialconst.asField:
             colName = spatialconst.asField
@@ -901,18 +917,33 @@ class AbstractComponent(object):
 
 
 
-	distColName = spatialconst.distField
+        distColName = spatialconst.distField
         sampleVarDict = {'temp':['%s' %(distColName)]}
         self.append_cols_for_dependent_variables(data, sampleVarDict)
         data.setcolumn(distColName, dist)	
 
-	#raw_input("column name - %s and dist Column name - %s" %(colName,distColName))
+        #raw_input("column name - %s and dist Column name - %s" %(colName,distColName))
 
-	#print originLocColVals[:,0]
-	#print destinationLocColVals[:,0]
-	#print tt
+        #print originLocColVals[:,0]
+        #print destinationLocColVals[:,0]
+        #print tt
 
         return data
+
+
+    def update_skim_by_current(self, data):
+        
+        #if self.component_name == "DynamicNonMandatoryActivities":
+        
+        if 'informationtype' in data.varnames:
+            dataFilter = DataFilter('informationtype', 'equals', 1)
+            rows_index = dataFilter.row_indice(data)
+            #print "Row numbers ----------" 
+            #print rows_index
+            
+            return rows_index
+        else:
+            return None
 
 
 

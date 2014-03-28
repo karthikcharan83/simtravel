@@ -37,7 +37,7 @@ class SimulationManager(object):
         
         #, configObject=None, fileLoc=None, component=None):
         #TODO: REMOVE PLACEHOLDER 
-        fileLoc = 'C:/DTALite/New_PHXsubarea/config_mag_dtalite_pretrip.xml'
+        fileLoc = 'C:/DTALite/New_PHXsubarea/config_mag_dtalite.xml'
         configObject = None
         
 
@@ -82,9 +82,7 @@ class SimulationManager(object):
         self.trips = 0
         
         self.subregion = {}
-        
-        # Read skim data of pretrip information        
-        self.currentSkimsMatrix = SkimsProcessor(1, 175)
+
 
 
     def setup_databaseConnection(self):
@@ -258,33 +256,16 @@ class SimulationManager(object):
                         #raw_input("check size after ...") 
                     elif ttTableLoc == self.lastTtTableLoc:
                         pass
-    
-#                    ttCurTableLoc, distCurTableLoc = self.identify_currentskims_matrix(comp.analysisInterval)
-#
-#                    if ttCurTableLoc <> self.lastCurTtTableLoc and (len(comp.spatialConst_list) > 0 or 
-#    							len(comp.dynamicspatialConst_list) > 0):
-#                        self.load_currentskims_matrix(comp, ttCurTableLoc, distCurTableLoc)
-#                        self.lastCurTtTableLoc = ttCurTableLoc
-#                    elif ttCurTableLoc == self.lastCurTtTableLoc:
-#                        pass
                         
     
                     print '\tTime taken to process skims %.4f' %(time.time()-t_sk)
-                    
-                    if loop_num == 0:
-                        data = comp.pre_process(self.queryBrowser, 
-                                                self.skimsMatrix, self.db, fileLoc)
-                    else:
-                        data = comp.pre_process(self.queryBrowser, 
-                                                self.currentSkimsMatrix, self.db, fileLoc)
+                    data = comp.pre_process(self.queryBrowser, 
+                                            self.skimsMatrix, self.db, fileLoc)
     
                 if data is not None:
                     #print 'inside here for component - ', comp.component_name
                     if comp.component_name == "ExtractAllTravelEpisodes":
-                        if loop_num == 0:
-                            tripInfo = comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
-                        else:
-                            tripInfo = comp.run(data, self.queryBrowser, self.currentSkimsMatrix, self.uniqueIds, fileLoc)
+                        tripInfo = comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
                         print 'Origin Zone Ids Before - ', tripInfo[:5,5]
                         print 'Destination Zone Ids Before - ', tripInfo[:5,6]
                         #tripInfo[:,5] += 11
@@ -294,11 +275,8 @@ class SimulationManager(object):
                         self.add_header_for_dtalite(fileLoc, analysisInterval, tripInfo, filename)
                         #raw_input()
                     else:
-                        if loop_num == 0:
-                            comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
-                        else:
-                            comp.run(data, self.queryBrowser, self.currentSkimsMatrix, self.uniqueIds, fileLoc)
-    
+                        comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
+   
     
                 elif data is None and comp.component_name == "ExtractAllTravelEpisodes":
                     tripInfo = zeros((1,18))
@@ -411,18 +389,9 @@ class SimulationManager(object):
         
         print 'TRAVEL Skims object created --'
         #raw_input("check memory after distance skims -- ")
-        print 'Check travel times -- ', self.skimsMatrix.get_travel_times(array([1,2,3,4]), array([1,2,3,4]))
+        print 'Check travel times -- ', self.skimsMatrix.get_travel_times(array([1,1,1,1]), array([1,2,3,4]))
         print 'Check distances -- ', self.skimsMatrix.get_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
         print 'Check generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
-
-
-#    def identify_currentskims_matrix(self, analysisInterval):
-#        
-#        numSkim = analysisInterval/15
-#        ttTableLocation = "C:/DTALite/New_PHXsubarea/Skims/skim%s.csv" %numSkim;
-#        distTableLocation = "C:/DTALite/New_PHXsubarea/Skims/distance0.dat";
-#
-#        return ttTableLocation, distTableLocation 
 
 
     def load_currentskims_matrix(self, ttTableLocation, distTableLocation=None):
@@ -432,15 +401,15 @@ class SimulationManager(object):
         print 'dist Table Location - ', distTableLocation
 
         #raw_input("check memory before creating travel skims -- ")
-        self.currentSkimsMatrix.set_tt_fileString(ttTableLocation)
-        self.currentSkimsMatrix.set_dist_fileString(distTableLocation)
-        self.currentSkimsMatrix.create_graph()
+        self.skimsMatrix.set_real_tt_fileString(ttTableLocation)
+        self.skimsMatrix.set_real_dist_fileString(distTableLocation)
+        self.skimsMatrix.create_real_graph()
     
         print 'Real-Time TRAVEL Skims object created --'
         #raw_input("check memory after distance skims -- ")
-        print 'Check real-time travel times -- ', self.currentSkimsMatrix.get_travel_times(array([1,1,1,1]), array([1,2,3,4]))
-        print 'Check distances -- ', self.currentSkimsMatrix.get_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
-        print 'Check real-time generalized cost tt + dist*2 -- ', self.currentSkimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
+        print 'Check real-time travel times -- ', self.skimsMatrix.get_real_travel_times(array([1,1,1,1]), array([1,2,3,4]))
+        print 'Check distances -- ', self.skimsMatrix.get_real_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
+        print 'Check real-time generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_real_time(array([1,2,3,4]), array([1,2,3,4]))
             
             
 
@@ -483,8 +452,8 @@ class SimulationManager(object):
 
 if __name__ == '__main__':
     simulationObject = SimulationManager()
-
-    simulationObject.run_selected_components_for_dtalite(84)
+    simulationObject.load_currentskims_matrix("C:/DTALite/New_PHXsubarea/output_td_skim_min30.csv", "C:/DTALite/New_PHXsubarea/distance0.dat")
+    simulationObject.run_selected_components_for_dtalite(90)
     
     #simulationObject.load_currentskims_matrix(151)    
     #for i in range(1400):

@@ -90,7 +90,7 @@ class RunAmosDtalite(object):
                     realtime_skim_name = self.data_in_real_time[i][self.column_index_for_realtimeskim]
                     
                     
-                    self.temp_create_dtalite(i-1)       # Just For Testing
+                    #self.temp_create_dtalite(i-1)       # Just For Testing
                     
                     
                     tripInfoArrivals = self.arrival_from_dtalite(i-1, dtal_output_name)
@@ -99,7 +99,7 @@ class RunAmosDtalite(object):
                     self.manager.run_selected_components_for_dtalite(i, tripInfoArrivals, openamos_output_name)             
                      
                     
-                    self.temp_trips_from_openamos(i)  # Just For Testing
+                    #self.temp_trips_from_openamos(i)  # Just For Testing
 
 
 
