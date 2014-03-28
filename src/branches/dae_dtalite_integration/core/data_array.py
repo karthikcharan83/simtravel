@@ -454,10 +454,11 @@ class DataFilter(object):
         #print "\t\t\t\tExtracting for one filter took - %.4f" %(time.time()-ti)
         return valid_rows            
 
+    # Add by Dae to find index of rows on which information type value is 1
     def row_indice(self, data):
 
         valueCheck = self.value        
-        return where(data.columns([self.varname]) < valueCheck)[0]
+        return where(data.columns([self.varname]) == valueCheck)[0]
         
 
     def __repr__(self):

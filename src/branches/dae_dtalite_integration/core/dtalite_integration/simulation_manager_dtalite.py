@@ -394,6 +394,8 @@ class SimulationManager(object):
         print 'Check generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
 
 
+    # Add by Dae to load currentskim data 
+    # This function is called by control_openamos_dtalite.py
     def load_currentskims_matrix(self, ttTableLocation, distTableLocation=None):
         
 

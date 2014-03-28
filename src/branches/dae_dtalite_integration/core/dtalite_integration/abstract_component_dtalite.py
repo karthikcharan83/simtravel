@@ -806,7 +806,8 @@ class AbstractComponent(object):
 	#print 'count of valid locations - ', (locationChoices <> 0).sum(-1)
 	locValidCount = (locationChoices <> 0).sum(-1)
 	data.setcolumn('count', locValidCount)
-
+         
+        # Add by Dae to get current skim data
         row_index = self.update_skim_by_current(data)
 	#print locationChoices
 	
@@ -816,6 +817,7 @@ class AbstractComponent(object):
 	    tt_to = skimsMatrix2.get_generalized_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
 	    tt_from = skimsMatrix2.get_generalized_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
      
+         # Add by Dae to get current skim data
 	    tt_to2 = skimsMatrix2.get_generalized_real_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
 	    tt_from2 = skimsMatrix2.get_generalized_real_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
 	
@@ -828,7 +830,8 @@ class AbstractComponent(object):
             data.setcolumn(colName, sampleLocColVals)
             #print "colName"
             #print colName
-
+            
+            # Add by Dae to insert current skim data on rows which have information type of 1
             if row_index <> None:
                 tt_to[row_index] = tt_to2[row_index]
                 tt_from[row_index] = tt_from2[row_index]
@@ -885,10 +888,11 @@ class AbstractComponent(object):
         dist = skimsMatrix.get_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
         tt = skimsMatrix.get_generalized_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
 
+        # Add by Dae to get current skim data
         dist2 = skimsMatrix.get_real_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
         tt2 = skimsMatrix.get_generalized_real_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
         
-        
+        # Add by Dae to insert current skim data on rows which have information type of 1
         row_index = self.update_skim_by_current(data)
         if row_index <> None:
             dist[row_index] = dist2[row_index]
@@ -930,7 +934,7 @@ class AbstractComponent(object):
 
         return data
 
-
+    # Add by Dae to get row index of which information type is 1
     def update_skim_by_current(self, data):
         
         #if self.component_name == "DynamicNonMandatoryActivities":
