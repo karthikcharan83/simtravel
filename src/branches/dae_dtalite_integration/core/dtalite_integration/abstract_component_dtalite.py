@@ -71,6 +71,7 @@ class AbstractComponent(object):
 
         self.keyColsList()
         self.loop_component = loop_component
+        self.loadCurrentSkim = False
         #self.dependencyAllocationFlag = dependencyAllocationFlag
     #TODO: check for names in the variable list
     #TODO: check for varnames in model specs and in the data
@@ -833,8 +834,16 @@ class AbstractComponent(object):
             
             # Add by Dae to insert current skim data on rows which have information type of 1
             if row_index <> None:
+                #print 'Household ID:'
+                #print data.column('houseid')
+                #print 'Information Type:'
+                #print data.column('informationtype')
+                #print 'Change current skim data for information type = 1'
+                #print "Length: %s - %s : %s - %s" %(len(tt_to), len(tt_to2), len(tt_from), len(tt_from2))
+                #print tt_to
                 tt_to[row_index] = tt_to2[row_index]
                 tt_from[row_index] = tt_from2[row_index]
+                #print tt_to
                 
 	    # Also updating skim values for sampled locations: here the travel time TO sampled location is updated
             if spatialconst.asField:
@@ -895,8 +904,12 @@ class AbstractComponent(object):
         # Add by Dae to insert current skim data on rows which have information type of 1
         row_index = self.update_skim_by_current(data)
         if row_index <> None:
+            #print 'Change current skim data for information type = 1'
+            #print "Length: %s - %s" %(len(dist), len(dist2))
+            #print tt
             dist[row_index] = dist2[row_index]
             tt[row_index] = tt2[row_index]
+            #print tt
  
          
          #if (tt < 3).any():
@@ -938,16 +951,23 @@ class AbstractComponent(object):
     def update_skim_by_current(self, data):
         
         #if self.component_name == "DynamicNonMandatoryActivities":
-        
-        if 'informationtype' in data.varnames:
-            dataFilter = DataFilter('informationtype', 'equals', 1)
-            rows_index = dataFilter.row_indice(data)
-            #print "Row numbers ----------" 
-            #print rows_index
-            
-            return rows_index
-        else:
-            return None
+        if self.loadCurrentSkim:
+            if 'informationtype' in data.varnames:
+                dataFilter = DataFilter('informationtype', 'equals', 1)
+                rows_index = dataFilter.row_indice(data)
+                #print "Row numbers ----------" 
+                #print rows_index
+                
+                return rows_index
+                
+#        else:
+#            print ''
+#            print ''
+#            print 'Do not load current skim data.'
+#            print ''
+#            print ''
+
+        return None
 
 
 

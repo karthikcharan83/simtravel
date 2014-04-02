@@ -82,6 +82,8 @@ class SimulationManager(object):
         self.trips = 0
         
         self.subregion = {}
+        
+        self.loadCurrentSkim = False
 
 
 
@@ -211,6 +213,7 @@ class SimulationManager(object):
         for comp in self.componentList:
             t = time.time()
             comp.analysisInterval = analysisInterval - 1
+            comp.loadCurrentSkim = self.loadCurrentSkim
             print '\nRunning Component - %s; Analysis Interval - %s' %(comp.component_name,
                                                                        comp.analysisInterval)
             
@@ -398,22 +401,27 @@ class SimulationManager(object):
     # This function is called by control_openamos_dtalite.py
     def load_currentskims_matrix(self, ttTableLocation, distTableLocation=None):
         
+        if self.loadCurrentSkim:
+            print 'tt Table Location - ', ttTableLocation
+            print 'dist Table Location - ', distTableLocation
 
-        print 'tt Table Location - ', ttTableLocation
-        print 'dist Table Location - ', distTableLocation
-
-        #raw_input("check memory before creating travel skims -- ")
-        self.skimsMatrix.set_real_tt_fileString(ttTableLocation)
-        self.skimsMatrix.set_real_dist_fileString(distTableLocation)
-        self.skimsMatrix.create_real_graph()
-    
-        print 'Real-Time TRAVEL Skims object created --'
-        #raw_input("check memory after distance skims -- ")
-        print 'Check real-time travel times -- ', self.skimsMatrix.get_real_travel_times(array([1,1,1,1]), array([1,2,3,4]))
-        print 'Check distances -- ', self.skimsMatrix.get_real_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
-        print 'Check real-time generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_real_time(array([1,2,3,4]), array([1,2,3,4]))
-            
-            
+            #raw_input("check memory before creating travel skims -- ")
+            self.skimsMatrix.set_real_tt_fileString(ttTableLocation)
+            self.skimsMatrix.set_real_dist_fileString(distTableLocation)
+            self.skimsMatrix.create_real_graph()
+        
+            print 'Real-Time TRAVEL Skims object created --'
+            #raw_input("check memory after distance skims -- ")
+            print 'Check real-time travel times -- ', self.skimsMatrix.get_real_travel_times(array([1,1,1,1]), array([1,2,3,4]))
+            print 'Check distances -- ', self.skimsMatrix.get_real_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
+            print 'Check real-time generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_real_time(array([1,2,3,4]), array([1,2,3,4]))
+#        else:
+#            print ''
+#            print ''
+#            print 'Do not load current skim data.'
+#            print ''
+#            print ''
+                
 
     def close_connections(self):
         self.queryBrowser.dbcon_obj.close_connection()
@@ -454,8 +462,9 @@ class SimulationManager(object):
 
 if __name__ == '__main__':
     simulationObject = SimulationManager()
-    simulationObject.load_currentskims_matrix("C:/DTALite/New_PHXsubarea/output_td_skim_min30.csv", "C:/DTALite/New_PHXsubarea/distance0.dat")
-    simulationObject.run_selected_components_for_dtalite(90)
+    simulationObject.load_currentskims_matrix("C:/DTALite/New_PHXsubarea/output_td_skim_min30.csv", \
+    "C:/DTALite/New_PHXsubarea/distance0.dat")
+    simulationObject.run_selected_components_for_dtalite(60)
     
     #simulationObject.load_currentskims_matrix(151)    
     #for i in range(1400):

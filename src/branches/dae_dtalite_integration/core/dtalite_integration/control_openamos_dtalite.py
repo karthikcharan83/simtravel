@@ -71,6 +71,7 @@ class RunAmosDtalite(object):
         
         
         numRuns = len(self.data_in_real_time)
+        #numRuns = 60
         read_realtime_skim = False
         realtime_time_path = ""
         realtime_dist_path = ""
