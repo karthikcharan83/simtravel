@@ -64,6 +64,7 @@ class Households_Vehicles_Count_R(t.IsDescription):
     vehcount = t.Int32Col()
     vehdefi = t.Int32Col()
     avratio = t.Float32Col()
+    informationtype = t.Int32Col()
 
 class Vehicles_R(t.IsDescription):
     houseid = t.Int64Col()
