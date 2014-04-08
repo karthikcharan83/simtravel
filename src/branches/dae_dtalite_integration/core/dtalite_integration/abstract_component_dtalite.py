@@ -818,9 +818,27 @@ class AbstractComponent(object):
 	    tt_to = skimsMatrix2.get_generalized_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
 	    tt_from = skimsMatrix2.get_generalized_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
      
-         # Add by Dae to get current skim data
-	    tt_to2 = skimsMatrix2.get_generalized_real_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
-	    tt_from2 = skimsMatrix2.get_generalized_real_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
+
+
+
+            # Add by Dae to insert current skim data on rows which have information type of 1
+            if row_index <> None:
+                #print 'Household ID:'
+                #print data.column('houseid')
+                #print 'Information Type:'
+                #print data.column('informationtype')
+                #print 'Change current skim data for information type = 1'
+                #print "Length: %s - %s : %s - %s" %(len(tt_to), len(tt_to2), len(tt_from), len(tt_from2))
+                #print tt_to
+
+                # Add by Dae to get current skim data
+                tt_to2 = skimsMatrix2.get_generalized_real_time(originLocColVals[:,0], sampleLocColVals, votdColVals[:,0])
+                tt_from2 = skimsMatrix2.get_generalized_real_time(sampleLocColVals, destinationLocColVals[:,0], votdColVals[:,0])
+
+                tt_to[row_index] = tt_to2[row_index]
+                tt_from[row_index] = tt_from2[row_index]
+                #print tt_to
+
 	
 	    #print 'Sampled locations - ', sampleLocColVals
 	    #print 'Travel time to - ', tt_to
@@ -832,18 +850,7 @@ class AbstractComponent(object):
             #print "colName"
             #print colName
             
-            # Add by Dae to insert current skim data on rows which have information type of 1
-            if row_index <> None:
-                #print 'Household ID:'
-                #print data.column('houseid')
-                #print 'Information Type:'
-                #print data.column('informationtype')
-                #print 'Change current skim data for information type = 1'
-                #print "Length: %s - %s : %s - %s" %(len(tt_to), len(tt_to2), len(tt_from), len(tt_from2))
-                #print tt_to
-                tt_to[row_index] = tt_to2[row_index]
-                tt_from[row_index] = tt_from2[row_index]
-                #print tt_to
+
                 
 	    # Also updating skim values for sampled locations: here the travel time TO sampled location is updated
             if spatialconst.asField:
@@ -897,16 +904,17 @@ class AbstractComponent(object):
         dist = skimsMatrix.get_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
         tt = skimsMatrix.get_generalized_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
 
-        # Add by Dae to get current skim data
-        dist2 = skimsMatrix.get_real_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
-        tt2 = skimsMatrix.get_generalized_real_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
-        
+
         # Add by Dae to insert current skim data on rows which have information type of 1
         row_index = self.update_skim_by_current(data)
         if row_index <> None:
-            #print 'Change current skim data for information type = 1'
-            #print "Length: %s - %s" %(len(dist), len(dist2))
-            #print tt
+
+            # Add by Dae to get current skim data
+            dist2 = skimsMatrix.get_real_travel_distances(originLocColVals[:,0], destinationLocColVals[:,0])
+            tt2 = skimsMatrix.get_generalized_real_time(originLocColVals[:,0], destinationLocColVals[:,0], votdColVals[:,0])
+        
+            print 'Change current skim data for information type = 1'
+            print tt2
             dist[row_index] = dist2[row_index]
             tt[row_index] = tt2[row_index]
             #print tt
@@ -950,8 +958,8 @@ class AbstractComponent(object):
     # Add by Dae to get row index of which information type is 1
     def update_skim_by_current(self, data):
         
-        #if self.component_name == "DynamicNonMandatoryActivities":
-        if self.loadCurrentSkim:
+        if self.loadCurrentSkim and self.analysisInterval > 1:
+            print " Filtering for index of informationtype equal to one."
             if 'informationtype' in data.varnames:
                 dataFilter = DataFilter('informationtype', 'equals', 1)
                 rows_index = dataFilter.row_indice(data)
@@ -959,13 +967,6 @@ class AbstractComponent(object):
                 #print rows_index
                 
                 return rows_index
-                
-#        else:
-#            print ''
-#            print ''
-#            print 'Do not load current skim data.'
-#            print ''
-#            print ''
 
         return None
 
