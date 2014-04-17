@@ -75,7 +75,7 @@ class RunAmosDtalite(object):
         read_realtime_skim = False
         realtime_time_path = ""
         realtime_dist_path = ""
-        for i in range(numRuns):
+        for i in range(31):
 
             
             if i == 0:
@@ -91,7 +91,7 @@ class RunAmosDtalite(object):
                     realtime_skim_name = self.data_in_real_time[i][self.column_index_for_realtimeskim]
                     
                     
-                    #self.temp_create_dtalite(i-1)       # Just For Testing
+                    self.temp_create_dtalite(i-1)       # Just For Testing
                     
                     
                     tripInfoArrivals = self.arrival_from_dtalite(i-1, dtal_output_name)
@@ -100,7 +100,7 @@ class RunAmosDtalite(object):
                     self.manager.run_selected_components_for_dtalite(i, tripInfoArrivals, openamos_output_name)             
                      
                     
-                    #self.temp_trips_from_openamos(i)  # Just For Testing
+                    self.temp_trips_from_openamos(i)  # Just For Testing
 
 
 
@@ -206,7 +206,7 @@ class RunAmosDtalite(object):
                 
             if int(trip_id) > 0.0:
                 starttime = float(trip[7])
-                arrivaltime = int(starttime) + randint(1, 200)
+                arrivaltime = int(trip[8]) #int(starttime) + randint(1, 200)
 
                     
                 if arrivaltime not in self.tripsAct.keys():
