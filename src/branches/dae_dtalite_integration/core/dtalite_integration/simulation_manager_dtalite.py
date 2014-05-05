@@ -37,7 +37,7 @@ class SimulationManager(object):
         
         #, configObject=None, fileLoc=None, component=None):
         #TODO: REMOVE PLACEHOLDER 
-        fileLoc = 'C:/DTALite/New_PHXsubarea/config_mag_dtalite.xml'
+        fileLoc = 'C:/DTALite/New_PHXsubarea_1p/config_mag_dtalite.xml'
         configObject = None
         
 
@@ -216,93 +216,85 @@ class SimulationManager(object):
             comp.loadCurrentSkim = self.loadCurrentSkim
             print '\nRunning Component - %s; Analysis Interval - %s' %(comp.component_name,
                                                                        comp.analysisInterval)
-            
-            loop_num = 1
-            if len(comp.loop_component) > 0:
+                             
                 
-                loop_num = comp.loop_component[1]
-                
-                                               
-            for loop in range(loop_num):
-                
-                if loop_num > 1 and comp.pre_run_filter is not None:
-                    print "Run two times for this component: %s - %s" %(comp.component_name, loop)
-                    (comp.pre_run_filter[0]).value = loop                    
-                
-            
-                if comp.component_name == 'ArrivalTimeInformation':
-                    comp.db = self.db
-            
+        
+            if comp.component_name == 'ArrivalTimeInformation':
+                comp.db = self.db
+        
+            else:
+                if comp.skipFlag:
+                    print '\tSkipping the run for this component'
+                    continue
+
+                # Reset seed 
+                for mod in comp.model_list:
+                    mod.seed = self.modSeedDict[(comp.component_name, mod.dep_varname)] + analysisInterval - 1
+
+                #Load skims matrix outside so that when there is temporal aggregation
+                # of tod skims then loading happens only so many times
+
+                t_sk = time.time()
+                ttTableLoc, distTableLoc = self.identify_skims_matrix(comp)
+
+
+                if ttTableLoc <> self.lastTtTableLoc and (len(comp.spatialConst_list) > 0 or 
+							len(comp.dynamicspatialConst_list) > 0):
+                    #raw_input("check size before ...") 
+
+                    #self.skimsMatrix, self.uniqueIds = self.load_skims_matrix(comp, tableName)
+                    self.load_skims_matrix(comp, ttTableLoc, distTableLoc)
+                    self.lastTtTableLoc = ttTableLoc
+                    #raw_input("check size after ...") 
+                elif ttTableLoc == self.lastTtTableLoc:
+                    pass
+                    
+
+                print '\tTime taken to process skims %.4f' %(time.time()-t_sk)
+                data = comp.pre_process(self.queryBrowser, 
+                                        self.skimsMatrix, self.db, fileLoc)
+
+            if data is not None:
+                #print 'inside here for component - ', comp.component_name
+                if comp.component_name == "ExtractAllTravelEpisodes":
+                    tripInfo = comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
+                    print 'Origin Zone Ids Before - ', tripInfo[:5,5]
+                    print 'Destination Zone Ids Before - ', tripInfo[:5,6]
+                    #tripInfo[:,5] += 11
+                    #tripInfo[:,6] += 11
+                    #print 'Origin Zone Ids After Mod - ', tripInfo[:5,5]
+                    #print 'Destination Zone Ids After Mod - ', tripInfo[:5,6]
+                    self.add_header_for_dtalite(fileLoc, analysisInterval, tripInfo, filename)
+                    #raw_input()
                 else:
-                    if comp.skipFlag:
-                        print '\tSkipping the run for this component'
-                        continue
-
-                    # Reset seed 
-                    for mod in comp.model_list:
-                        mod.seed = self.modSeedDict[(comp.component_name, mod.dep_varname)] + analysisInterval - 1
-    
-                    #Load skims matrix outside so that when there is temporal aggregation
-                    # of tod skims then loading happens only so many times
-    
-                    t_sk = time.time()
-                    ttTableLoc, distTableLoc = self.identify_skims_matrix(comp)
-
-
-                    if ttTableLoc <> self.lastTtTableLoc and (len(comp.spatialConst_list) > 0 or 
-    							len(comp.dynamicspatialConst_list) > 0):
-                        #raw_input("check size before ...") 
-    
-                        #self.skimsMatrix, self.uniqueIds = self.load_skims_matrix(comp, tableName)
-                        self.load_skims_matrix(comp, ttTableLoc, distTableLoc)
-                        self.lastTtTableLoc = ttTableLoc
-                        #raw_input("check size after ...") 
-                    elif ttTableLoc == self.lastTtTableLoc:
-                        pass
-                        
-    
-                    print '\tTime taken to process skims %.4f' %(time.time()-t_sk)
-                    data = comp.pre_process(self.queryBrowser, 
-                                            self.skimsMatrix, self.db, fileLoc)
-    
-                if data is not None:
-                    #print 'inside here for component - ', comp.component_name
-                    if comp.component_name == "ExtractAllTravelEpisodes":
-                        tripInfo = comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
-                        print 'Origin Zone Ids Before - ', tripInfo[:5,5]
-                        print 'Destination Zone Ids Before - ', tripInfo[:5,6]
-                        #tripInfo[:,5] += 11
-                        #tripInfo[:,6] += 11
-                        #print 'Origin Zone Ids After Mod - ', tripInfo[:5,5]
-                        #print 'Destination Zone Ids After Mod - ', tripInfo[:5,6]
-                        self.add_header_for_dtalite(fileLoc, analysisInterval, tripInfo, filename)
-                        #raw_input()
-                    else:
-                        comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
+                    comp.run(data, self.queryBrowser, self.skimsMatrix, self.uniqueIds, fileLoc)
    
-    
-                elif data is None and comp.component_name == "ExtractAllTravelEpisodes":
-                    tripInfo = zeros((1,18))
-                    self.create_csv_to_dtalite(fileLoc, analysisInterval, filename)
-                    """
-                    tripInfo = zeros((3,11))
-    
-                    self.trips += 1
-    		        tripInfo[0,0] = self.trips
-    		        tripInfo[0,5] = 1850 + 11
-    		        tripInfo[0,6] = 1075 + 11 
-    
-    		        self.trips += 1
-    		        tripInfo[1,0] = self.trips
-    		        tripInfo[1,5] = 1488 + 11
-    		        tripInfo[1,6] = 1074 + 11 
-    
-    		        self.trips += 1
-    		        tripInfo[2,0] = self.trips
-    		        tripInfo[2,5] = 28 + 11
-    		        tripInfo[2,6] = 1995 + 11 
-    		        """
+
+            elif data is None and comp.component_name == "ExtractAllTravelEpisodes":
+                tripInfo = zeros((1,18))
+                self.create_csv_to_dtalite(fileLoc, analysisInterval, filename)
+                """
+                tripInfo = zeros((3,11))
+
+                self.trips += 1
+		        tripInfo[0,0] = self.trips
+		        tripInfo[0,5] = 1850 + 11
+		        tripInfo[0,6] = 1075 + 11 
+
+		        self.trips += 1
+		        tripInfo[1,0] = self.trips
+		        tripInfo[1,5] = 1488 + 11
+		        tripInfo[1,6] = 1074 + 11 
+
+		        self.trips += 1
+		        tripInfo[2,0] = self.trips
+		        tripInfo[2,5] = 28 + 11
+		        tripInfo[2,6] = 1995 + 11 
+		        """
             print '\t-- Finished simulating component; time taken %.4f --' %(time.time()-t)
+            
+            #if comp.component_name == "ExtractTravelEpisodesWithHouseholdMembers" or comp.component_name == "PersonsLeaving" or comp.component_name == "CheckPersonsAtSameOrigin":
+            #    raw_input()
 
 
         tripInfo = tripInfo.astype(int)
