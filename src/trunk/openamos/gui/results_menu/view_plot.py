@@ -49,14 +49,14 @@ class MakeResultPlot(QDialog):
         self.sketches = []
         self.axes = []
         self.toolbars = []
-        
+
         self.new_obj = None
-        self.project = None        
+        self.project = None
         self.valid = False
         self.connects(config)
         self.cursor = self.new_obj.cursor
 
-        
+
         self.tabs = QTabWidget()
         self.tabs.setContextMenuPolicy(Qt.CustomContextMenu)
         self.tabs.setMinimumHeight(300)
@@ -67,7 +67,7 @@ class MakeResultPlot(QDialog):
         if not (self.new_obj.check_if_table_exists("schedule_nhts") and self.new_obj.check_if_table_exists("trips_nhts") \
             and self.new_obj.check_if_table_exists("households_nhts") and self.new_obj.check_if_table_exists("persons_nhts")):
             self.show_nhts.setDisabled(True)
-        
+
         radiowidget = QWidget(self)
         radiolayout = QHBoxLayout()
         radiowidget.setLayout(radiolayout)
@@ -81,7 +81,7 @@ class MakeResultPlot(QDialog):
         addsegment.addWidget(self.tripradio)
         addsegment.addWidget(self.actiradio)
         radiolayout.addWidget(segment)
-        
+
         filter = QGroupBox(self)
         addfilter = QHBoxLayout()
         filter.setLayout(addfilter)
@@ -97,12 +97,12 @@ class MakeResultPlot(QDialog):
         addfilter.addWidget(self.choicevar2)
         radiolayout.addWidget(filter)
         radiolayout.setContentsMargins(0,0,0,0)
-#        self.fill_item1()       
+#        self.fill_item1()
 
         stablewidget = QWidget(self)
         stablelayout = QHBoxLayout()
         stablewidget.setLayout(stablelayout)
-        
+
         tools = QToolBar()
         tools.setMaximumWidth(150)
         home_action = self.createaction("Go Home",self.gohome,"home","")
@@ -123,7 +123,7 @@ class MakeResultPlot(QDialog):
         addoutput.addWidget(self.percent)
         addoutput.setAlignment(Qt.AlignCenter)
         stablelayout.addWidget(output)
-        
+
         self.selecttable = QGroupBox(self)
         selecttablelayout = QHBoxLayout()
         self.selecttable.setLayout(selecttablelayout)
@@ -134,15 +134,15 @@ class MakeResultPlot(QDialog):
         selecttablelayout.addWidget(stablelabel)
         selecttablelayout.addWidget(self.stablecombo)
         stablelayout.addWidget(self.selecttable)
-        
+
         substablewidget = QWidget(self)
         substablelayout = QHBoxLayout()
         substablewidget.setLayout(substablelayout)
         substablelayout.setAlignment(Qt.AlignLeft)
-        stablelayout.addWidget(substablewidget) 
+        stablelayout.addWidget(substablewidget)
         self.resetbutton = QPushButton('Reset')
         self.resetbutton.setFixedWidth(80)
-        stablelayout.addWidget(self.resetbutton)      
+        stablelayout.addWidget(self.resetbutton)
         self.showbutton = QPushButton('Show Plot')
         self.showbutton.setFixedWidth(80)
         stablelayout.addWidget(self.showbutton)
@@ -166,12 +166,12 @@ class MakeResultPlot(QDialog):
         filterlayout.addWidget(radiowidget)
         filterlayout.addWidget(self.socio)
         filterlayout.addWidget(self.tripfilter)
-        
+
         scrollArea = QScrollArea()
         scrollArea.setWidget(filter_widget)
         scrollArea.setMaximumHeight(550)
         scrollArea.setWidgetResizable(True)
-        
+
         tempwidget = QWidget(self)
         templayout = QVBoxLayout()
         tempwidget.setLayout(templayout)
@@ -179,18 +179,18 @@ class MakeResultPlot(QDialog):
         templayout.addWidget(self.tabs)
         templayout.addWidget(progresswidget)
         templayout.setStretch(1,1)
-        
+
         splitter = QSplitter(Qt.Vertical)
         splitter.addWidget(scrollArea)
         splitter.addWidget(tempwidget)
         splitter.setSizes([350,450])
-        
+
         self.vbox = QVBoxLayout()
         self.vbox.addWidget(splitter)
 #        self.vbox.setStretch(0,1)
         self.setLayout(self.vbox)
         self.fill_item1()
-        
+
         self.connect(self.dialogButtonBox, SIGNAL("rejected()"), SLOT("reject()")) #self.disconnects)
         self.connect(self.resetbutton, SIGNAL("clicked(bool)"), self.reset_all)
         self.connect(self.showbutton, SIGNAL("clicked(bool)"), self.draw_plot)
@@ -201,10 +201,10 @@ class MakeResultPlot(QDialog):
         self.connect(self.stablecombo, SIGNAL("currentIndexChanged(const QString&)"), self.selected_table)
         self.connect(self.show_nhts, SIGNAL("stateChanged(int)"), self.initTables)
 
-        
+
 
     def makeVarsWidget1(self):
-        
+
         self.socio = QGroupBox("")
         varslayout = QGridLayout()
         self.socio.setLayout(varslayout)
@@ -220,7 +220,7 @@ class MakeResultPlot(QDialog):
         addsegment.addWidget(self.segment2)
         varslayout.addWidget(segment,1,0)
         segment.setContentsMargins(0,0,0,0)
-                        
+
         tableslabel = QLabel('Columns')
         varslayout.addWidget(tableslabel,0,1)
         self.colswidget = QListWidget()
@@ -230,15 +230,15 @@ class MakeResultPlot(QDialog):
         self.colswidget.setMaximumWidth(160)
         self.colswidget.setMinimumHeight(150)
         varslayout.addWidget(self.colswidget,1,1)
-        
+
         varslabel = QLabel('Values')
         varslayout.addWidget(varslabel,0,2)
         self.valwidget = QListWidget()
         self.valwidget.setSelectionMode(QAbstractItemView.SingleSelection)
         self.valwidget.setMaximumWidth(160)
         self.valwidget.setMinimumHeight(150)
-        varslayout.addWidget(self.valwidget,1,2)        
-        
+        varslayout.addWidget(self.valwidget,1,2)
+
         buttonwidget1 = QWidget(self)
         buttonlayout1 = QVBoxLayout()
         buttonwidget1.setLayout(buttonlayout1)
@@ -260,7 +260,7 @@ class MakeResultPlot(QDialog):
         self.varstable.setMaximumWidth(300)
         self.varstable.setMinimumHeight(150)
         varslayout.addWidget(self.varstable,1,4)
-        
+
         workwidget = QWidget(self)
         worklayout = QVBoxLayout()
         workwidget.setLayout(worklayout)
@@ -273,11 +273,11 @@ class MakeResultPlot(QDialog):
         worklayout.addWidget(self.cmbworkstatus)
         workwidget.setContentsMargins(0,0,0,40)
         varslayout.addWidget(workwidget,1,5)
-        
+
         self.tripfilter = QGroupBox("")
         tripfilterlayout = QGridLayout()
         self.tripfilter.setLayout(tripfilterlayout)
-        
+
         self.activitylabel = QLabel("Trip Purpose")
         self.activitychoice = QListWidget()
         self.activitychoice.setSelectionMode(QAbstractItemView.MultiSelection)
@@ -314,14 +314,14 @@ class MakeResultPlot(QDialog):
         self.occupchoice.setFixedWidth(140)
         self.occupchoice.setMinimumHeight(150)
 
-        
+
         self.fill_item2(1,self.trip_labels("trippurpose"))
         self.fill_item2(2,self.trip_labels("starttime"))
         self.fill_item2(3,self.trip_labels("endtime"))
         self.fill_item2(4,self.trip_labels("duration"))
         self.fill_item2(5,self.trip_labels("tripmode"))
         self.fill_item2(6,self.trip_labels("occupancy"))
-        
+
         tripfilterlayout.addWidget(self.activitylabel,0,0)
         tripfilterlayout.addWidget(self.activitychoice,1,0)
         tripfilterlayout.addWidget(startlabel,0,1)
@@ -334,7 +334,7 @@ class MakeResultPlot(QDialog):
         tripfilterlayout.addWidget(self.modechoice,1,4)
         tripfilterlayout.addWidget(self.occuplabel,0,5)
         tripfilterlayout.addWidget(self.occupchoice,1,5)
-        
+
         self.connect(self.colswidget, SIGNAL("itemClicked (QListWidgetItem *)"), self.populateValues)
         self.connect(self.selbutton1, SIGNAL("clicked(bool)"), self.selValue)
         self.connect(self.delbutton, SIGNAL("clicked(bool)"), self.delValue)
@@ -362,8 +362,8 @@ class MakeResultPlot(QDialog):
             tables.append("Schedules: Aggregated in Home Final Schedules")
         if self.new_obj.check_if_table_exists("schedule_full_r"):
             tables.append("Schedules: Full Schedules")
-        
-            
+
+
         self.stablecombo.addItems(tables)
 
 
@@ -386,7 +386,7 @@ class MakeResultPlot(QDialog):
             self.out_table = "schedule_aggregatefinal_r"
         else:
             self.out_table = "schedule_full_r"
-            
+
 
     def createaction(self, text, slot=None, icon=None,
                      tip=None, signal="triggered()"):
@@ -421,7 +421,7 @@ class MakeResultPlot(QDialog):
             index = index//2
             fig = self.figs[index]
             fig.savefig(str(filename))
-             
+
     def draw_plot(self):
         if self.choicevar1.currentText() != "" and self.choicevar2.currentText() != "":
             self.on_draw2()
@@ -476,13 +476,13 @@ class MakeResultPlot(QDialog):
             else:
                 self.tabs.removeTab(index+1)
                 self.tabs.removeTab(index)
-                
-            i = index//2                
+
+            i = index//2
             self.figs.pop(i)
             self.sketches.pop(i)
             self.axes.pop(i)
             self.toolbars.pop(i)
-    
+
     def reset_all(self):
         reply = QMessageBox.information(self,"Warning","Do you really want to remove?",QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
@@ -494,22 +494,22 @@ class MakeResultPlot(QDialog):
             self.sketches = []
             self.axes = []
             self.toolbars = []
-            
+
             self.colswidget.clear()
             self.valwidget.clear()
             self.delRow()
             if self.columnName() <> None:
                 self.colswidget.addItems(self.columnName())
-            
+
             self.choicevar1.setCurrentIndex(0)
             self.fill_item2(1,self.trip_labels("trippurpose"))
             self.fill_item2(2,self.trip_labels("starttime"))
             self.fill_item2(3,self.trip_labels("endtime"))
             self.fill_item2(4,self.trip_labels("duration"))
             self.fill_item2(5,self.trip_labels("tripmode"))
-            self.fill_item2(6,self.trip_labels("occupancy"))     
-        
- 
+            self.fill_item2(6,self.trip_labels("occupancy"))
+
+
     def createCanvas(self):
 #        mydpi = 100
 #        myfig = Figure((5.0, 4.5), dpi=mydpi)
@@ -518,43 +518,43 @@ class MakeResultPlot(QDialog):
         sketch = FigureCanvas(myfig)
         myfig.subplots_adjust(left=0.08,right=0.85)
         myaxes = myfig.add_subplot(111)
-        
+
         myCanvas = []
         myCanvas.append(sketch)
         myCanvas.append(myaxes)
         self.sketches.append(sketch)
         self.axes.append(myaxes)
-        
+
         tool = NavigationToolbar(sketch,self)
         self.toolbars.append(tool)
-        
+
         return myCanvas
-    
-    # Put a label on the bottom and right corner of the plot to show the sample size    
+
+    # Put a label on the bottom and right corner of the plot to show the sample size
     def fig_text(self,total):
         sample = "Sample Size: %d"%(total)
         fig = self.figs[len(self.figs)-1]
         fig.text(0.863,0.03,sample,fontsize=11,ha='left',va='bottom')
-       
+
 #    def mousePressEvent(self, ev):
 #        QApplication.restoreOverrideCursor()
-        
+
     def onleave(self,ev):
         QApplication.restoreOverrideCursor()
-            
+
     def connects(self,configobject):
-        
-        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)        
+
+        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)
         user_name = configobject.getConfigElement(DB_CONFIG,DB_USER)
         password = configobject.getConfigElement(DB_CONFIG,DB_PASS)
         host_name = configobject.getConfigElement(DB_CONFIG,DB_HOST)
         database_name = configobject.getConfigElement(DB_CONFIG,DB_NAME)
-        
+
         self.database_config_object = DataBaseConfiguration(protocol, user_name, password, host_name, database_name)
         self.new_obj = DataBaseConnection(self.database_config_object)
         self.qb_obj = QueryBrowser(self.database_config_object)
         self.new_obj.new_connection()
- 
+
 #        #assigning the connection and cursor to the qb_obj
 #        self.qb_obj.dbcon_obj.connection = self.new_obj.connection
 #        self.qb_obj.dbcon_obj.cursor = self.new_obj.cursor
@@ -571,7 +571,7 @@ class MakeResultPlot(QDialog):
 #            index_name = index_name + '_' + each + '_' + table_name
 #            self.qb_obj.create_index(table_name, col_name, index_name)
 #            result = self.qb_obj.cluster_index(table_name, index_name)
-#        
+#
 #        #for schedule_final_r
 #        table_name = 'schedule_final_r'
 #        for each in self.schedule_ltrec_r_temp:
@@ -584,7 +584,7 @@ class MakeResultPlot(QDialog):
 #        t2 = time.time()
 #        print 'Time taken to create all indexes --> %s'%(t2-t1)
 
-        
+
     def reject(self): #disconnects(self):
 #        #delete all indexes
 #        t1 = time.time()
@@ -594,7 +594,7 @@ class MakeResultPlot(QDialog):
 #            index_name = 'plot'
 #            index_name = index_name + '_' + each + '_' + table_name
 #            self.qb_obj.delete_index(table_name, index_name)
-#        
+#
 #        #for schedule_final_r
 #        table_name = 'schedule_final_r'
 #        for each in self.schedule_ltrec_r_temp:
@@ -606,7 +606,7 @@ class MakeResultPlot(QDialog):
 
         self.new_obj.close_connection()
         QDialog.accept(self)
-        
+
 
     def fill_item1(self):
         self.choicevar1.clear()
@@ -615,26 +615,26 @@ class MakeResultPlot(QDialog):
 
         if self.tripradio.isChecked():
             self.selecttable.setVisible(False)
-            
+
             for i in self.trips_r_temp:
                 if self.checkColumnExists("trips_full_r",i):# or i == "duration":
                     vars.append(i)
-            
+
             vars.append("trip episode rates")
             self.activitylabel.setText("Trip Purpose")
             self.modelabel.setVisible(True)
             self.modechoice.setVisible(True)
             self.occuplabel.setVisible(True)
             self.occupchoice.setVisible(True)
-            
+
         else:
             self.selecttable.setVisible(True)
-            
+
             for i in self.schedule_r_temp:
                 if self.checkColumnExists(self.out_table,i):
                     vars.append(i)
 
-            
+
             vars.append("activity episode rates")
             self.activitylabel.setText("Activity Type")
             self.modelabel.setVisible(False)
@@ -643,7 +643,7 @@ class MakeResultPlot(QDialog):
             self.occupchoice.setVisible(False)
 
         self.choicevar1.addItems(vars)
-        
+
     def fill_item2(self,index,items):
         item_key = items.keys()
         item_key.sort()
@@ -702,10 +702,10 @@ class MakeResultPlot(QDialog):
                     if self.checkColumnExists(self.out_table,i):
                         vars.append(i)
 
-        
-        self.choicevar2.addItems(vars) 
-            
-        
+
+        self.choicevar2.addItems(vars)
+
+
     def set_disable(self):
         if self.choicevar2.currentText() != "":
             self.percent.setChecked(True)
@@ -717,37 +717,37 @@ class MakeResultPlot(QDialog):
         tablename = self.table
         if self.show_nhts.isChecked():
             tablename = tablename + "_nhts"
-            
+
         if self.new_obj.check_if_table_exists(tablename): #self.table):
             cols = self.new_obj.get_column_list(tablename) #self.table)
             columns = []
             for col in cols:
-                
+
                 columns.append(QString(col))
             return columns
         else:
             return None
-    
+
     def populateValues(self, item):
-        
+
         try:
             values = []
             temp = None
             vars = str(item.text())
-            
+
             tablename = self.table
             if self.show_nhts.isChecked():
                 tablename = tablename + "_nhts"
-            
+
             order = str(item.text())
-            
+
             self.cursor.execute("""SELECT DISTINCT %s FROM %s ORDER BY %s"""%(vars,tablename,order))
             temp = self.cursor.fetchall()
-            
+
             for i in temp:
                 value = str(i[0])
                 values.append(value)
-                
+
             self.valwidget.clear()
             self.valwidget.addItems(values)
 
@@ -766,17 +766,17 @@ class MakeResultPlot(QDialog):
                 tableitem.setText(currcolumn)
                 tableitem.setFlags(tableitem.flags() & ~Qt.ItemIsEditable)
                 self.varstable.setItem(self.varstable.rowCount()-1, 0, tableitem)
-                
+
                 varitem = QTableWidgetItem()
                 varitem.setText(currvar)
                 varitem.setFlags(varitem.flags() & ~Qt.ItemIsEditable)
                 self.varstable.setItem(self.varstable.rowCount()-1, 1, varitem)
-                
+
         else:
             msg = "Please select a Column and a Value"
             QMessageBox.information(self, "Warning",
                                     msg,
-                                    QMessageBox.Ok) 
+                                    QMessageBox.Ok)
 
 
     def isExist(self, ccolumn, cvalue):
@@ -786,16 +786,16 @@ class MakeResultPlot(QDialog):
             value = str((self.varstable.item(i,1)).text())
             if (column == ccolumn) & (value == cvalue):
                 return True
-            
+
         return False
-    
+
 
     def delValue(self):
         self.varstable.removeRow(self.varstable.currentRow())
 
 
     def initTables(self):
-        
+
         if self.segment1.isChecked(): #and self.table != 'households':
             self.colswidget.clear()
             self.valwidget.clear()
@@ -816,7 +816,7 @@ class MakeResultPlot(QDialog):
         numrows = self.varstable.rowCount() - 1
         while numrows > -1:
             self.varstable.removeRow(numrows)
-            numrows = numrows - 1  
+            numrows = numrows - 1
 
     def selectedResults(self):
         sindex = self.idwidget.selectedIndexes()
@@ -824,20 +824,20 @@ class MakeResultPlot(QDialog):
         for i in sindex:
             temp = self.data[i.row()]
             sdata.append(temp)
-            
+
         return sdata
 
 
     def x_label(self):
         xtitle_trip = {'trippurpose':'Trip Purpose','starttime':'Trip Start Time','endtime':'Trip End Time',
                        'tripmode':'Trip Mode','occupancy':'Occupancy','duration':'Trip Time (mins)','miles':'Trip Length (miles)',
-                       'trip episode rates':'Trips'} 
+                       'trip episode rates':'Trips'}
         xtitle_acti = {'activitytype':'Activity Type','starttime':'Start Time','endtime':'End Time',
                   'duration':'Activity Duration (mins)','activity episode rates':'Activities'}
-        
+
         column1 = str(self.choicevar1.currentText())
         column2 = str(self.choicevar2.currentText())
-        
+
         if self.tripradio.isChecked():
             if column2 != "":
                 return xtitle_trip[column2]
@@ -848,31 +848,31 @@ class MakeResultPlot(QDialog):
                 return xtitle_acti[column2]
             else:
                 return xtitle_acti[column1]
-            
-            
+
+
     def plot_title(self):
         xtitle_trip = {'trippurpose':'Trip Purpose','starttime':'Trip Start Time','endtime':'Trip End Time',
                        'tripmode':'Trip Mode','occupancy':'Occupancy','duration':'Trip Time (mins)','miles':'Trip Length (miles)',
-                       'trip episode rates':'Trip Episode Rates'} 
+                       'trip episode rates':'Trip Episode Rates'}
         xtitle_acti = {'activitytype':'Activity Type','starttime':'Start Time','endtime':'End Time',
                   'duration':'Activity Duration (mins)','activity episode rates':'Activity Episode Rates'}
-        
+
         column1 = str(self.choicevar1.currentText())
         column2 = str(self.choicevar2.currentText())
-        
+
         title = ""
         if self.tripradio.isChecked():
             title = xtitle_trip[column1]
         else:
             title = xtitle_acti[column1]
-        
+
         if column2 != "":
             title = title + " by "
             if self.tripradio.isChecked():
                 title = title + xtitle_trip[column2]
             else:
                 title = title + xtitle_acti[column2]
-        
+
         return title
 
 
@@ -882,16 +882,16 @@ class MakeResultPlot(QDialog):
         else:
             #table = "persons_daily_status_r"
             table = "persons_r"
-        
+
         if self.cmbworkstatus.currentIndex() == 1:
             state = "(select * from %s where wrkdailystatus = 1 order by houseid, personid) as c" %(table)
         elif self.cmbworkstatus.currentIndex() == 2:
             state = "(select * from %s where wrkdailystatus = 0 order by houseid, personid) as c" %(table)
         else:
             state = ""
-            
+
         return state
-            
+
 
     def socio_sql(self):
         table1 = ""
@@ -899,22 +899,22 @@ class MakeResultPlot(QDialog):
             table1 = "households"
         else:
             table1 = "persons"
-            
+
         if self.show_nhts.isChecked():
             table1 = table1 + "_nhts"
-            
+
         vars = ''
         if self.segment1.isChecked():
             vars = 'houseid'
         else:
             vars = 'houseid, personid'
-        
+
         filter = ''
         col_list = []
         numrows = self.varstable.rowCount()
         if numrows < 1:
             return "" #"WHERE"
-        
+
         for i in range(numrows):
             column = str((self.varstable.item(i,0)).text())
             col = str(column)
@@ -928,7 +928,7 @@ class MakeResultPlot(QDialog):
         return state
 
 
-    
+
     def time_categroy(self,column):
         #time = {1:[0,120],2:[120,300],3:[300,480],4:[480,660],5:[660,900],6:[900,1440]}
         time = {1:[0,60],2:[60,120],3:[120,180],4:[180,240],5:[240,300],6:[300,360],
@@ -946,7 +946,7 @@ class MakeResultPlot(QDialog):
         activitytype = {1:[100],2:[101,200],3:[200,300],4:[300,400],5:[400,500],
                         6:[500,597],7:[597,599],8:[600],9:[601],10:[599]}
 
-        if column == "starttime" or column == "endtime": 
+        if column == "starttime" or column == "endtime":
             return time
         elif column == "tripmode":
             return mode
@@ -965,9 +965,9 @@ class MakeResultPlot(QDialog):
 #                        301:'School',411:'OH-Pers Buss',
 #                        412:'OH-Shopping',415:'OH-Meal',416:'OH-Serve Passgr',461:'OH-Dependent Pers Buss',462:'OH-Dependent Shopping',
 #                        465:'OH-Dependent Meal',466:'OH-Dependent Serve Passgr',513:'OH-Social Visit',514:'OH-Sports/Rec',597:'Filler',
-#                        598:'Anchor',600:'Pick-up',601:'Drop-off',599:'Other'}  
+#                        598:'Anchor',600:'Pick-up',601:'Drop-off',599:'Other'}
         activitytype = {1:'Home',2:'In-Home',3:'Work',4:'School',5:'Maintenance',6:'Discretionary',
-                        7:'Anchor',8:'Pick Up',9:'Drop Off',10:'OH-Other'}             
+                        7:'Anchor',8:'Pick Up',9:'Drop Off',10:'OH-Other'}
         modedict = {1:'Car',2:'Van',3:'SUV',4:'Pickup Truck',5:'Bus',6:'Train',7:'School Bus',8:'Bike',9:'Walk',
                     10:'Taxi',11:'Other'}
         starttime = {1:'4am-5am',2:'5am-6am',3:'6am-7am',4:'7am-8am',5:'8am-9am',6:'9am-10am',
@@ -981,7 +981,7 @@ class MakeResultPlot(QDialog):
                     6:'70-100',7:'100-150',8:'150-200',9:'200-250',10:'>= 250'}
         miles = {1:'0-5',2:'5-10',3:'10-15',4:'15-20',5:'20-25',
                  6:'25-30',7:'30-40',8:'40-50',9:'>= 50'}
-        
+
         if column == "activitytype" or column == "trippurpose":
             return activitytype
         if column == "tripmode":
@@ -1016,7 +1016,7 @@ class MakeResultPlot(QDialog):
                 else:
                     filter1 = filter1 + "%s = %s or "%(column,value[0])
             filter1 = filter1[0:len(filter1)-4] + ")"
-        
+
         if len(indexes)==1:
             filter1 = filter1[1:len(filter1)-1]
         return filter1
@@ -1037,9 +1037,9 @@ class MakeResultPlot(QDialog):
         index4 = self.durachoice.selectedIndexes()
         index5 = self.modechoice.selectedIndexes()
 #        index6 = self.occupchoice.selectedIndexes()
-        
+
         filter1 =""
-        if self.tripradio.isChecked():   
+        if self.tripradio.isChecked():
             filter1 = self.sub_where_trip("trippurpose",index1,trippurpose)
         else:
             filter1 = self.sub_where_trip("activitytype",index1,trippurpose)
@@ -1072,18 +1072,18 @@ class MakeResultPlot(QDialog):
                 filter = "%s and %s"%(filter,filter5)
             else:
                 filter = filter5
-                
-        return filter
-             
 
-         
+        return filter
+
+
+
     def retrieveResult(self):
         table = self.tableName()
-        
+
         column = self.choicevar1.currentText()
         if column == "":
             return False
-        
+
         t1 = time.time()
         filter = ""
         socio = str(self.socio_sql())
@@ -1092,45 +1092,45 @@ class MakeResultPlot(QDialog):
                 filter = "a.houseid = b.houseid"
             else:
                 filter = "a.houseid = b.houseid and a.personid = b.personid"
-                
+
         work = self.work_sql()
         if work != "":
             if filter != "":
                 filter = "%s and "%(filter)
-                
+
 #            if self.segment1.isChecked():
 #                filter = filter + "a.houseid = c.houseid"
 #            else:
-            filter = filter + "a.houseid = c.houseid and a.personid = c.personid"            
+            filter = filter + "a.houseid = c.houseid and a.personid = c.personid"
 
         charact = ""
         if self.where_trip() != "":
             charact = " and %s"%(self.where_trip())
-        
+
         try:
             self.total = 0.0
             cond = self.time_categroy(column)
 
-            
+
             temp = cond.keys()
             temp.sort()
             for key in temp: #cond.keys():
                 lowhigh = cond[key]
-                    
-#                sql = "" 
+
+#                sql = ""
                 sql = "select count(*) from "
                 if len(lowhigh) > 1:
                     sql = "%s(select houseid, personid from %s where %s >= %d and %s < %d%s order by houseid, personid) as a" %(sql,table,column,lowhigh[0],column,lowhigh[1],charact)
                 else:
                     sql = "%s(select houseid, personid from %s where %s = %d%s) as a" %(sql,table,column,lowhigh[0],charact)
-                    
+
                 if socio != "":
                     sql = "%s,%s"%(sql,socio)
-                    
+
                 if work != "":
                     sql = "%s,%s"%(sql,work)
-                
-                if filter != "": 
+
+                if filter != "":
                     sql = "%s where %s"%(sql,filter)
 
                 print sql
@@ -1141,51 +1141,51 @@ class MakeResultPlot(QDialog):
                         self.err1.append(key)
                         self.err2.append(j[0])
                         self.total = self.total + j[0]
-                
+
             if self.percent.isChecked():
                 for i in range(len(self.err1)):
                     if self.total > 0.0:
                         self.err2[i] = round(100*float(self.err2[i])/self.total,2)
                     else:
                         self.err2[i] = 0.0
-            
+
             t2 = time.time()
             print 'time taken --> %s'%(t2-t1)
             return True
         except Exception, e:
-	    print sql
+            print sql
             print '\tError while fetching the columns from the table'
             print e
-            
+
         return False
 
     def on_draw1(self):
         """ Redraws the figure
-        """     
+        """
         #if not self.selectvar2.isChecked() and int(self.choicevar1.currentIndex())>0:
         self.progresslabel.setText("Processing....")
         self.repaint()
-            
+
         self.err1 = []
         self.err2 = []
-        isRetrieve = True  
+        isRetrieve = True
         if self.choicevar1.currentText() != "trip episode rates" and self.choicevar1.currentText() != "activity episode rates":
             isRetrieve = self.retrieveResult()
         else:
             isRetrieve = self.numPersons()
-                    
+
         if isRetrieve:
         # clear the axes and redraw the plot anew
 
             Sketch = self.createCanvas()
             Canvas = Sketch[0]
             axes = Sketch[1]
-            
+
             axes.clear()
             axes.grid(True)
             N=len(self.err1)
             ind = np.arange(N)
-    
+
             axes.set_title(self.plot_title())
             axes.bar(ind, self.err2, 0.4, color='green', align='center')
             axes.set_xlabel(str(self.x_label()))
@@ -1197,7 +1197,7 @@ class MakeResultPlot(QDialog):
                 else:
                     axes.set_ylabel("Number of Persons")
             #axes.set_ylim(0,100)
-            
+
             labelsdict = self.trip_labels(str(self.choicevar1.currentText()))
             labels = []
             if labelsdict != None:
@@ -1208,7 +1208,7 @@ class MakeResultPlot(QDialog):
                     labels.append(temp)
             else:
                 labels = self.err1
-                
+
             axes.set_xticks(ind)
             if len(labels) >= 13:
                 axes.set_xticklabels(labels, size='xx-small')
@@ -1216,14 +1216,14 @@ class MakeResultPlot(QDialog):
                 axes.set_xticklabels(labels, size='x-small')
             else:
                 axes.set_xticklabels(labels)
-            
-            
+
+
             self.makePlotTab(Canvas)
             Canvas.draw()
             Canvas.mpl_connect('figure_enter_event', self.onleave)
             self.fig_text(self.total)
-            
-            
+
+
         vtable = CustomTable(self)
         #vtable.setSelectionMode(QAbstractItemView.MultiSelection)
         vtable.setColumnCount(2)
@@ -1234,7 +1234,7 @@ class MakeResultPlot(QDialog):
             vtable.setHorizontalHeaderItem(1,header)
         else:
             header = QTableWidgetItem(str("Percent(%)"))
-            vtable.setHorizontalHeaderItem(1,header)                
+            vtable.setHorizontalHeaderItem(1,header)
         vtable.setRowCount(len(self.err2))
         for i in range(len(self.err2)):
             temp = self.err1[i]
@@ -1244,7 +1244,7 @@ class MakeResultPlot(QDialog):
             vtable.setItem(i,0,header)
             values = QTableWidgetItem(str(self.err2[i]))
             vtable.setItem(i,1,values)
-            
+
         self.makeTableTab(vtable)
         self.progresslabel.setText("")
         self.repaint()
@@ -1255,50 +1255,50 @@ class MakeResultPlot(QDialog):
                      '#F4A460','#808080','#32CD32','#CD853F','#00FA9A','#DCDCDC','#228B22','#006400',
                      '#696969','#00FF00','#A9A9A9','#98FB98','#D3D3D3','#3CB371','#C0C0C0','#ADFF2F']
         return colorpool[index]
-        
+
 
     def on_draw2(self):
         """ Redraws the figure
         """
-        
+
         self.progresslabel.setText("Processing....")
         self.repaint()
-        
+
         column1 = self.choicevar1.currentText()
         column2 = self.choicevar2.currentText()
-            
+
         isExchange = False
         if column1 == "activitytype" or column1 == "trippurpose":
             temp = column1
             column1 = column2
             column2 = temp
             isExchange = True
-            
+
         category2 = []
         cond = self.time_categroy(column2)
         for key in cond.keys():
             category2.append(key)
-        
-        category2.sort()    
+
+        category2.sort()
         if len(category2) > 0:
-            
+
             table = self.tableName()
             category1 = self.time_categroy(column1)
-            
+
             Sketch = self.createCanvas()
             Canvas = Sketch[0]
             axes = Sketch[1]
-            
+
             axes.clear()
             axes.grid(True)
             axes.set_title(self.plot_title())
-            
+
             bars = []
             cumulate = []
             if isExchange == False:
                 for j in range(len(category2)):
                     cumulate.append(0)
-            
+
             filter = ""
             socio = str(self.socio_sql())
             if socio != "":
@@ -1311,11 +1311,11 @@ class MakeResultPlot(QDialog):
             if work != "":
                 if filter != "":
                     filter = "%s and "%(filter)
-                    
+
 #                if self.segment1.isChecked():
 #                    filter = filter + "a.houseid = c.houseid"
 #                else:
-                filter = filter + "a.houseid = c.houseid and a.personid = c.personid"  
+                filter = filter + "a.houseid = c.houseid and a.personid = c.personid"
 
             charact = ""
             if self.where_trip() != "":
@@ -1325,36 +1325,36 @@ class MakeResultPlot(QDialog):
             previous = []
             t1 = time.time()
             for key in category1.keys():
-                
+
                 lowhigh1 = category1[key]
                 xvalue = []
                 for j in range(len(category2)):
                     xvalue.append(0)
-                    
+
                 try:
 
-                    
+
                     sql = "select count(*), a.%s from "%(column2)
                     if len(lowhigh1) > 1:
                         sql = "%s(select houseid, personid, %s from %s where %s >= %d and %s < %d%s order by houseid, personid) as a" %(sql,column2,table,column1,lowhigh1[0],column1,lowhigh1[1],charact)
                     else:
                         sql = "%s(select houseid, personid, %s from %s where %s = %d%s) as a" %(sql,column2,table,column1,lowhigh1[0],charact)
-                        
+
                     if socio != "":
                         sql = "%s,%s"%(sql,socio)
-                        
+
                     if work != "":
                         sql = "%s,%s"%(sql,work)
-                    
-                    if filter != "": 
+
+                    if filter != "":
                         sql = "%s where %s"%(sql,filter)
-                    
+
                     sql = "%s group by a.%s order by a.%s"%(sql,column2,column2)
-                    
+
                     print sql
                     self.cursor.execute(sql)
                     data = self.cursor.fetchall()
- 
+
                     if isExchange:
                         total = 0
                         for t in data:
@@ -1362,16 +1362,16 @@ class MakeResultPlot(QDialog):
                                 index = category2.index(self.purpose_index(int(t[1]))) #int(t[1]))
                                 xvalue[index] = xvalue[index] + int(t[0])
                                 total = total+int(t[0])
-                        
+
                         cumulate.append(total)
                         yvalue.append(xvalue)
-                    else:   
+                    else:
                         for t in data:
                             if self.purpose_index(int(t[1])) > 0:
                                 index = category2.index(self.purpose_index(int(t[1]))) #int(t[1]))
                                 xvalue[index] = xvalue[index] + int(t[0])
                                 cumulate[index] = cumulate[index] + int(t[0])
-    
+
                         yvalue.append(xvalue)
                         previous.append(deepcopy(cumulate))
 
@@ -1382,7 +1382,7 @@ class MakeResultPlot(QDialog):
 
             t2 = time.time()
             print 'time taken is ---> %s'%(t2-t1)
-            
+
             labels = []
             if isExchange:
                 labels = self.plot_legend(category1.keys(),str(self.choicevar2.currentText()))
@@ -1404,7 +1404,7 @@ class MakeResultPlot(QDialog):
                             yvalue[j].pop(i)
                 i = i-1
             ############################################
-            
+
             self.total = 0
             if isExchange:
                 cum = []
@@ -1423,7 +1423,7 @@ class MakeResultPlot(QDialog):
                         else:
                             xvalue.append(0)
                             cum[j]=0
-                      
+
                     colors = self.colors(i)
                     if i == 0:
                         temp = axes.bar(ind, xvalue, 0.5, color=colors, align='center')
@@ -1433,7 +1433,7 @@ class MakeResultPlot(QDialog):
                         bars.append(temp[0])
 
                 for j in range(len(yvalue)):
-                        self.total = self.total+cumulate[j]
+                    self.total = self.total+cumulate[j]
             else:
                 N=len(yvalue[0])
                 ind = np.arange(N)
@@ -1442,7 +1442,7 @@ class MakeResultPlot(QDialog):
                         if cumulate[j] != 0:
                             yvalue[i][j] = 100.0*yvalue[i][j]/cumulate[j]
                             previous[i][j] = 100.0*previous[i][j]/cumulate[j]
-                        
+
                     colors = self.colors(i)
                     if i == 0:
                         temp = axes.bar(ind, yvalue[i], 0.5, color=colors, align='center')
@@ -1452,10 +1452,10 @@ class MakeResultPlot(QDialog):
                         bars.append(temp[0])
 
                 for j in range(len(yvalue[i])):
-                        self.total = self.total+cumulate[j]
+                    self.total = self.total+cumulate[j]
 
-            
-            prop = matplotlib.font_manager.FontProperties(size=8)                
+
+            prop = matplotlib.font_manager.FontProperties(size=8)
             axes.set_xticks(ind)
             if len(labels) >= 13:
                 axes.set_xticklabels(labels, size='xx-small')
@@ -1463,24 +1463,24 @@ class MakeResultPlot(QDialog):
                 axes.set_xticklabels(labels, size='x-small')
             else:
                 axes.set_xticklabels(labels)
-            
+
             legendlabel = []
             if isExchange:
                 legendlabel = self.plot_legend(category2,str(self.choicevar1.currentText()))
             else:
                 legendlabel = self.plot_legend(category1.keys(),str(self.choicevar1.currentText()))
-            
+
             axes.legend(bars,legendlabel,prop=prop,bbox_to_anchor=(1.01, 1),loc=2,borderaxespad=0.)
             axes.set_xlabel(str(self.x_label()))
             axes.set_ylabel("Percent (%)")
             axes.set_ylim(0,100)
-                    
-            
+
+
             self.makePlotTab(Canvas)
             Canvas.draw()
             Canvas.mpl_connect('figure_enter_event', self.onleave)
             self.fig_text(self.total)
-        
+
         self.create_table(isExchange,yvalue,cumulate,labels,legendlabel)
         self.progresslabel.setText("")
         self.repaint()
@@ -1508,53 +1508,53 @@ class MakeResultPlot(QDialog):
             index = 9
         elif key == 599:
             index = 10
-            
+
         return index
 
     def create_table(self,isExchange,yvalue,cumulate,labels,legendlabel):
-            vtable = CustomTable(self)
-            #vtable.setSelectionMode(QAbstractItemView.MultiSelection)
-            if isExchange:
-                vtable.setColumnCount(len(yvalue))               
-                vtable.setRowCount(len(yvalue[0]))
-                for i in range(len(yvalue)):
-                    xvalue = yvalue[i]
-                    for j in range(len(xvalue)):
+        vtable = CustomTable(self)
+        #vtable.setSelectionMode(QAbstractItemView.MultiSelection)
+        if isExchange:
+            vtable.setColumnCount(len(yvalue))
+            vtable.setRowCount(len(yvalue[0]))
+            for i in range(len(yvalue)):
+                xvalue = yvalue[i]
+                for j in range(len(xvalue)):
+                    temp = 0.0
+                    if cumulate[i] != 0:
+                        temp = 100.0*xvalue[j]/cumulate[i]
+                    else:
                         temp = 0.0
-                        if cumulate[i] != 0:
-                            temp = 100.0*xvalue[j]/cumulate[i]
-                        else:
-                            temp = 0.0
 
-                        if i==0:
-                            header = QTableWidgetItem(str(legendlabel[j]))
-                            vtable.setVerticalHeaderItem(j,header)
+                    if i==0:
+                        header = QTableWidgetItem(str(legendlabel[j]))
+                        vtable.setVerticalHeaderItem(j,header)
 
-                        if j==0:
-                            header = QTableWidgetItem(str(labels[i]))
-                            vtable.setHorizontalHeaderItem(i,header)
-                                                   
-                        value = QTableWidgetItem(str(round(temp,2)))
-                        vtable.setItem(j,i,value)
-            else:                
-                vtable.setColumnCount(len(yvalue[0]))               
-                vtable.setRowCount(len(yvalue))
-                for i in range(len(yvalue)):
-                    xvalue = yvalue[i]
-                    for j in range(len(xvalue)):
-                        temp = xvalue[j]
-                        if i==0:
-                            header = QTableWidgetItem(str(labels[j]))
-                            vtable.setHorizontalHeaderItem(j,header)
-                            
-                        if j==0:
-                            header = QTableWidgetItem(str(legendlabel[i]))
-                            vtable.setVerticalHeaderItem(i,header)                        
-                        
-                        value = QTableWidgetItem(str(round(temp,2)))
-                        vtable.setItem(i,j,value)
-                
-            self.makeTableTab(vtable)
+                    if j==0:
+                        header = QTableWidgetItem(str(labels[i]))
+                        vtable.setHorizontalHeaderItem(i,header)
+
+                    value = QTableWidgetItem(str(round(temp,2)))
+                    vtable.setItem(j,i,value)
+        else:
+            vtable.setColumnCount(len(yvalue[0]))
+            vtable.setRowCount(len(yvalue))
+            for i in range(len(yvalue)):
+                xvalue = yvalue[i]
+                for j in range(len(xvalue)):
+                    temp = xvalue[j]
+                    if i==0:
+                        header = QTableWidgetItem(str(labels[j]))
+                        vtable.setHorizontalHeaderItem(j,header)
+
+                    if j==0:
+                        header = QTableWidgetItem(str(legendlabel[i]))
+                        vtable.setVerticalHeaderItem(i,header)
+
+                    value = QTableWidgetItem(str(round(temp,2)))
+                    vtable.setItem(i,j,value)
+
+        self.makeTableTab(vtable)
 
 
     def plot_legend(self,category,column):
@@ -1567,9 +1567,9 @@ class MakeResultPlot(QDialog):
                 temp = legenddict[label]
             legendlabel.append(temp)
 
-                
+
         return legendlabel
-            
+
 
 
     def gohome(self):
@@ -1597,24 +1597,24 @@ class MakeResultPlot(QDialog):
     Retrieve the number of persons by trip frequencies
     '''
     def numPersons(self):
-        
+
         if self.show_nhts.isChecked():
             table1 = "persons_nhts as p, households_nhts as h"
         else:
             table1 = "persons as p, households as h"
-            
+
         base = ""
         if self.cmbworkstatus.currentIndex() > 0:
             if self.show_nhts.isChecked():
                 table1 = "%s, persons_daily_status_nhts as w"%(table1)
             else:
                 table1 = "%s, persons_daily_status_r as w"%(table1)
-            
+
             if self.cmbworkstatus.currentIndex() == 1:
                 base = " AND p.houseid = w.houseid AND p.personid = w.personid AND w.wrkdailystatus = 1"
             else:
                 base = " AND p.houseid = w.houseid AND p.personid = w.personid AND w.wrkdailystatus = 0"
-        
+
         table2 = self.tableName()
         socio = ""
         numrows = self.varstable.rowCount()
@@ -1626,11 +1626,11 @@ class MakeResultPlot(QDialog):
             if self.segment1.isChecked():
                 socio = socio + "h.%s = '%s' AND " %(column,value)
             else:
-                socio = socio + "p.%s = '%s' AND " %(column,value)               
+                socio = socio + "p.%s = '%s' AND " %(column,value)
         if numrows > 0:
             socio = socio[0:len(socio)-5]
 
-        
+
         t1 = time.time()
         try:
             self.total = 0.0
@@ -1642,7 +1642,7 @@ class MakeResultPlot(QDialog):
                   (SELECT houseid, personid, count(*) as freq FROM %s %s GROUP BY houseid, personid) as b \
                   ON a.houseid = b.houseid AND a.personid = b.personid \
                   GROUP BY b.freq ORDER BY b.freq" %(table1,base,socio,table2,character)
-            
+
             print sql
             self.cursor.execute(sql)
             data = self.cursor.fetchall()
@@ -1650,30 +1650,30 @@ class MakeResultPlot(QDialog):
                 self.err1.append(j[0])
                 self.err2.append(j[1])
                 self.total = self.total + j[1]
-                
+
             if self.err1[len(self.err1)-1] == None:
                 self.err1.pop()
                 tmp = self.err2.pop()
                 self.total = self.total - tmp
 #                self.err1.insert(0,0)
 #                self.err2.insert(0,tmp)
-            
+
             if self.percent.isChecked() and self.total > 0.0:
                 for i in range(len(self.err1)):
                     self.err2[i] = round(100*float(self.err2[i])/self.total,2)
 
-            
+
             t2 = time.time()
             print 'time taken --> %s'%(t2-t1)
             return True
         except Exception, e:
             print '\tError while fetching the columns from the table'
             print e
-            
+
         return False
 
     def tableName(self):
-        
+
         table = ""
         if not self.show_nhts.isChecked():
             if self.tripradio.isChecked():
@@ -1685,7 +1685,7 @@ class MakeResultPlot(QDialog):
                 table = "trips_nhts"
             else:
                 table = "schedule_nhts"
-            
+
         return table
 
 
@@ -1698,42 +1698,42 @@ class CustomTable(QTableWidget):
         self.__initContextMenus__()
 
     def __initActions__(self):
-        self.copyAction = QAction("Copy",  self) 
-        self.copyAction.setShortcut("Ctrl+C") 
-        self.addAction(self.copyAction) 
-        self.connect(self.copyAction, SIGNAL("triggered()"), self.copyCells) 
+        self.copyAction = QAction("Copy",  self)
+        self.copyAction.setShortcut("Ctrl+C")
+        self.addAction(self.copyAction)
+        self.connect(self.copyAction, SIGNAL("triggered()"), self.copyCells)
 
-    def __initContextMenus__(self): 
-        self.setContextMenuPolicy(Qt.CustomContextMenu) 
-        self.connect(self, SIGNAL("customContextMenuRequested(QPoint)"), self.tableWidgetContext) 
+    def __initContextMenus__(self):
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.connect(self, SIGNAL("customContextMenuRequested(QPoint)"), self.tableWidgetContext)
 
-    def tableWidgetContext(self, point): 
-        '''Create a menu for the tableWidget and associated actions''' 
-        tw_menu = QMenu("Menu", self)  
-        tw_menu.addAction(self.copyAction) 
-        tw_menu.exec_(self.mapToGlobal(point)) 
-        
+    def tableWidgetContext(self, point):
+        '''Create a menu for the tableWidget and associated actions'''
+        tw_menu = QMenu("Menu", self)
+        tw_menu.addAction(self.copyAction)
+        tw_menu.exec_(self.mapToGlobal(point))
+
     def copyCells(self):
-        selRange  = self.selectedRanges()[0]#just take the first range 
-        topRow = selRange.topRow() 
-        bottomRow = selRange.bottomRow() 
-        rightColumn = selRange.rightColumn() 
-        leftColumn = selRange.leftColumn() 
-        #item = self.tableWidget.item(topRow, leftColumn) 
-        clipStr = QString() 
-        for row in xrange(topRow, bottomRow+1): 
-            for col in xrange(leftColumn, rightColumn+1): 
-                cell = self.item(row, col) 
-                if cell: 
-                    clipStr.append(cell.text()) 
-                else: 
-                    clipStr.append(QString("")) 
-                clipStr.append(QString("\t")) 
-            clipStr.chop(1) 
-            clipStr.append(QString("\r\n")) 
-        
-        cb = QApplication.clipboard() 
-        cb.setText(clipStr)      
+        selRange  = self.selectedRanges()[0]#just take the first range
+        topRow = selRange.topRow()
+        bottomRow = selRange.bottomRow()
+        rightColumn = selRange.rightColumn()
+        leftColumn = selRange.leftColumn()
+        #item = self.tableWidget.item(topRow, leftColumn)
+        clipStr = QString()
+        for row in xrange(topRow, bottomRow+1):
+            for col in xrange(leftColumn, rightColumn+1):
+                cell = self.item(row, col)
+                if cell:
+                    clipStr.append(cell.text())
+                else:
+                    clipStr.append(QString(""))
+                clipStr.append(QString("\t"))
+            clipStr.chop(1)
+            clipStr.append(QString("\r\n"))
+
+        cb = QApplication.clipboard()
+        cb.setText(clipStr)
 
 
 def main():

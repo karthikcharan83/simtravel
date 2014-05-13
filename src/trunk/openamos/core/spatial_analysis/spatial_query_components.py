@@ -26,15 +26,15 @@ class SpatioTemporalConstraint(object):
                 %(self.table, self.locationField, self.timeField))
 
 class PrismConstraints(object):
-    def __init__(self, table, skimField, 
-                 originField, destinationField, 
+    def __init__(self, table, skimField,
+                 originField, destinationField,
                  startConstraint, endConstraint,
-                 asField, 
-		 distField,
-		 votdField=None,
+                 asField,
+                 distField,
+                 votdField=None,
                  sampleField = None,
-                 countChoices=None, activityTypeFilter=None, threshold=None, 
-                 seed=1, afterModel=None, beforeModel=None, locationInfoTable=None, 
+                 countChoices=None, activityTypeFilter=None, threshold=None,
+                 seed=1, afterModel=None, beforeModel=None, locationInfoTable=None,
                  locationIdVar=None, locationVariables=[], locationFilterList=[], locationFilterType="or"):
 
         if not isinstance(table, str):
@@ -66,7 +66,7 @@ class PrismConstraints(object):
             raise PrismConstraintError, """The start constraint for the prism """\
                 """is not a valid SpatioTemporalConstraint object"""
         self.endConstraint = endConstraint
-        
+
         if asField is not None and not isinstance(asField, str):
             raise PrismConstraintError, """The as field is """\
                 """not valid; should be a str object"""
@@ -93,7 +93,7 @@ class PrismConstraints(object):
                 """to be returned; should be a valid integer type """
         self.countChoices = countChoices
 
-        
+
         if not isinstance(seed, int):
             raise PrismConstraintError, """The seed  """\
                 """should be a valid integer type """
@@ -115,8 +115,8 @@ class PrismConstraints(object):
         self.locationInfoTable = locationInfoTable
         self.locationIdVar = locationIdVar
         self.locationVariables = locationVariables
-	self.locationFilterList = locationFilterList
-	self.locationFilterType = locationFilterType
+        self.locationFilterList = locationFilterList
+        self.locationFilterType = locationFilterType
 
 
     def __repr__(self):
@@ -138,16 +138,10 @@ class PrismConstraints(object):
                   self.afterModel,
                   self.beforeModel,
                   self.locationVariables,
-		  self.locationFilterList,
-		  self.locationFilterType))
+                  self.locationFilterList,
+                  self.locationFilterType))
 
 
 #class PrismLocationChoicesConstraints(PrismConstraints):
-#    def __init__(self, table, field, startConstraint, endConstraint, 
+#    def __init__(self, table, field, startConstraint, endConstraint,
 #        PrismConstraints.__init__(table, field, startConstraint, endConstraint)
-
-
-
-            
-
-        

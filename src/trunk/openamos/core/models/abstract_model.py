@@ -7,7 +7,7 @@ class Model(object):
     """
     This is the base class for all the mathematical formulations
     implemented in OpenAMOS including both regression and choice models.
-    
+
     Inputs:
     specification - Specification object
     """
@@ -20,25 +20,25 @@ class Model(object):
         """
         The method returns the expected values for the different choices
         using the coefficients in the specification input.
-        
+
         Inputs:
         data - DataArray object
         """
         num_choices = self.specification.number_choices
-        expected_value_array = DataArray(zeros((data.rows, num_choices)), 
+        expected_value_array = DataArray(zeros((data.rows, num_choices)),
                                          self.choices)
 
         for i in range(num_choices):
             coefficients = self.coefficients[i]
             expected_value_array.data[:,i] = data.calculate_equation(coefficients)
         return expected_value_array
-    
+
 
     def calculate_exp_expected_values(self, data):
         """
         The method returns the exponent of the expected values for the
         the different choices using the coefficients in the specification input.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -52,7 +52,7 @@ class Model(object):
         #exp_expected_values = self.calculate_expected_values(data)
         #exp_expected_values.data = exp(exp_expected_values.data)
         return exp_expected_value_array
-        
+
 
 import unittest
 from numpy import array, all
@@ -66,7 +66,7 @@ class TestAbstractModel(unittest.TestCase):
         self.data = DataArray(array([[1, 1.1], [1, -0.25]]), ['Constant', 'Var1'])
         self.specification = Specification(choices, coefficients)
         self.model = Model(self.specification)
-        
+
 
     def testexpectedvalue(self):
         value_array_act = zeros((self.data.rows,self.specification.number_choices))
@@ -82,7 +82,7 @@ class TestAbstractModel(unittest.TestCase):
         exp_expected_value_array = self.model.calculate_exp_expected_values(
                                                                                 self.data)
         self.assertEqual(True, isinstance(exp_expected_value_array, DataArray))
-        self.assertEqual(self.specification.choices, 
+        self.assertEqual(self.specification.choices,
                             exp_expected_value_array.varnames)
         diff_values = all(exp(value_array_act) == exp_expected_value_array.data)
         self.assertEqual(True, diff_values)

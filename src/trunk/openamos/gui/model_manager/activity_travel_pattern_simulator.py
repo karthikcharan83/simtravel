@@ -9,12 +9,12 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         self.setWindowTitle('Activity Travel Pattern Simulator')
         self.setAutoFillBackground(True)
         size =  parent.geometry()
-     
+
         # These two global variables are used in paintevent.
         global widgetwidth, widgetheight
         widgetwidth = size.width()
         widgetheight = size.height()
-        
+
 
 #        children_button = QPushButton('Children with after school \ndependent activities', self)
 #        children_button.setGeometry((size.width()) * 3 / 4 - 100, 120, 200, 50)
@@ -39,7 +39,7 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         mode_choice_model_button.setGeometry((size.width()) * 3 / 4 - 260, 400, 220, 50)
         mode_choice_model_button.setStyleSheet("background-color: #00C5CD")
         self.connect(mode_choice_model_button, SIGNAL('clicked()'), self.mode_choice_model)
-       
+
 #        all_other_individuals_button = QPushButton('All other individuals', self)
 #        all_other_individuals_button.setGeometry((size.width()) / 4 - 110, 120, 220, 50)
 #        all_other_individuals_button.setStyleSheet("background-color: #FFFDD0")
@@ -47,7 +47,7 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         adult_individuals_button = QPushButton('Adult individuals, children \nwith independent activities \n(if children stay at home then \nthey shadow the activity-travel \npatterns of adult to whom \nthey are assigned)', self)
         adult_individuals_button.setGeometry((size.width()) / 4 - 110, 200, 220, 100)
         adult_individuals_button.setStyleSheet("background-color: #00C5CD")
-        self.connect(adult_individuals_button, SIGNAL('clicked()'), self.adult_individuals)       
+        self.connect(adult_individuals_button, SIGNAL('clicked()'), self.adult_individuals)
 
         travel_time_button = QPushButton('Is travel time to next \nfixed activity \74 time \navailable in the prism?', self)
         travel_time_button.setGeometry((size.width()) / 4 - 110, 330, 220, 50)
@@ -109,147 +109,147 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         sov_hov_button.setStyleSheet("background-color: #00C5CD")
         self.connect(sov_hov_button, SIGNAL('clicked()'), self.sov_hov)
 
-        
+
         Dummy  = QPushButton('', self)
         Dummy.setGeometry(0, size.height() - 4, 1140, 2)
-        
+
         self.configob = co
-        
-        
+
+
 #    def time_slice(self):
 #        diagtitle = COMPMODEL_SMSLICE
 #        modelkey = MODELKEY_SMSLICE
-#        
+#
 #        diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
 #        diag.exec_()
-        
+
     def activity_pursued_1(self):
         diagtitle = COMPMODEL_SMACTIVEPURSUE
         modelkey = MODELKEY_SMACTIVEPURSUE
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def assign_to_non_hhold(self):
         diagtitle = COMPMODEL_SMACTIVEASSIGNED
         modelkey = MODELKEY_SMACTIVEASSIGNED
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def assign_to_hhold(self):
         diagtitle = COMPMODEL_SMASSIGNACTIVE
         modelkey = MODELKEY_SMASSIGNACTIVE
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def mode_choice_model(self):
         diagtitle = COMPMODEL_AFTSCHACTIVITYMODE
         modelkey = MODELKEY_AFTSCHACTIVITYMODE
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def adult_individuals(self):
         diagtitle = COMPMODEL_SMINDIVIDUAL
         modelkey = MODELKEY_SMINDIVIDUAL
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def travel_time(self):
         diagtitle = COMPMODEL_SMTRIPTIME
         modelkey = MODELKEY_SMTRIPTIME
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def activity_choice(self):
         diagtitle = COMPMODEL_ACTIVITYTYPE
         modelkey = MODELKEY_ACTIVITYTYPE
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def actual_start_time(self):
         diagtitle = COMPMODEL_SMSTARTTIME
         modelkey = MODELKEY_SMSTARTTIME
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def time_in_activity(self):
         diagtitle = COMPMODEL_ACTIVITYDURATION
         modelkey = MODELKEY_ACTIVITYDURATION
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
 #    def proceed_next_activity(self):
 #        diagtitle = COMPMODEL_SMPROCEED
 #        modelkey = MODELKEY_SMPROCEED
-#        
+#
 #        diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
 #        diag.exec_()
-        
+
     def mode_choice_next_activity(self):
         diagtitle = COMPMODEL_FIXEDACTIVITYMODE
         modelkey = MODELKEY_FIXEDACTIVITYMODE
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def hov(self):
         diagtitle = COMPMODEL_SMISHOV
         modelkey = MODELKEY_SMISHOV
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def activity_pursued_2(self):
         diagtitle = COMPMODEL_SMACTIVEPURSED
         modelkey = MODELKEY_SMACTIVEPURSED
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
     def check_if_join_activity(self):
         diagtitle = COMPMODEL_JOINTACTIVITY
         modelkey = MODELKEY_JOINTACTIVITY
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
 #    def activity_non_hhold(self):
 #        diagtitle = COMPMODEL_SMACTIVENON
 #        modelkey = MODELKEY_SMACTIVENON
-#        
+#
 #        diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
 #        diag.exec_()
-#        
+#
 #    def activity_hhold(self):
 #        diagtitle = COMPMODEL_SMACTIVEHOUSE
 #        modelkey = MODELKEY_SMACTIVEHOUSE
-#        
+#
 #        diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
 #        diag.exec_()
-        
+
     def sov_hov(self):
         diagtitle = COMPMODEL_TRIPVEHICLE
         modelkey = MODELKEY_TRIPVEHICLE
-        
+
         diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
         diag.exec_()
-        
+
 #    def activity_travel_pattern(self):
 #        diagtitle = COMPMODEL_SMPATTERN
 #        modelkey = MODELKEY_SMPATTERN
-#        
+#
 #        diag = AbtractSpecDialog(self.configob,modelkey,diagtitle)
 #        diag.exec_()
-        
-        
+
+
 
     def paintEvent(self, parent = None):
         # Drawing line
@@ -282,7 +282,7 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         line.drawLine(widgetwidth / 4 + 150, 865, widgetwidth / 4 + 450, 865)
         line.drawLine(widgetwidth / 2, 960, widgetwidth / 2, 1070)
 
-        
+
         line.end()
 
 
@@ -293,103 +293,103 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         arrow.begin(self)
         point = QPoint()
 
-        point.setX(widgetwidth / 4)  
+        point.setX(widgetwidth / 4)
         point.setY(120)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth * 3/ 4)  
+        point.setX(widgetwidth * 3/ 4)
         point.setY(120)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth * 3 / 4)  
+        point.setX(widgetwidth * 3 / 4)
         point.setY(200)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4)  
+        point.setX(widgetwidth / 4)
         point.setY(200)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4)  
+        point.setX(widgetwidth / 4)
         point.setY(330)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 - 150)  
+        point.setX(widgetwidth / 4 - 150)
         point.setY(410)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 - 150)  
+        point.setX(widgetwidth / 4 - 150)
         point.setY(540)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 - 150)  
+        point.setX(widgetwidth / 4 - 150)
         point.setY(620)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 - 150)  
+        point.setX(widgetwidth / 4 - 150)
         point.setY(790)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
- 
-        point.setX(widgetwidth / 4 + 150)  
+
+        point.setX(widgetwidth / 4 + 150)
         point.setY(620)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 + 150)  
+        point.setX(widgetwidth / 4 + 150)
         point.setY(700)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth * 3 / 4 - 150)  
+        point.setX(widgetwidth * 3 / 4 - 150)
         point.setY(300)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth * 3 / 4 + 150)  
+        point.setX(widgetwidth * 3 / 4 + 150)
         point.setY(300)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth * 3 / 4 - 150)  
+        point.setX(widgetwidth * 3 / 4 - 150)
         point.setY(400)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 + 150)  
+        point.setX(widgetwidth / 4 + 150)
         point.setY(880)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 4 + 550)  
+        point.setX(widgetwidth / 4 + 550)
         point.setY(905)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() + 13, point.y() - 4), QPoint(point.x() + 13, point.y() + 4))
 
-        point.setX(widgetwidth / 4 + 50)  
+        point.setX(widgetwidth / 4 + 50)
         point.setY(815)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 13,point.y() - 4), QPoint(point.x() - 13,point.y() + 4))
 
-        point.setX(widgetwidth / 4 + 350)  
+        point.setX(widgetwidth / 4 + 350)
         point.setY(815)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 13,point.y() - 4), QPoint(point.x() - 13,point.y() + 4))
 
-        point.setX(widgetwidth / 2)  
+        point.setX(widgetwidth / 2)
         point.setY(990)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
 
-        point.setX(widgetwidth / 2)  
+        point.setX(widgetwidth / 2)
         point.setY(1070)
         arrow.setBrush(QColor("black"))
         arrow.drawPolygon(QPoint(point.x(),point.y()),QPoint(point.x() - 4,point.y() - 13), QPoint(point.x() + 4,point.y() - 13))
@@ -397,14 +397,14 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         arrow.setBrush(QColor("#F0F0F0"))
         arrow.drawRoundedRect(widgetwidth/2 - 100, 40, 200, 50, 15.0, 15.0)
         arrow.drawRoundedRect(widgetwidth/2 - 150, 1070, 300, 50, 15.0, 15.0)
-        
+
         arrow.drawRoundedRect(widgetwidth*3/4 - 100, 120, 200, 50, 15.0, 15.0)
         arrow.drawRoundedRect(widgetwidth/4 - 110, 120, 220, 50, 15.0, 15.0)
         arrow.drawRoundedRect(widgetwidth/4 + 40, 620, 220, 50, 15.0, 15.0)
         arrow.drawRoundedRect(widgetwidth/4 + 50, 880, 200, 50, 15.0, 15.0)
-        arrow.drawRoundedRect(widgetwidth/4 + 350, 880, 200, 50, 15.0, 15.0)       
+        arrow.drawRoundedRect(widgetwidth/4 + 350, 880, 200, 50, 15.0, 15.0)
 
-        
+
         arrow.end()
 
         # Drawing text
@@ -412,55 +412,55 @@ class Activity_Travel_Pattern_Simulator(QWidget):
         text.begin(self)
         point = QPoint()
 
-        point.setX(widgetwidth * 3 / 4 - 160)  
+        point.setX(widgetwidth * 3 / 4 - 160)
         point.setY(230)
         text.drawText(point, "Yes")
 
-        point.setX(widgetwidth * 3 / 4 + 145)  
+        point.setX(widgetwidth * 3 / 4 + 145)
         point.setY(230)
         text.drawText(point, "No")
 
-        point.setX(widgetwidth / 4 - 160)  
+        point.setX(widgetwidth / 4 - 160)
         point.setY(350)
         text.drawText(point, "Yes")
 
-        point.setX(widgetwidth / 4 + 145)  
+        point.setX(widgetwidth / 4 + 145)
         point.setY(350)
         text.drawText(point, "No")
 
-        point.setX(widgetwidth / 4 - 5)  
+        point.setX(widgetwidth / 4 - 5)
         point.setY(640)
         text.drawText(point, "No")
 
-        point.setX(widgetwidth / 4 - 175)  
+        point.setX(widgetwidth / 4 - 175)
         point.setY(725)
         text.drawText(point, "Yes")
 
-        point.setX(widgetwidth / 4 - 12)  
+        point.setX(widgetwidth / 4 - 12)
         point.setY(810)
         text.drawText(point, "HOV")
 
-        point.setX(widgetwidth / 4 + 293)  
+        point.setX(widgetwidth / 4 + 293)
         point.setY(810)
         text.drawText(point, "Yes")
 
-        point.setX(widgetwidth / 4 + 295)  
+        point.setX(widgetwidth / 4 + 295)
         point.setY(860)
         text.drawText(point, "No")
 
-        point.setX(widgetwidth / 4 + 130)  
+        point.setX(widgetwidth / 4 + 130)
         point.setY(860)
         text.drawText(point, "No")
 
-        point.setX(widgetwidth / 4 + 605)  
+        point.setX(widgetwidth / 4 + 605)
         point.setY(865)
         text.drawText(point, "Yes")
 
-        point.setX(widgetwidth / 4 - 210)  
+        point.setX(widgetwidth / 4 - 210)
         point.setY(890)
         text.drawText(point, "SOV \53")
 
-        point.setX(widgetwidth / 4 - 230)  
+        point.setX(widgetwidth / 4 - 230)
         point.setY(905)
         text.drawText(point, "Other Modes")
 
@@ -469,28 +469,21 @@ class Activity_Travel_Pattern_Simulator(QWidget):
 
         temp = QRect(widgetwidth/2 - 150, 1070, 300, 50)
         text.drawText(temp, Qt.AlignCenter, 'Activity-travel patterns for \nall individuals within the time-slice')
-        
+
         temp = QRect(widgetwidth*3/4 - 100, 120, 200, 50)
         text.drawText(temp, Qt.AlignCenter, 'Children with after school \ndependent activities')
 
         temp = QRect(widgetwidth/4 - 110, 120, 220, 50)
         text.drawText(temp, Qt.AlignCenter, 'All other individuals')
-        
+
         temp = QRect(widgetwidth/4 + 40, 620, 220, 50)
         text.drawText(temp, Qt.AlignCenter, 'Proceed to next \nfixed activity')
-        
+
         temp = QRect(widgetwidth/4 + 50, 880, 200, 50)
         text.drawText(temp, Qt.AlignCenter, 'Joint Activity with \nNon-household member')
-        
+
         temp = QRect(widgetwidth/4 + 350, 880, 200, 50)
-        text.drawText(temp, Qt.AlignCenter, 'Joint Activity with \nhousehold member')        
+        text.drawText(temp, Qt.AlignCenter, 'Joint Activity with \nhousehold member')
 
-        
+
         text.end()
-
-        
-
-
- 
-
-

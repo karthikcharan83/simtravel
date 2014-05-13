@@ -14,15 +14,15 @@ class CleanAggregateActivitySchedule(Model):
         self.dependencyAttribs = self.specification.dependencyAttribs
         self.colNames = [self.activityAttribs.hidName,
                          self.activityAttribs.pidName,
-                         self.activityAttribs.scheduleidName, 
+                         self.activityAttribs.scheduleidName,
                          self.activityAttribs.activitytypeName,
                          self.activityAttribs.starttimeName,
                          self.activityAttribs.endtimeName,
                          self.activityAttribs.locationidName,
                          self.activityAttribs.durationName,
                          self.activityAttribs.dependentPersonName,
-			 self.activityAttribs.tripCountName]
-        
+                         self.activityAttribs.tripCountName]
+
 
 
 
@@ -73,12 +73,12 @@ class CleanAggregateActivitySchedule(Model):
 
 
         hid = self.personIndicesOfActs[:,0]
-        
+
         hidUnique, hid_reverse_indices = unique(hid, return_inverse=True)
 
         binsHidIndices = array(range(hid_reverse_indices.max()+2))
         histHidIndices = histogram(hid_reverse_indices, bins=binsHidIndices)
-        
+
         indicesHidRowCount = histHidIndices[0]
         indicesHidRow = indicesHidRowCount.cumsum()
 
@@ -133,11 +133,11 @@ class CleanAggregateActivitySchedule(Model):
                 activityList = self.return_activity_list_for_person(schedulesForPerson)
                 personObject.add_episodes(activityList)
                 workStatus, schoolStatus, childDependency = self.return_status_dependency(schedulesForPerson)
-                personObject.add_status_dependency(workStatus, schoolStatus, 
+                personObject.add_status_dependency(workStatus, schoolStatus,
                                                    childDependency)
                 householdObject.add_person(personObject)
             reconciledSchedules = householdObject.clean_schedules_for_in_home_episodes(seed)
-            
+
             actList += reconciledSchedules
 
         return DataArray(actList, self.colNames)
@@ -146,8 +146,8 @@ class CleanAggregateActivitySchedule(Model):
         # Updating activity list
         activityList = []
         for sched in schedulesForPerson:
-	    hid = sched[self.hidCol]
-	    pid = sched[self.pidCol]
+            hid = sched[self.hidCol]
+            pid = sched[self.pidCol]
 
             scheduleid = sched[self.schidCol]
             activitytype = sched[self.actTypeCol]
@@ -157,11 +157,11 @@ class CleanAggregateActivitySchedule(Model):
             duration = sched[self.durCol]
             depPersonId = sched[self.depPersonCol]
 
-            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid, 
+            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
                                          starttime, endtime, duration, depPersonId)
             activityList.append(actepisode)
 
-        
+
 
         return activityList
 
@@ -170,26 +170,26 @@ class CleanAggregateActivitySchedule(Model):
         schoolStatus = schedulesForPerson[0,self.schoolStatusCol]
         childDependency = schedulesForPerson[0,self.childDependencyCol]
 
-        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol, 
+        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol,
         #                                                self.schoolStatusCol,
         #                                                self.childDependencyCol)
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-        
+
         # Checking for status and dependency
         # whether the merge happened correctly
-        # this can be replaced with a simple extraction as opposed 
-        # to identifying unique values, checking for single value 
+        # this can be replaced with a simple extraction as opposed
+        # to identifying unique values, checking for single value
         # and then updating the status variables
-	"""
+        """
         workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
         if workStatusUnique.shape[0] > 1:
             print 'Work Status', workStatusUnique
-        
+
             raise Exception, "More than one values for status/dependency"
         else:
             workStatus = workStatusUnique[0]
-        
+
         schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
         if schoolStatusUnique.shape[0] > 1:
             print 'School Status', schoolStatusUnique
@@ -203,13 +203,13 @@ class CleanAggregateActivitySchedule(Model):
             raise Exception, "More than one values for status/dependency"
         else:
             childDependency = childDependencyUnique[0]
-        
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-	"""
+        """
         return workStatus, schoolStatus, childDependency
 
-        
+
 
 
 
@@ -221,19 +221,19 @@ from openamos.core.data_array import DataArray
 class TestReconcileModel(unittest.TestCase):
     def setUp(self):
         self.data = genfromtxt("/home/kkonduri/simtravel/test/mag_zone/schedule_txt.csv", delimiter=",", dtype=int)
-        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime', 
+        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime',
                     'endtime', 'duration']
         self.actSchedules = DataArray(self.data, colNames)
 
 
-        
+
 
     def test_retrieve_loop_ids(self):
         houseIdsCol = self.actSchedules.columns(['houseid']).data
         houseIdsUnique = unique(houseIdsCol)
         print houseIdsUnique
 
-        
+
         for hid in houseIdsUnique:
             schedulesRowsIndForHh = houseIdsCol == hid
             schedulesForHh = self.actSchedules.rowsof(schedulesRowsIndForHh)
@@ -244,7 +244,7 @@ class TestReconcileModel(unittest.TestCase):
             for pid in pIdsUnique:
                 schedulesRowIndForPer = pIdsCol == pid
                 schedulesForPerson = schedulesForHh.rowsof(schedulesRowIndForPer)
-            
+
                 #print 'Raw schedules for hid:%s and pid:%s' %(hid, pid)
                 #print schedulesForPerson
 
@@ -256,8 +256,8 @@ class TestReconcileModel(unittest.TestCase):
                     starttime = sch[5]
                     endtime = sch[6]
                     duration = sch[7]
-                    
-                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                                  starttime, endtime, duration)
                     activityList.append(actepisode)
                 personObject = Person(hid, pid)
@@ -267,9 +267,8 @@ class TestReconcileModel(unittest.TestCase):
         #pid = unique(self.actSchedules.columns(['houseid', 'personid']).
         #acts = self.actSchedules
 
-        #def 
+        #def
 
 
 if __name__ == "__main__":
     unittest.main()
-        

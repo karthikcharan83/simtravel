@@ -20,13 +20,13 @@ from openamos.core.database_management.cursor_database_connection import DataBas
 
 #this class will be used to create a class at runtime
 class create_class(object):
-  def mkClass(self, name, k):
-    class bah(object): pass
-    bah.__name__ = name
-    #print 'bah is %s and k is %s'%(bah, k)
-    for n in k: 
-        setattr(bah, n, k[n])
-    return bah 
+    def mkClass(self, name, k):
+        class bah(object): pass
+        bah.__name__ = name
+        #print 'bah is %s and k is %s'%(bah, k)
+        for n in k:
+            setattr(bah, n, k[n])
+        return bah
 
 
 """ temp class for getting table names and column names """
@@ -37,14 +37,14 @@ class temp_class(object):
         self.db_con = db_con
         dbcon_obj = DataBaseConnection(db_con)
         self.dbcon_obj = dbcon_obj
-        
+
     def return_tab(self):
         tab_list = self.dbcon_obj.get_table_list()
         return tab_list
 
 
 #current code will create a class for the table 'Persons'
-#create object of class temp_class 
+#create object of class temp_class
 aa = temp_class()
 
 #open new connection to database to get the table names and columns
@@ -61,11 +61,11 @@ for each in cols_list:
     new_col_list.append(each + ':' + '0')
 
 #close database connection
-aa.dbcon_obj.close_connection()    
+aa.dbcon_obj.close_connection()
 
 
 """ data processing
-Convert the column list into dictionary. 
+Convert the column list into dictionary.
 pass the dictionary and table name to create class method to create new class by table name
 """
 
@@ -96,5 +96,3 @@ for each_mem in some_list:
 print '\nprinting the columns'
 for every_mem in class_members:
     print every_mem
-    
-

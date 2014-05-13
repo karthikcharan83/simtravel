@@ -2,7 +2,7 @@ from openamos.core.agents.person import Person
 from openamos.core.agents.household import Household
 from openamos.core.agents.activity import ActivityEpisode
 from openamos.core.models.abstract_model import Model
- 
+
 from numpy import array, logical_and, zeros, histogram
 
 import time
@@ -11,25 +11,25 @@ import time
 class AdjustSchedules(Model):
     def __init__(self, specification):
         Model.__init__(self, specification)
-	self.specification = specification
-	self.activityAttribs = self.specification.activityAttribs
-	self.arrivalInfoAttribs = self.specification.arrivalInfoAttribs
-	self.occupancyInfoAttribs = self.specification.occupancyInfoAttribs
+        self.specification = specification
+        self.activityAttribs = self.specification.activityAttribs
+        self.arrivalInfoAttribs = self.specification.arrivalInfoAttribs
+        self.occupancyInfoAttribs = self.specification.occupancyInfoAttribs
         self.dailyStatusAttribs = self.specification.dailyStatusAttribs
         self.dependencyAttribs = self.specification.dependencyAttribs
 
-	self.schedAdjType = self.specification.schedAdjType
+        self.schedAdjType = self.specification.schedAdjType
 
-	self.colNames = [self.activityAttribs.hidName,
+        self.colNames = [self.activityAttribs.hidName,
                          self.activityAttribs.pidName,
-                         self.activityAttribs.scheduleidName, 
+                         self.activityAttribs.scheduleidName,
                          self.activityAttribs.activitytypeName,
                          self.activityAttribs.starttimeName,
                          self.activityAttribs.endtimeName,
                          self.activityAttribs.locationidName,
                          self.activityAttribs.durationName,
                          self.activityAttribs.dependentPersonName,
-			 self.activityAttribs.tripCountName]
+                         self.activityAttribs.tripCountName]
 
     def create_indices(self, data):
         idCols = data.columns([self.activityAttribs.hidName,
@@ -77,20 +77,20 @@ class AdjustSchedules(Model):
 
 
 
-        #raw_input('new implementation of indices')                
+        #raw_input('new implementation of indices')
 
-	self.check_hhldIndices_for_multiple_person_arrivals()	
+        self.check_hhldIndices_for_multiple_person_arrivals()
 
     def check_hhldIndices_for_multiple_person_arrivals(self):
-	numPersons = self.hhldIndicesOfPersons[:,-1] - self.hhldIndicesOfPersons[:,-2]
-	numPersonGrt1Flag = numPersons > 1
+        numPersons = self.hhldIndicesOfPersons[:,-1] - self.hhldIndicesOfPersons[:,-2]
+        numPersonGrt1Flag = numPersons > 1
 
-	#if numPersonGrt1Flag.sum() > 0:
-	#    print self.hhldIndicesOfPersons[numPersonGrt1Flag,:].astype(int)
-	#raw_input('hhldIndices; checking for multiple person arrivals')
-	
+        #if numPersonGrt1Flag.sum() > 0:
+        #    print self.hhldIndicesOfPersons[numPersonGrt1Flag,:].astype(int)
+        #raw_input('hhldIndices; checking for multiple person arrivals')
 
-        
+
+
     def create_col_numbers(self, colNamesDict):
         self.hidCol = colNamesDict[self.activityAttribs.hidName]
         self.pidCol = colNamesDict[self.activityAttribs.pidName]
@@ -101,17 +101,17 @@ class AdjustSchedules(Model):
         self.sttimeCol = colNamesDict[self.activityAttribs.starttimeName]
         self.endtimeCol = colNamesDict[self.activityAttribs.endtimeName]
         self.durCol = colNamesDict[self.activityAttribs.durationName]
-	self.depPersonCol = colNamesDict[self.activityAttribs.dependentPersonName]
-	self.tripCountCol = colNamesDict[self.activityAttribs.tripCountName]
+        self.depPersonCol = colNamesDict[self.activityAttribs.dependentPersonName]
+        self.tripCountCol = colNamesDict[self.activityAttribs.tripCountName]
 
-	if self.schedAdjType == "Arrival Adjustment":
-	    self.tripDependentPersonCol = colNamesDict[self.arrivalInfoAttribs.dependentPersonName]
-	    self.actualArrivalCol = colNamesDict[self.arrivalInfoAttribs.actualArrivalName]
-	    self.expectedArrivalCol = colNamesDict[self.arrivalInfoAttribs.expectedArrivalName]
+        if self.schedAdjType == "Arrival Adjustment":
+            self.tripDependentPersonCol = colNamesDict[self.arrivalInfoAttribs.dependentPersonName]
+            self.actualArrivalCol = colNamesDict[self.arrivalInfoAttribs.actualArrivalName]
+            self.expectedArrivalCol = colNamesDict[self.arrivalInfoAttribs.expectedArrivalName]
 
-	if self.schedAdjType == "Occupancy Adjustment":
-	    self.tripIndicatorCol = colNamesDict[self.occupancyInfoAttribs.tripIndicatorName]
-	    self.tripStTimeCol = colNamesDict[self.occupancyInfoAttribs.startTimeName]
+        if self.schedAdjType == "Occupancy Adjustment":
+            self.tripIndicatorCol = colNamesDict[self.occupancyInfoAttribs.tripIndicatorName]
+            self.tripStTimeCol = colNamesDict[self.occupancyInfoAttribs.startTimeName]
 
         self.schoolStatusCol = colNamesDict[self.dailyStatusAttribs.schoolStatusName]
         self.workStatusCol = colNamesDict[self.dailyStatusAttribs.workStatusName]
@@ -123,26 +123,26 @@ class AdjustSchedules(Model):
         schoolStatus = schedulesForPerson[0,self.schoolStatusCol]
         childDependency = schedulesForPerson[0,self.childDependencyCol]
 
-        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol, 
+        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol,
         #                                                self.schoolStatusCol,
         #                                                self.childDependencyCol)
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-        
+
         # Checking for status and dependency
         # whether the merge happened correctly
-        # this can be replaced with a simple extraction as opposed 
-        # to identifying unique values, checking for single value 
+        # this can be replaced with a simple extraction as opposed
+        # to identifying unique values, checking for single value
         # and then updating the status variables
-	"""
+        """
         workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
         if workStatusUnique.shape[0] > 1:
             print 'Work Status', workStatusUnique
-        
+
             raise Exception, "More than one values for status/dependency"
         else:
             workStatus = workStatusUnique[0]
-        
+
         schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
         if schoolStatusUnique.shape[0] > 1:
             print 'School Status', schoolStatusUnique
@@ -156,32 +156,32 @@ class AdjustSchedules(Model):
             raise Exception, "More than one values for status/dependency"
         else:
             childDependency = childDependencyUnique[0]
-        
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-	"""
+        """
         return workStatus, schoolStatus, childDependency
 
 
     def return_trip_occupancy_info(self, schedulesForPerson):
-	tripIndicator = schedulesForPerson[0, self.tripIndicatorCol]
-	tripStTime = schedulesForPerson[0, self.tripStTimeCol]
-	return tripIndicator, tripStTime
+        tripIndicator = schedulesForPerson[0, self.tripIndicatorCol]
+        tripStTime = schedulesForPerson[0, self.tripStTimeCol]
+        return tripIndicator, tripStTime
 
     def return_arrival_info(self, schedulesForPerson):
-	actualArrival = schedulesForPerson[0,self.actualArrivalCol]
-	expectedArrival = schedulesForPerson[0,self.expectedArrivalCol]
-	tripDependentPerson = schedulesForPerson[0,self.tripDependentPersonCol]	
+        actualArrival = schedulesForPerson[0,self.actualArrivalCol]
+        expectedArrival = schedulesForPerson[0,self.expectedArrivalCol]
+        tripDependentPerson = schedulesForPerson[0,self.tripDependentPersonCol]
 
-	#print 'Actual Arrival - %s and Expected Arrival - %s ' %(actualArrival, expectedArrival)
-	return actualArrival, expectedArrival, tripDependentPerson
+        #print 'Actual Arrival - %s and Expected Arrival - %s ' %(actualArrival, expectedArrival)
+        return actualArrival, expectedArrival, tripDependentPerson
 
     def return_activity_list_for_person(self, schedulesForPerson):
         # Updating activity list
         activityList = []
         for sched in schedulesForPerson:
-	    hid = sched[self.hidCol]
-	    pid = sched[self.pidCol]
+            hid = sched[self.hidCol]
+            pid = sched[self.pidCol]
 
             scheduleid = sched[self.schidCol]
             activitytype = sched[self.actTypeCol]
@@ -190,28 +190,28 @@ class AdjustSchedules(Model):
             endtime = sched[self.endtimeCol]
             duration = sched[self.durCol]
             depPersonId = sched[self.depPersonCol]
-	    tripCount = sched[self.tripCountCol]            
+            tripCount = sched[self.tripCountCol]
 
-            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid, 
+            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
                                          starttime, endtime, duration, depPersonId, tripCount)
             activityList.append(actepisode)
 
-        
+
 
         return activityList
 
 
     def resolve_consistency(self, data, seed):
-	actList = []
+        actList = []
         data.sort([self.activityAttribs.hidName,
                    self.activityAttribs.pidName,
                    self.activityAttribs.scheduleidName])
         ti = time.time()
         # Create Index Matrix
         self.create_indices(data)
-	self.create_col_numbers(data._colnames)
+        self.create_col_numbers(data._colnames)
 
-	#print data._colnames, data.varnames
+        #print data._colnames, data.varnames
 
         print 'Indices created in %.4f' %(time.time()-ti)
 
@@ -232,41 +232,41 @@ class AdjustSchedules(Model):
                 personObject.add_episodes(activityList)
 
                 workStatus, schoolStatus, childDependency = self.return_status_dependency(schedulesForPerson)
-                personObject.add_status_dependency(workStatus, schoolStatus, 
+                personObject.add_status_dependency(workStatus, schoolStatus,
                                                    childDependency)
 
-            	householdObject.add_person(personObject)
-		
-		if self.schedAdjType == "Arrival Adjustment":
-	    	    actualArrival, expectedArrival, tripDependentPerson = self.return_arrival_info(schedulesForPerson)
-	    	    personObject.add_arrival_status(actualArrival, expectedArrival, tripDependentPerson)
+                householdObject.add_person(personObject)
 
-		elif self.schedAdjType == "Occupancy Adjustment":
-		    tripInd, tripStTime = self.return_trip_occupancy_info(schedulesForPerson)
-		    #print 'trip indicator, trip start time -- ', tripInd, tripStTime
-		    personObject.add_occupancy_status(tripInd, tripStTime)
-		    householdObject.wait_push_subsequent_activities(personObject)
-		else:
-		    raise Exception, 'Invalid adjustment type ... '
+                if self.schedAdjType == "Arrival Adjustment":
+                    actualArrival, expectedArrival, tripDependentPerson = self.return_arrival_info(schedulesForPerson)
+                    personObject.add_arrival_status(actualArrival, expectedArrival, tripDependentPerson)
+
+                elif self.schedAdjType == "Occupancy Adjustment":
+                    tripInd, tripStTime = self.return_trip_occupancy_info(schedulesForPerson)
+                    #print 'trip indicator, trip start time -- ', tripInd, tripStTime
+                    personObject.add_occupancy_status(tripInd, tripStTime)
+                    householdObject.wait_push_subsequent_activities(personObject)
+                else:
+                    raise Exception, 'Invalid adjustment type ... '
 
 
-	    if self.schedAdjType == "Arrival Adjustment":
-	    	householdObject.adjust_schedules_given_arrival_info(seed)
-	    elif self.schedAdjType == "Occupancy Adjustment":
-	    			
-		#raw_input()
-		pass
-	    #raw_input()
-	    reconciledSchedules = householdObject._collate_results()
+            if self.schedAdjType == "Arrival Adjustment":
+                householdObject.adjust_schedules_given_arrival_info(seed)
+            elif self.schedAdjType == "Occupancy Adjustment":
 
-	    if not personObject._check_for_conflicts():
-		personObject.print_activity_list()
-		print "THE SCHEDULES ARE STILL MESSED UP"    
-                raise Exception, "THE SCHEDULES ARE STILL MESSED UP"    
+                #raw_input()
+                pass
+            #raw_input()
+            reconciledSchedules = householdObject._collate_results()
 
-	    actList += reconciledSchedules
+            if not personObject._check_for_conflicts():
+                personObject.print_activity_list()
+                print "THE SCHEDULES ARE STILL MESSED UP"
+                raise Exception, "THE SCHEDULES ARE STILL MESSED UP"
 
-	print 'Finished running the component including index creation in %.4f' %(time.time()-ti)
+            actList += reconciledSchedules
+
+        print 'Finished running the component including index creation in %.4f' %(time.time()-ti)
         return DataArray(actList, self.colNames)
 
 
@@ -278,7 +278,7 @@ from openamos.core.data_array import DataArray
 class TestReconcileModel(unittest.TestCase):
     def setUp(self):
         self.data = genfromtxt("/home/karthik/simtravel/test/mag_zone_dynamic/schedule_txt_small.csv", delimiter=",", dtype=int)
-        colNames = ['scheduleid', 'houseid', 'personid', 'activitytype', 'locationid', 'starttime', 
+        colNames = ['scheduleid', 'houseid', 'personid', 'activitytype', 'locationid', 'starttime',
                     'endtime', 'duration', 'dependentpersonid']
         self.actSchedules = DataArray(self.data, colNames)
 
@@ -329,21 +329,21 @@ class TestReconcileModel(unittest.TestCase):
 
 
 
-        #raw_input('new implementation of indices')                
+        #raw_input('new implementation of indices')
 
-        
+
 
     def test_retrieve_loop_ids(self):
         #houseIdsCol = self.actSchedules.columns(['houseid']).data
         #houseIdsUnique = unique(houseIdsCol)
         #print houseIdsUnique
-	self.create_indices(self.actSchedules)
-        
+        self.create_indices(self.actSchedules)
+
         for hid in self.hhldIndicesOfPersons:
-	    print hid
+            print hid
 
 
-	    """
+            """
 
             schedulesRowsIndForHh = houseIdsCol == hid
             schedulesForHh = self.actSchedules.rowsof(schedulesRowsIndForHh)
@@ -354,7 +354,7 @@ class TestReconcileModel(unittest.TestCase):
             for pid in pIdsUnique:
                 schedulesRowIndForPer = pIdsCol == pid
                 schedulesForPerson = schedulesForHh.rowsof(schedulesRowIndForPer)
-            
+
                 #print 'Raw schedules for hid:%s and pid:%s' %(hid, pid)
                 #print schedulesForPerson
 
@@ -366,21 +366,20 @@ class TestReconcileModel(unittest.TestCase):
                     starttime = sch[5]
                     endtime = sch[6]
                     duration = sch[7]
-                    
-                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                                  starttime, endtime, duration)
                     activityList.append(actepisode)
                 personObject = Person(hid, pid)
                 personObject.add_and_reconcile_episodes(activityList)
                 #print '\tReconciled Activity schedules - ', personObject.reconciledActivityEpisodes
                 #raw_input()
-		"""
+                """
         #pid = unique(self.actSchedules.columns(['houseid', 'personid']).
         #acts = self.actSchedules
 
-        #def 
+        #def
 
 
 if __name__ == "__main__":
     unittest.main()
-        

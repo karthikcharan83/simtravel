@@ -4,9 +4,9 @@ from openamos.core.models.abstract_model import Model
 
 class AbstractChoiceModel(Model):
     """
-    This is the base class for all discrete choice based mathematical 
+    This is the base class for all discrete choice based mathematical
     formulations in OpenAMOS.
-    
+
     Inputs:
     specification - Specification object
     """
@@ -17,7 +17,7 @@ class AbstractChoiceModel(Model):
         """
         The method returns the observed portion of the utility associated with
         the different choices.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -27,7 +27,7 @@ class AbstractChoiceModel(Model):
         """
         The method returns the observed portion of the utility associated with
         the ONLY the valid choices.
-        
+
         Inputs:
         None
         """
@@ -35,9 +35,9 @@ class AbstractChoiceModel(Model):
 
     def calc_exp_choice_utilities(self, data):
         """
-        The method returns the exponent of the observed portion of the 
+        The method returns the exponent of the observed portion of the
         utility associated with the different choices.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -45,9 +45,9 @@ class AbstractChoiceModel(Model):
 
     def calc_probabilities(self):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
-        
+
         Inputs:
         None
         """
@@ -57,7 +57,7 @@ class AbstractChoiceModel(Model):
         """
         The method returns the selected choice among the available
         alternatives.
-        
+
         Inputs:
         None
         """
@@ -71,11 +71,11 @@ class TestAbstractChoiceModel(unittest.TestCase):
     def setUp(self):
         choice = ['SOV']
         coefficients = [{'constant':2, 'Var1':2.11}]
-        data = array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]])        
+        data = array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]])
 
         self.data = DataArray(data, ['Constant', 'VaR1'])
         self.specification = Specification(choice, coefficients)
-        
+
     def testvalues(self):
         model = AbstractChoiceModel(self.specification)
 
@@ -90,6 +90,6 @@ class TestAbstractChoiceModel(unittest.TestCase):
         exp_expected_diff = all(exp_expected_act ==
                                      model_exp_expected_values.data)
         self.assertEqual(True, exp_expected_diff)
-        
+
 if __name__ == '__main__':
     unittest.main()

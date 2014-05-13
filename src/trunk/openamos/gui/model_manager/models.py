@@ -17,7 +17,7 @@ class Models(QWidget):
         global model_widget
         model_widget = parent
 
-        
+
     def show_long_term_models(self):
         self.long_term_models = LongTermModels(model_widget, self.configobject)
         self.long_term_models.show()
@@ -45,11 +45,11 @@ class Models(QWidget):
     def show_child_model(self):
         self.child_model = Child_Model(model_widget, self.configobject)
         self.child_model.show()
-        
+
     def show_child_status_model(self):
         self.child_status_model = Child_Status_Model(model_widget, self.configobject)
         self.child_status_model.show()
-        
+
     def show_after_school_model(self):
         self.after_school_model = After_School(model_widget, self.configobject)
         self.after_school_model.show()
@@ -61,10 +61,10 @@ class Models(QWidget):
     def show_activity_travel_pattern_simulator(self):
         self.activity_travel_pattern_simulator = Activity_Travel_Pattern_Simulator(model_widget, self.configobject)
         self.activity_travel_pattern_simulator.show()
-        
+
     def setConfigObject(self,co):
         self.configobject = co
-        
+
     def show_clear_widget(self):
         self.clearWidgets = ClearWidgets(model_widget)
         self.clearWidgets.show()
@@ -74,13 +74,13 @@ class Models(QWidget):
 class ClearWidgets(QWidget):
     def __init__(self, parent=None):
         super(ClearWidgets, self).__init__(parent)
-        
+
         self.setAutoFillBackground(True)
         size =  parent.geometry()
         # These two global variables are used in paintevent.
         global widgetwidth, widgetheight
         widgetwidth = size.width()
         widgetheight = size.height()
-        
+
         Dummy  = QPushButton('', self)
         Dummy.setGeometry(0, size.height() - 4, 1140, 2)

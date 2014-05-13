@@ -12,7 +12,7 @@ from openamos.core.database_management.cursor_database_connection import *
 from openamos.core.database_management.database_configuration import *
 
 from openamos.gui.misc.basic_widgets import *
-import sys,codecs,unicodedata,string 
+import sys,codecs,unicodedata,string
 from shapefile import *
 #from pyproj import Proj, transform
 from osgeo import osr
@@ -25,49 +25,49 @@ class Read_Shape(QDialog):
     '''
     def __init__(self, configobject = None, parent = None):
         QDialog.__init__(self, parent)
-        
+
         self.new_obj = None
         self.connects(configobject)
         self.cursor = self.new_obj.cursor
-        
+
         self.tablename = "shape_zone"
         self.setMinimumSize(QSize(400,160))
         self.setWindowTitle("Import Shapefile")
-        
+
         pagelayout = QVBoxLayout()
         self.setLayout(pagelayout)
-        
+
         dbinputbox = QGroupBox("")
         vbox = QVBoxLayout()
         dbinputbox.setLayout(vbox)
-        
+
         shapenamelabel = QLabel("Select a shapefile")
         shapewidget = QWidget(self)
         shapelayout = QHBoxLayout()
         shapelayout.setContentsMargins(0,0,0,0)
         shapewidget.setLayout(shapelayout)
-        
+
         self.shapename = LineEdit()
         shapelayout.addWidget(self.shapename)
         self.shapebutton = QPushButton('...')
         self.shapebutton.setMaximumWidth(30)
         shapelayout.addWidget(self.shapebutton)
-        
+
         SIDlabel = QLabel("Enter EPSG code")
         self.epsg = LineEdit()
         self.epsg.setMaximumWidth(150)
-        
+
         IDlabel = QLabel("Select ID")
         self.polyID = QComboBox()
         self.polyID.setMaximumWidth(250)
-        
+
         vbox.addWidget(shapenamelabel)
         vbox.addWidget(shapewidget)
         vbox.addWidget(SIDlabel)
         vbox.addWidget(self.epsg)
         vbox.addWidget(IDlabel)
         vbox.addWidget(self.polyID)
-        
+
         pagelayout.addWidget(dbinputbox)
         self.dialogButtonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         pagelayout.addWidget(self.dialogButtonBox)
@@ -83,15 +83,15 @@ class Read_Shape(QDialog):
         prj_file = open(path,'r')
         prj_lines = prj_file.readlines()
         prj_file.close()
-        
+
         for i in range(len(prj_lines)):
             prj_lines[i] = string.rstrip(prj_lines[i])
-            
+
         prj = osr.SpatialReference()
         prj.ImportFromESRI(prj_lines)
-        prj.from_esri = True        
+        prj.from_esri = True
         prj.AutoIdentifyEPSG()
-        
+
         srid = ''
         if prj.IsGeographic():
             srid = str(prj.GetAuthorityCode('GEOGCS'))
@@ -101,7 +101,7 @@ class Read_Shape(QDialog):
             else:
                 srid = str(prj.GetAuthorityCode('PROJCS'))
         self.epsg.setText(srid)
-        
+
 
     def open_folder(self):
         dialog = QFileDialog()
@@ -114,16 +114,16 @@ class Read_Shape(QDialog):
 
 
     def create_sql(self):
-        
+
         shpname = self.shapename.text()
         sid = self.epsg.text()
         pid = self.polyID.currentText()
         #self.tablename = self.table_name()
-        
+
         if self.checkIfTableExists(self.tablename):
             self.cursor.execute("DROP TABLE %s" %(self.tablename))
             self.new_obj.connection.commit()
-            
+
         if shpname != '' and sid != '' and pid != '':
             self.sqlname = shpname[0:len(shpname)-4] + '.sql'
             f = codecs.open(self.sqlname,'w',"utf-8")
@@ -141,16 +141,16 @@ class Read_Shape(QDialog):
             f.write(u'CREATE INDEX "%s_the_geom_gist" ON "%s" using gist ("the_geom");\n' %(self.tablename,self.tablename))
             f.write(u'COMMIT;\n')
             f.close()
-            
+
             self.read_sql()
             QMessageBox.information(self, "",
-                            QString("""Shapefile importing is successful!"""), 
+                            QString("""Shapefile importing is successful!"""),
                             QMessageBox.Yes)
         else:
             QMessageBox.warning(self, "Import spatial information...",
-                                        QString("""You should select shapefile and enter EPSG code."""), 
+                                        QString("""You should select shapefile and enter EPSG code."""),
                                         QMessageBox.Yes)
-        
+
         self.disconnects()
         QDialog.accept(self)
 
@@ -163,10 +163,10 @@ class Read_Shape(QDialog):
 
     def create_state(self,f,sf):
         f.write(u'CREATE TABLE "%s" (gid serial PRIMARY KEY,\n' %(self.tablename))
-        
+
         fields = sf.fields
         numfields = len(fields)
-        
+
         for i in range(numfields):
             field = fields[i]
             Fname = field[0]
@@ -175,13 +175,13 @@ class Read_Shape(QDialog):
             Ftype = field[1]
             Flength = int(field[2])
             Dlength = int(field[3])
-            
+
             type = ''
             if Ftype == 'C':
                 type = 'varchar(%d)' %(Flength)
             elif Ftype == 'N':
                 if Dlength > 0:
-                    type = 'float8' 
+                    type = 'float8'
                 else:
                     if Flength <= 4:
                         type = 'smallint'
@@ -191,7 +191,7 @@ class Read_Shape(QDialog):
                         type = 'bigint'
             elif Ftype == 'F':
                 type = 'numeric'
-                
+
             if i > 0:
                 if i <> numfields-1:
                     line = '"%s" %s,\n' %(Fname,type)
@@ -205,7 +205,7 @@ class Read_Shape(QDialog):
         sid = self.epsg.text()
         stype = sf.shapeType
         shapetype = ''
-        
+
         if stype == 1:
             shapetype = 'POINT'
         elif stype == 3:
@@ -216,7 +216,7 @@ class Read_Shape(QDialog):
             shapetype = 'MULTILINESTRING'
         elif stype == 25:
             shapetype = 'MULTIPOLYGON'
-        
+
         f.write(u"SELECT addgeometrycolumn('','%s','the_geom',%s,'%s',2,true);\n" %(self.tablename,sid,shapetype))
 
 
@@ -227,7 +227,7 @@ class Read_Shape(QDialog):
         shapes = sf.shapes()
         records = sf.records()
         numshapes = len(shapes)
-        
+
         columns = self.insert_first(sf)
         geom = ''
         for i in range(numshapes):
@@ -238,7 +238,7 @@ class Read_Shape(QDialog):
                     value = value + "'%s'," %(temp)
                 else:
                     value = value + "NULL,"
-            
+
             stype = sf.shapeType
             if stype == 1:
                 geom = self.point_state(shapes,i,sid)
@@ -262,7 +262,7 @@ class Read_Shape(QDialog):
             if i == self.polyID.currentIndex()-1:
                 fname = "locationid"
             columns = columns + '"%s",' %(fname)
-        columns = columns + 'the_geom)'        
+        columns = columns + 'the_geom)'
         return columns
 
 
@@ -275,12 +275,12 @@ class Read_Shape(QDialog):
     def line_state(self,shapes,i,sid):
         numpoints = len(shapes[i].points)
         points = ''
-        
+
         for j in range(numpoints):
             x = shapes[i].points[j][0]
             y = shapes[i].points[j][1]
             points = points + '%s %s,' %(x,y)
-    
+
         points = points[0:len(points)-1]
         geom = "st_geometryfromtext('LINESTRING(%s)',%s));\n" %(points,sid)
         return geom
@@ -288,12 +288,12 @@ class Read_Shape(QDialog):
     def polygon_state(self,shapes,i,sid):
         numpoints = len(shapes[i].points)
         polys = ''
-        
+
         for j in range(numpoints):
             x = shapes[i].points[j][0]
             y = shapes[i].points[j][1]
             polys = polys + '%s %s,' %(x,y)
-    
+
         polys = polys[0:len(polys)-1]
         geom = "st_geometryfromtext('POLYGON((%s))',%s));\n" %(polys,sid)
         return geom
@@ -302,7 +302,7 @@ class Read_Shape(QDialog):
     def multipolygon_state(self,shapes,i,sid):
         numpoints = len(shapes[i].points)
         numparts = len(shapes[i].parts)
-        
+
         polys = ''
         for j in range(numparts):
             poly = '('
@@ -316,10 +316,10 @@ class Read_Shape(QDialog):
 
         geom = "st_geometryfromtext('MULTIPOLYGON((%s))',%s));\n" %(polys,sid)
         return geom
-        
-        
+
+
 #    def creat_table(self):
-#        
+#
 #        ssql = 'CREATE TABLE "test" (gid serial PRIMARY KEY,"objectid" int4,"taz" int4,"raz" int4,"mpa" varchar(2),"county" varchar(3),"tazacres" numeric,"istaz" numeric,"shape_area" numeric,"shape_len" numeric,"area" numeric,"perimeter" numeric,"p504_d00_" float8,"p504_d00_i" float8,"puma5" varchar(5),"name" varchar(90),"lsad" varchar(2),"lsad_trans" varchar(50))'
 #        self.cursor.execute(ssql)
 #        #self.new_obj.connection.commit()
@@ -332,11 +332,11 @@ class Read_Shape(QDialog):
 
     def read_sql(self):
         #self.connects()
-        
+
         text_file = open(self.sqlname, "r")
-        create = '' 
+        create = ''
         step = 0
-        
+
         for line in text_file:
             temp = line[0:len(line)-1]
             if step == 0:
@@ -358,7 +358,7 @@ class Read_Shape(QDialog):
                 else:
                     self.cursor.execute('COMMIT')
                     #self.new_obj.connection.commit()
-       
+
         text_file.close()
 
 
@@ -375,27 +375,27 @@ class Read_Shape(QDialog):
         return tables
 
     def connects(self,configobject):
-        
-#        protocol = 'postgres'        
+
+#        protocol = 'postgres'
 #        user_name = 'postgres'
 #        password = 'Dyou65221'
 #        host_name = 'localhost'
 #        database_name = 'mag_zone'
-#        
+#
 #        self.database_config_object = DataBaseConfiguration(protocol, user_name, password, host_name, database_name)
 #        self.new_obj = DataBaseConnection(self.database_config_object)
 #        self.new_obj.new_connection()
-        
-        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)        
+
+        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)
         user_name = configobject.getConfigElement(DB_CONFIG,DB_USER)
         password = configobject.getConfigElement(DB_CONFIG,DB_PASS)
         host_name = configobject.getConfigElement(DB_CONFIG,DB_HOST)
         database_name = configobject.getConfigElement(DB_CONFIG,DB_NAME)
-        
+
         self.database_config_object = DataBaseConfiguration(protocol, user_name, password, host_name, database_name)
         self.new_obj = DataBaseConnection(self.database_config_object)
         self.new_obj.new_connection()
-        
+
 
     def disconnects(self):
         self.new_obj.close_connection()
@@ -410,7 +410,7 @@ def main():
 
 if __name__=="__main__":
     main()
-    
+
 
 
 #def importSHP():
@@ -436,7 +436,7 @@ if __name__=="__main__":
 #        x2, y2 = transform(p1,p2,x,y)
 #        print '%f %f' %(x2, y2)
 #
-##C:\Program Files\PostgreSQL\8.3\bin\shp2pgsql.exe" -s 4326 -I countries.shp countries 
+##C:\Program Files\PostgreSQL\8.3\bin\shp2pgsql.exe" -s 4326 -I countries.shp countries
 ##| "C:\Program Files\PostgreSQL\8.3\bin\psql.exe" -d mapfish_workshop -U postgres
 #
 ## -------------------------------------------------------
@@ -444,4 +444,3 @@ if __name__=="__main__":
 #if __name__ == '__main__':
 #
 #    importSHP()
-    

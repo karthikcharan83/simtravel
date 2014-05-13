@@ -6,7 +6,7 @@ class CountSpecification(Specification):
     """
     This is the base class for specifying the attributes for a count data
     regression model.
-    
+
     Inputs:
     choices - a list object of strings
     coefficients - a list of dictionaries; dictionary is a {'variable':'coefficient'}
@@ -36,7 +36,7 @@ class CountSpecification(Specification):
         if not checkVal:
             raise CoefficientsError, checkText
 
-        checkVal, checkText = self.check_specification_consistency(self.choices, 
+        checkVal, checkText = self.check_specification_consistency(self.choices,
                                                                    self.coefficients)
 
         if not checkVal:
@@ -48,7 +48,7 @@ class CountSpecification(Specification):
                 """only one equation expected"""
 
         return 1, ''
-        
+
 
 import unittest
 
@@ -57,21 +57,21 @@ class TestBadCountSpecification(unittest.TestCase):
         self.choices = ['Veh1', 'Veh2', 'Veh3']
         self.coefficients = [{'Constant':2, 'Var1':2.11}]
         self.coefficients1 = [{'Constant':2, 'Var1':2.11}, {'Constant':1.2}]
-        
+
         self.distribution1 = 'notspecified'
         self.distribution2 = 123
 
     def testcoeffecients(self):
-        self.assertRaises(SpecificationError, CountSpecification, 
+        self.assertRaises(SpecificationError, CountSpecification,
                           self.choices, self.coefficients1)
 
     def testdistributions(self):
-        self.assertRaises(SpecificationError, CountSpecification, self.choices, 
+        self.assertRaises(SpecificationError, CountSpecification, self.choices,
                           self.coefficients, distribution=self.distribution1)
-        self.assertRaises(SpecificationError, CountSpecification, self.choices, 
+        self.assertRaises(SpecificationError, CountSpecification, self.choices,
                           self.coefficients, distribution=self.distribution2)
 
-        
-        
+
+
 if __name__ == '__main__':
     unittest.main()

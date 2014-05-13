@@ -5,7 +5,7 @@ from numpy import array, ceil, ma, zeros
 #from math import ceil
 
 class Graph(object):
-    def __init__(self, skims_t_res=15, analy_t_res=6, 
+    def __init__(self, skims_t_res=15, analy_t_res=6,
                  analysis_period = 24, dist=None, data=None):
         """
         skims_t_res = in mins
@@ -19,7 +19,7 @@ class Graph(object):
         TODO: Pass data as an input as opposed to reading from a file
               So data can be read from the tables in the database and provided
               to an instance of this class
-         
+
         Test Data Layout:
         1 --> 2 --> 3
 
@@ -43,14 +43,14 @@ class Graph(object):
         print 'Number of analysis intervals', self.num_analy_intervals
 
 
-        
+
         #print self.data.shape
 
         #self.tts = self.process_data()
         #self.arc_index = self.create_arc_index()
-        
+
         #print self.arc_index.keys(), 'KEYSSSSSSSSSSSSSSSSSS'
-        
+
         #self.arrival_time(1, 2, 5)
 
         #g = self.build_graph()
@@ -60,7 +60,7 @@ class Graph(object):
         #self.build_prism_between_nodes(g, 1, 9, 2, 8)
 
     def read_data(self, location):
-        # Layout -- Link, Dir, ANode, BNode, Avg_Time_for all intervals, Length 
+        # Layout -- Link, Dir, ANode, BNode, Avg_Time_for all intervals, Length
         # currently reads data from a flat file
         # add functionality to read from a database table if necessary
 
@@ -97,9 +97,9 @@ class Graph(object):
             f.write('\n')
         """
 
-        
 
-        
+
+
     def create_arc_index(self):
         arc_index = {}
         count = 0
@@ -120,8 +120,8 @@ class Graph(object):
         if i == j:
             return t
         row = self.arc_index[(i, j)]
-        #skim_int = ceil((t+1)*self.analy_t_res/(self.skims_t_res*60))        
-        skim_int = ceil(t*self.analy_t_res/(self.skims_t_res*60.))        
+        #skim_int = ceil((t+1)*self.analy_t_res/(self.skims_t_res*60))
+        skim_int = ceil(t*self.analy_t_res/(self.skims_t_res*60.))
 
         #print '\t\tSKIMMING INTERVAL', skim_int
         #ttaken = self.tts[row, skim_int-1]
@@ -132,7 +132,7 @@ class Graph(object):
         #print "\t\tarrival time is - %s discrete units" %a_ij
         return a_ij
         #print ('leaves in interval %d, leaves %d and time taken is %d and arrives %d at %d'
-        #       %(t+1, i, ttaken, j, a_ij))        
+        #       %(t+1, i, ttaken, j, a_ij))
 
     def departure_time(self, i, j, t):
         """
@@ -140,9 +140,9 @@ class Graph(object):
         """
         if i == j:
             return t
-        
+
         #print '\n\t\tcalculating earliest departure time for nodes - ', i, j
-        
+
         earliest_dep_time = False
         st_time = t
 
@@ -165,7 +165,7 @@ class Graph(object):
                 earliest_dep_time = False
 
 
-        
+
 
     def build_graph(self):
         g = networkx.DiGraph()
@@ -173,30 +173,30 @@ class Graph(object):
         for n in range(self.data.shape[0]):
             i = self.data[n, 2]
             j = self.data[n, 3]
-            
+
             g.add_edge(int(i), int(j))
 
         print 'Graph was successfully created'
         print '\tThe number of nodes - %s' %(g.number_of_nodes())
-        print '\tThe number of edges - %s' %(g.number_of_edges())            
+        print '\tThe number of edges - %s' %(g.number_of_edges())
         #print g.edges()
         return g
-            
+
 
     def build_static_graph(self):
         g = networkx.DiGraph()
         for n in range(self.data.shape[0]):
             i = self.data[n,2]
             j = self.data[n,3]
-            
+
             if self.data[n,4] == -99:
                 wt = max(self.data[n,4:-1])
             else:
                 wt = self.data[n,4]
-                        
+
             g.add_edge(int(i), int(j), weight=wt)
         return g
-    
+
     def build_time_expanded_graph(self):
         g = networkx.DiGraph()
 
@@ -212,7 +212,7 @@ class Graph(object):
         print 'Graph was successfully created'
         print '\tThe number of nodes - %s' %(g.number_of_nodes())
         print '\tThe number of edges - %s' %(g.number_of_edges())
-                
+
 
     def build_tree_from_source_at_time(self, g, source, t, cutoff=None):
         """
@@ -234,7 +234,7 @@ class Graph(object):
             if j <> source:
                 hp.heappush(ea_sj, (99999999, j))
                 #nodes_ind[j] = False
-                
+
         hp.heappush(ea_sj, (t, source))
         nodes_ind[source] = False
 
@@ -248,7 +248,7 @@ class Graph(object):
             #print '\nAT NODE - ', i, 'MIN VALUE OF EA_SI - ', t_i
             #print '\t number of nodes to be skimmed', len(nodes_ind)
             #print '\t', nodes_ind
-            
+
             # Finalizing and removing fthe node from the dist indicator
             if i in nodes_ind:
                 nodes_ind.pop(i)
@@ -257,7 +257,7 @@ class Graph(object):
                 continue
             #print '\t number of nodes still to be skimmed after removing the current one', len(nodes_ind)
             #print '\t', nodes_ind
-            
+
             # Printing final distances for debugging
             #print '\tEA_SJ HEAP BEFORE UPDATING', ea_sj
 
@@ -267,14 +267,14 @@ class Graph(object):
 
             for j,edgedata in edata:
                 #print '\tconnection to source - ', j
-                
+
                 if j in dist:
                     t_j = dist[j]
                 else:
                     t_j = 99999999
-                
+
                 #print '\tfor node - %s, ea_s%s(%s) from dist dict was - %s' %(j, j, t, t_j)
-    
+
                 t_j_new = min(t_j, self.arrival_time(i, j, t_i))
 
                 #print '\tfor node - %s, ea_s%s(%s) updated valus is - %s' %(j, j, t, t_j_new)
@@ -293,29 +293,29 @@ class Graph(object):
                     if t_j_new <= cutoff:
                         #print '\tNEW VALUE UPDATED LESS THAN CUTOFF---------------------------------------'
                         dist[j] = t_j_new
-                        hp.heappush(ea_sj, (t_j_new, j))                        
+                        hp.heappush(ea_sj, (t_j_new, j))
                         nodes_ind[j] = False
                     else:
-                        #print '\tCUTOFF EXCEEDED-----------------------------'                        
+                        #print '\tCUTOFF EXCEEDED-----------------------------'
                         #print '\tnode at which exceeded', j
                         #print '\texceed value is ', t_j_new
                         #print '\tcutoff is', cutoff
                         if j in nodes_ind:
                             nodes_ind.pop(j)
-                            
+
                 elif t_j_new <99999999:
                     #print '\tNEW VALUE UPDATED HERE FOR LESS THAN 99999999-----------------------------'
-                    dist[j] = t_j_new                    
+                    dist[j] = t_j_new
                     hp.heappush(ea_sj, (t_j_new, j))
                     nodes_ind[j] = False
-                        
+
             #print nodes_ind
-            #print '\tEA_SJ HEAP AFTER UPDATING', ea_sj            
+            #print '\tEA_SJ HEAP AFTER UPDATING', ea_sj
             #print '\tafter updating distance dictionary', dist
             #raw_input()
         #print dist
         return dist
-    
+
     def build_tree_to_dest_at_time(self, g, dest, t, cutoff=None):
         """
         cutoff - Latest Arrival at destination in seconds
@@ -335,7 +335,7 @@ class Graph(object):
             if j <> dest:
                 hp.heappush(ld_jd, (99999999, j))
                 #nodes_ind[j] = False
-                
+
         hp.heappush(ld_jd, (-t, dest))
         nodes_ind[dest] = False
 
@@ -350,7 +350,7 @@ class Graph(object):
             #print '\nAT NODE - ', i, 'Latest Departure LD_ID - ', -t_i
             #print '\t number of nodes to be skimmed', len(nodes_ind)
             #print '\t', nodes_ind
-            
+
             # Finalizing and removing fthe node from the dist indicator
             nodes_ind.pop(i)
             #print '\t number of nodes still to be skimmed after removing the current one', len(nodes_ind)
@@ -360,19 +360,19 @@ class Graph(object):
             #print '\tEA_SJ HEAP BEFORE UPDATING', ld_jd
 
             edata = g[i].iteritems()
-            
+
             pred_data = g.predecessors_iter(i)
 
             for j in pred_data:
                 #print '\n\tconnection to destination - ', j
-                
+
                 if j in dist:
                     t_j = -dist[j]
                 else:
                     t_j = 99999999
-                
+
                 #print '\tfor node - %s, ld_%sd(%s) from dist dict was - %s' %(j, j, t, -t_j)
-    
+
                 dep_time = self.departure_time(j, i, -t_i)
                 if dep_time == -1:
                     #print 'valid departure not possible for j - %s, i - %s, time - %s' %(j, i, -t_i)
@@ -395,27 +395,27 @@ class Graph(object):
                     if t_j_new >= cutoff:
                         #print '\tNEW VALUE UPDATED MORE THAN CUTOFF---------------------------------------'
                         dist[j] = t_j_new
-                        hp.heappush(ld_jd, (-t_j_new, j))                        
+                        hp.heappush(ld_jd, (-t_j_new, j))
                         nodes_ind[j] = False
                     else:
-                        #print '\tLESS THAN CUTOFF -----------------------------'                        
+                        #print '\tLESS THAN CUTOFF -----------------------------'
                         #print '\tnode at which less', j
                         if j in nodes_ind:
                             nodes_ind.pop(j)
-                            
+
                 elif t_j_new <99999999:
                     #print '\tNEW VALUE UPDATED HERE FOR LESS THAN 99999999-----------------------------'
-                    dist[j] = t_j_new                    
+                    dist[j] = t_j_new
                     hp.heappush(ld_jd, (-t_j_new, j))
                     nodes_ind[j] = False
-                        
+
             #print '\tNodes to be skimmed in the next round', nodes_ind
-            #print '\tEA_SJ HEAP AFTER UPDATING', ld_jd            
+            #print '\tEA_SJ HEAP AFTER UPDATING', ld_jd
             #print '\tafter updating distance dictionary', dist
             #raw_input()
 
         return dist
-        
+
     def build_prism_between_nodes_static(self, g, source, dest, t_s, t_d):
         ti = time.time()
         reached_d, reached_path = networkx.single_source_dijkstra(g, source, cutoff=t_d-t_s)
@@ -436,14 +436,14 @@ class Graph(object):
         for i in reached_d:
             if i in left_d and ((reached_d[i] + left_d[i]) < t_d - t_s):
                 dests_accessible[i] = reached_d[i]
-            
+
         return dests_accessible
 
     def build_prism_between_nodes(self, g, source, dest, t_s, t_d):
         #cutoff = ceil(t_s + (t_d-t_s)/self.analy_t_res)
         t_s = ceil(t_s/self.analy_t_res)
         t_d = ceil(t_d/self.analy_t_res)
-        
+
         ti = time.time()
         reached = self.build_tree_from_source_at_time(g, source, t_s, t_d)
         #print '\tReached retrieved in ', time.time()-ti
@@ -464,7 +464,7 @@ class Graph(object):
         dests_accessible = {}
         for i in reached:
             if i in left and (reached[i] < left[i]):
-                dests_accessible[i] = [(reached[i]-t_s)*self.analy_t_res, 
+                dests_accessible[i] = [(reached[i]-t_s)*self.analy_t_res,
                                        (t_d-left[i])*self.analy_t_res,
                                        (left[i]-reached[i])*self.analy_t_res]
 
@@ -473,18 +473,18 @@ class Graph(object):
         print dests_accessible
 
         print 'TIME BETWEEN SOURCE AND DESTINATION - %s' %(t_d - t_s)
-        
+
         """
         #for i in dests_accessible:
         #    print ("""Destination - %s, time from source - %s"""\
         #               """, time to destination - %s, potential """\
-        #               """duration at destination %s""" 
+        #               """duration at destination %s"""
         #           %(i, reached[i]-t_s, t_d-left[i], left[i]-reached[i]))
         return dests_accessible
-       
-        
-            
-            
+
+
+
+
 
     def build_graph1(self):
         self.add_links()
@@ -510,7 +510,7 @@ class Graph(object):
         self.nnodes = self.graph_time.number_of_nodes()
 
 
-    
+
     def draw_graph(self):
         if self.nedges < 200:
             networkx.draw(self.graph_time)
@@ -533,7 +533,7 @@ class Graph(object):
         return dist, path
 
 if __name__ == "__main__":
-    
+
     import time
     """
     g = Graph()
@@ -548,7 +548,7 @@ if __name__ == "__main__":
         locs = g.build_prism_between_nodes_static(net_graph, 4378, 4727, 601., 3000.)
     #print '\t', len(locs)
     print '\tTime Taken for 10 STATIC Prism query', (time.time()-ti)
-    
+
     """
     g = Graph()
     ti = time.time()
@@ -556,7 +556,7 @@ if __name__ == "__main__":
     g.process_data()
     g.create_arc_index()
     net_graph = g.build_graph()
-    
+
     print '\n\tNumber of nodes accessible subject to spatio-temporal constraints- '
 
     for i in range(10):
@@ -583,7 +583,7 @@ if __name__ == "__main__":
     g.departure_time(3002, 11965, 451)
     print 'Time to query possible destinations - %s' %(time.time()-ti)
 
-    
+
 
     print '\n4. Testing building a SPT from a source: Earliest Arrival'
     ti = time.time()
@@ -604,7 +604,7 @@ if __name__ == "__main__":
     print '\n\tNumber of nodes accessible to reach 11984 by 900 and should not start before 601 analysis interval'
     print '\t', len(g.build_tree_to_dest_at_time(net_graph, 11984, 900, 601))
     print '\tTime Taken:From a single source to entire network node with a cutoff of i hour or 600 analysis intervals - ', (time.time()-ti)
-    
+
     ti = time.time()
     print '\n5. Locations within Prism with Start Anchor -8232, 600s and End Anchor - 12236, 900s'
     print '\n\tNumber of nodes accessible subject to spatio-temporal constraints is - '
@@ -621,7 +621,7 @@ if __name__ == "__main__":
         f.write('\n')
 
 
-    
+
 
     ti = time.time()
     g = Graph()

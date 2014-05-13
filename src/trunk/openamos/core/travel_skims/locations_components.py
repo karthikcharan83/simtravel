@@ -1,7 +1,7 @@
 
 
 class LocationsInfo(object):
-    def __init__(self, tableName, referenceTableName, 
+    def __init__(self, tableName, referenceTableName,
                  location_id_var, locations_varsList):
         self.tableName = tableName
         self.referenceTableName = referenceTableName
@@ -16,7 +16,3 @@ class LocationsInfo(object):
                     """\n\t\t Variables extracetd and cached are - %s """
                 %(self.tableName, self.referenceTableName,
                   self.location_id_var, self.locations_varsList))
-
-
-
-

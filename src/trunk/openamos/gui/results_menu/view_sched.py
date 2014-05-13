@@ -34,9 +34,9 @@ class MakeSchedPlot(QDialog):
         self.setWindowTitle("Profile of Activity Travel Pattern")
         self.setWindowFlags(Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
         self.setWindowIcon(QIcon("./images/run.png"))
-        
+
         self.new_obj = None
-        self.project = None        
+        self.project = None
         self.valid = False
         self.connects(config)
         self.cursor = self.new_obj.cursor
@@ -81,7 +81,7 @@ class MakeSchedPlot(QDialog):
         stablewidget = QWidget(self)
         stablelayout = QHBoxLayout()
         stablewidget.setLayout(stablelayout)
-        
+
         tools = QToolBar()
         tools.setMaximumWidth(150)
         home_action = self.createaction("Go Home",self.gohome,"home","")
@@ -103,26 +103,26 @@ class MakeSchedPlot(QDialog):
         self.stablecombo.setMinimumWidth(250)
         substablelayout.addWidget(self.stablecombo)
         substablelayout.setAlignment(Qt.AlignLeft)
-        stablelayout.addWidget(substablewidget) 
+        stablelayout.addWidget(substablewidget)
         self.resetbutton = QPushButton('Reset')
         self.resetbutton.setFixedWidth(80)
-        stablelayout.addWidget(self.resetbutton)      
+        stablelayout.addWidget(self.resetbutton)
         self.showbutton = QPushButton('Show Chart')
         self.showbutton.setFixedWidth(80)
         stablelayout.addWidget(self.showbutton)
         stablelayout.setContentsMargins(0,0,0,0)
-        
+
         filter_widget = QWidget(self)
         filterlayout = QVBoxLayout()
         filter_widget.setLayout(filterlayout)
         filterlayout.addWidget(radiowidget)
         filterlayout.addWidget(self.varswidget1)
         filterlayout.addWidget(self.varswidget2)
-        
+
         scrollArea = QScrollArea()
         scrollArea.setWidget(filter_widget)
         scrollArea.setWidgetResizable(True)
-        
+
         self.vbox = QVBoxLayout()
         self.vbox.addWidget(scrollArea)
         self.vbox.addWidget(stablewidget)
@@ -130,7 +130,7 @@ class MakeSchedPlot(QDialog):
         self.vbox.addWidget(self.dialogButtonBox)
         self.vbox.setStretch(2,1)
         self.setLayout(self.vbox)
-        
+
         self.connect(self.dialogButtonBox, SIGNAL("rejected()"), SLOT("reject()"))
         self.connect(self.segment1, SIGNAL("clicked(bool)"), self.initTables)
         self.connect(self.segment2, SIGNAL("clicked(bool)"), self.initTables)
@@ -138,8 +138,8 @@ class MakeSchedPlot(QDialog):
         self.connect(self.based2, SIGNAL("clicked(bool)"), self.showGroupBox)
         self.connect(self.showbutton, SIGNAL("clicked(bool)"), self.on_draw1)
         self.connect(self.resetbutton, SIGNAL("clicked(bool)"), self.reset_all)
-        
-        if self.stablecombo.count < 1:  
+
+        if self.stablecombo.count < 1:
             msg = "There is no simulation output"
             QMessageBox.information(self,"Warning",msg,QMessageBox.Ok)
             self.showbutton.setDisabled(True)
@@ -150,10 +150,10 @@ class MakeSchedPlot(QDialog):
         self.varslayout = QGridLayout()
         self.varswidget1.setLayout(self.varslayout)
         self.varswidget1.setContentsMargins(0,0,0,0)
-                
+
         tableslabel = QLabel('Columns')
         self.varslayout.addWidget(tableslabel,0,0)
-        
+
         self.colswidget = QListWidget()
         self.colswidget.setSelectionMode(QAbstractItemView.SingleSelection)
         if self.columnName() <> None:
@@ -161,16 +161,16 @@ class MakeSchedPlot(QDialog):
         self.colswidget.setMaximumWidth(180)
         self.colswidget.setMaximumHeight(150)
         self.varslayout.addWidget(self.colswidget,1,0)
-        
+
         varslabel = QLabel('Values')
         self.varslayout.addWidget(varslabel,0,1)
-        
+
         self.valwidget = QListWidget()
         self.valwidget.setSelectionMode(QAbstractItemView.SingleSelection)
         self.valwidget.setMaximumWidth(180)
         self.valwidget.setMaximumHeight(150)
-        self.varslayout.addWidget(self.valwidget,1,1)        
-        
+        self.varslayout.addWidget(self.valwidget,1,1)
+
         buttonwidget1 = QWidget(self)
         buttonlayout1 = QVBoxLayout()
         buttonwidget1.setLayout(buttonlayout1)
@@ -240,7 +240,7 @@ class MakeSchedPlot(QDialog):
             self.connect(action, SIGNAL(signal), slot)
 
         return action
-    
+
 
     def hasTables(self):
 
@@ -274,7 +274,7 @@ class MakeSchedPlot(QDialog):
 
 #        if self.new_obj.check_if_table_exists("schedule_nhts"):
 #            tables.append("Schedules: NHTS")
-            
+
         self.stablecombo.addItems(tables)
 
 
@@ -283,8 +283,8 @@ class MakeSchedPlot(QDialog):
         one = menubar.addAction("Show Chart")
         two = menubar.addAction("Remove Current Tab")
         three = menubar.addAction("Save Plot as PNG")
-        
-        if self.stablecombo.count() > 0: 
+
+        if self.stablecombo.count() > 0:
             self.connect(one, SIGNAL("triggered()"),self.on_draw1)
         self.connect(two, SIGNAL("triggered()"),self.removeTab)
         self.connect(three,SIGNAL("triggered()"),self.saveimg)
@@ -325,7 +325,7 @@ class MakeSchedPlot(QDialog):
             self.sketches.pop(index)
             self.axes.pop(index)
             self.toolbars.pop(index)
-    
+
     def reset_all(self):
         reply = QMessageBox.information(self,"Warning","Do you really want to remove?",QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
@@ -334,7 +334,7 @@ class MakeSchedPlot(QDialog):
             self.sketches = []
             self.axes = []
             self.toolbars = []
-            
+
             if self.based2.isChecked():
                 self.idwidget2.clear()
                 self.retrieveID2()
@@ -345,9 +345,9 @@ class MakeSchedPlot(QDialog):
                 self.delRow()
                 if self.columnName() <> None:
                     self.colswidget.addItems(self.columnName())
-                
-        
- 
+
+
+
     def createCanvas(self):
 #        mydpi = 100
 #        myfig = Figure((5.0, 4.5), dpi=mydpi)
@@ -357,35 +357,35 @@ class MakeSchedPlot(QDialog):
         sketch = FigureCanvas(myfig)
         myfig.subplots_adjust(left=0.08,right=0.85)
         myaxes = myfig.add_subplot(1,1,1)
-        
-        
+
+
         myCanvas = []
         myCanvas.append(sketch)
         myCanvas.append(myaxes)
         self.sketches.append(sketch)
         self.axes.append(myaxes)
-        
+
         tool = NavigationToolbar(sketch,self)
         self.toolbars.append(tool)
-        
+
         return myCanvas
-      
+
     def onleave(self,ev):
         QApplication.restoreOverrideCursor()
 
     def connects(self,configobject):
-        
-        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)        
+
+        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)
         user_name = configobject.getConfigElement(DB_CONFIG,DB_USER)
         password = configobject.getConfigElement(DB_CONFIG,DB_PASS)
         host_name = configobject.getConfigElement(DB_CONFIG,DB_HOST)
         database_name = configobject.getConfigElement(DB_CONFIG,DB_NAME)
-        
+
         self.database_config_object = DataBaseConfiguration(protocol, user_name, password, host_name, database_name)
         self.new_obj = DataBaseConnection(self.database_config_object)
         self.new_obj.new_connection()
 
-        
+
     def reject(self):
         self.new_obj.close_connection()
         QDialog.accept(self)
@@ -396,28 +396,28 @@ class MakeSchedPlot(QDialog):
             cols = self.new_obj.get_column_list(self.table)
             columns = []
             for col in cols:
-                
+
                 columns.append(QString(col))
             return columns
         else:
             return None
-    
+
     def populateValues(self, item):
-        
+
         try:
             values = []
             temp = None
             vars = str(item.text())
             tablename = self.table
             order = str(item.text())
-            
+
             self.cursor.execute("""SELECT DISTINCT %s FROM %s ORDER BY %s"""%(vars,tablename,order))
             temp = self.cursor.fetchall()
-            
+
             for i in temp:
                 value = str(i[0])
                 values.append(value)
-                
+
             self.valwidget.clear()
             self.valwidget.addItems(values)
 
@@ -436,17 +436,17 @@ class MakeSchedPlot(QDialog):
                 tableitem.setText(currcolumn)
                 tableitem.setFlags(tableitem.flags() & ~Qt.ItemIsEditable)
                 self.varstable.setItem(self.varstable.rowCount()-1, 0, tableitem)
-                
+
                 varitem = QTableWidgetItem()
                 varitem.setText(currvar)
                 varitem.setFlags(varitem.flags() & ~Qt.ItemIsEditable)
                 self.varstable.setItem(self.varstable.rowCount()-1, 1, varitem)
-                
+
         else:
             msg = "Please select a Column and a Value"
             QMessageBox.information(self, "Warning",
                                     msg,
-                                    QMessageBox.Ok) 
+                                    QMessageBox.Ok)
 
 
     def isExist(self, ccolumn, cvalue):
@@ -456,9 +456,9 @@ class MakeSchedPlot(QDialog):
             value = str((self.varstable.item(i,1)).text())
             if (column == ccolumn) & (value == cvalue):
                 return True
-            
+
         return False
-    
+
 
     def delValue(self):
         self.varstable.removeRow(self.varstable.currentRow())
@@ -492,7 +492,7 @@ class MakeSchedPlot(QDialog):
                 self.retrieveID2()
             else:
                 self.retrieveID2()
-                
+
 
     def showGroupBox(self):
         if self.based1.isChecked():
@@ -512,7 +512,7 @@ class MakeSchedPlot(QDialog):
         numrows = self.varstable.rowCount() - 1
         while numrows > -1:
             self.varstable.removeRow(numrows)
-            numrows = numrows - 1  
+            numrows = numrows - 1
 
     def selectedResults(self):
         sindex = self.idwidget.selectedIndexes()
@@ -520,12 +520,12 @@ class MakeSchedPlot(QDialog):
         for i in sindex:
             temp = self.data[i.row()]
             sdata.append(temp)
-            
+
         return sdata
-            
+
 
     def retrieveID1(self):
-        
+
         numrows = self.varstable.rowCount()
         if numrows > 0:
             try:
@@ -533,18 +533,18 @@ class MakeSchedPlot(QDialog):
                 self.data = []
                 pid = []
                 temp = None
-                
+
                 SQL = self.SQL_ID1()
                 if SQL != "" and SQL != None:
                     #self.cursor.execute("""SELECT %s FROM %s WHERE %s ORDER BY %s"""%(vars,tablename,filter,order))
                     self.cursor.execute(SQL)
                     temp = self.cursor.fetchall()
-        
-                    
+
+
 #                     ind = []
 #                     for i in range(50):
 #                         ind.append(randint(0, len(temp)))
-#                     
+#
 #                     tid = ''
 #                     for i in range(50):
 #                         id = temp[ind[i]]
@@ -552,8 +552,8 @@ class MakeSchedPlot(QDialog):
 #                             tid = str(id[0])
 #                         else:
 #                             tid = '%s,%s'%(str(id[0]),str(id[1]))
-#                             
-#                         self.idwidget.addItem(tid) 
+#
+#                         self.idwidget.addItem(tid)
 
                     tid = ''
                     for i in temp:
@@ -563,7 +563,7 @@ class MakeSchedPlot(QDialog):
                             tid = '%s,%s' %(str(i[0]),str(i[1]))
                         self.idwidget.addItem(tid)
 
-            
+
             except Exception, e:
                 print '\tError while unloading data from the table %s'%self.table
                 print e
@@ -575,14 +575,14 @@ class MakeSchedPlot(QDialog):
                                     QMessageBox.Ok)
 
     def retrieveID2(self):
-        
+
         try:
             self.idwidget2.clear()
             self.data = []
 #            pid = []
             temp = None
 
-            SQL = self.SQL_ID2()  
+            SQL = self.SQL_ID2()
             if SQL != "" and SQL != None:
                 #self.cursor.execute("""SELECT %s FROM %s WHERE %s ORDER BY %s"""%(vars,tablename,filter,order))
                 self.cursor.execute(SQL)
@@ -591,27 +591,27 @@ class MakeSchedPlot(QDialog):
 
 
                 for i in temp:
-		    #if i[0] not in [8, 1839, 6006, 13139, 15080, 25779, 35751, 
-		    #		    49815, 57273, 94554, 95335, 96768, 130599, 133718, 1353601, 149978, 155946]:
-	    	    #if i[0] not in [352, 1533, 1839, 2396, 2776, 3441, 4315, 4514, 5937, 6006, 6930, 
-		    #		    7433, 7787, 8143, 8156, 8861, 12093, 14120, 14663, 14789, 16059]:
-		    if i[0] not in [8, 1839, 6006, 13139, 15080, 22501, 25779, 32174, 14513, 
-	    			    34664, 35751, 40563, 52876, 71887, 
-	    			    49815, 57273, 94554, 95335, 96768, 130599, 1353601, 149978, 133718,
-				    352, 1533, 1839, 2396, 2776, 3441, 4315, 4514, 5937, 6006, 6930, 
-	    			    7433, 7787, 8143, 8156, 8861, 12093, 14120, 14663, 14789, 16059]:
-			continue
-			pass
+                    #if i[0] not in [8, 1839, 6006, 13139, 15080, 25779, 35751,
+                    #               49815, 57273, 94554, 95335, 96768, 130599, 133718, 1353601, 149978, 155946]:
+                    #if i[0] not in [352, 1533, 1839, 2396, 2776, 3441, 4315, 4514, 5937, 6006, 6930,
+                    #               7433, 7787, 8143, 8156, 8861, 12093, 14120, 14663, 14789, 16059]:
+                    if i[0] not in [8, 1839, 6006, 13139, 15080, 22501, 25779, 32174, 14513,
+                                    34664, 35751, 40563, 52876, 71887,
+                                    49815, 57273, 94554, 95335, 96768, 130599, 1353601, 149978, 133718,
+                                    352, 1533, 1839, 2396, 2776, 3441, 4315, 4514, 5937, 6006, 6930,
+                                    7433, 7787, 8143, 8156, 8861, 12093, 14120, 14663, 14789, 16059]:
+                        continue
+                        pass
                     if self.segment1.isChecked():
                         self.idwidget2.addItem(str(i[0]))
                     else:
                         self.idwidget2.addItem(i[0])
 
-                    
+
 #                    pid.append(id)
 #                self.fixedFifty(pid)
 #                self.idwidget2.addItems(pid)
-        
+
         except Exception, e:
             print '\tError while unloading data from the table %s'%self.table
             print e
@@ -631,13 +631,13 @@ class MakeSchedPlot(QDialog):
         vars = 'A.houseid, A.personid, A.activitytype, A.starttime, (A.endtime - A.starttime)' #A.duration'
         order = 'A.houseid, A.personid, A.starttime'
         filter = 'A.starttime >= 0'
-        
+
         if self.segment1.isChecked():
             filter = filter + " AND A.houseid = '%s'" %(id)
         else:
             ids = id.split(',')
             filter = filter + " AND A.houseid = '%s' AND A.personid = '%s'" %(ids[0],ids[1])
-            
+
         state = """SELECT DISTINCT %s FROM %s WHERE %s ORDER BY %s"""%(vars,tablename,filter,order)
 
         return state
@@ -646,14 +646,14 @@ class MakeSchedPlot(QDialog):
     def trip_sql(self,id, trip_type='Expected'):
 
 
-	if trip_type == 'Expected':
+        if trip_type == 'Expected':
             tablename = 'trips_full_r AS A'
         #tablename = 'schedule_joint_dailyallocrec_r AS A'
             vars = 'A.houseid, A.personid, A.starttime, (A.endtime - A.starttime), A.endtime'
             order = 'A.houseid, A.personid, A.starttime'
             filter = 'A.starttime >= 0'
-	if trip_type == 'Actual':
-	    tablename = 'persons_arrived_r AS A'
+        if trip_type == 'Actual':
+            tablename = 'persons_arrived_r AS A'
             vars = 'A.houseid, A.personid, A.expectedstarttime, (A.actualarrivaltime - A.expectedstarttime), A.actualarrivaltime'
             order = 'A.houseid, A.personid, A.expectedstarttime'
             filter = 'A.expectedstarttime >= 0'
@@ -665,38 +665,38 @@ class MakeSchedPlot(QDialog):
         return state
 
     def retrieve_sched(self, tableName):
-        
+
         pid = []
         try:
             self.data = []
             temp = None
-            
+
             sindex = None  #self.idwidget.selectedItems()
             if self.based1.isChecked():
                 sindex = self.idwidget.selectedItems()
             else:
                 sindex = self.idwidget2.selectedItems()
-                
+
             for id1 in sindex:
                 id = id1.text()
                 SQL = self.sched_sql(id, tableName)
-        
+
                 if SQL != "" and SQL != None:
                     self.cursor.execute(SQL)
                     temp = self.cursor.fetchall()
-                    
+
                     prior_id = '0'
                     aschedule = []
-		    print SQL
+                    print SQL
                     for i in temp:
                         id = '%s,%s' %(str(i[0]),str(i[1]))
-			
+
                         print id
                         if prior_id <> id:
                             if prior_id <> '0':
                                 self.data.append(aschedule)
                             prior_id = id
-                            
+
                             aschedule = []
                             pid.append(id)
                             aschedule.append(i[2])
@@ -706,29 +706,29 @@ class MakeSchedPlot(QDialog):
                             aschedule.append(i[2])
                             aschedule.append(i[3])
                             aschedule.append(i[4])
-		
+
                     self.data.append(aschedule)
 
             print self.data
         except Exception, e:
             print '\tError while unloading data from the table %s'%self.table
             print e
-        
+
         return pid
-   
+
     def retrieve_trip(self, pid, trip_type='Expected'):
 
         try:
             trips = []
             temp = None
-            
+
             for id1 in pid:
                 SQL = self.trip_sql(id1, trip_type)
-        	print 'TRIPS', SQL
+                print 'TRIPS', SQL
                 if SQL != "" and SQL != None:
                     self.cursor.execute(SQL)
                     temp = self.cursor.fetchall()
-            
+
                     aschedule = []
                     for i in temp:
                         aschedule.append(i[2])
@@ -739,10 +739,10 @@ class MakeSchedPlot(QDialog):
         except Exception, e:
             print '\tError while unloading data from the table %s'%self.table
             print e
-            
+
         return trips
-    
-    
+
+
     def SQL_ID1(self):
         tablename = '%s AS A, %s AS B' %(self.schedule_table(),self.table)
         vars = ''
@@ -758,7 +758,7 @@ class MakeSchedPlot(QDialog):
 #            order = 'A.houseid'
 #        else:
 #            order = 'A.houseid, A.personid'
-        
+
         numrows = self.varstable.rowCount()
         for i in range(numrows):
             if i > 0:
@@ -766,11 +766,11 @@ class MakeSchedPlot(QDialog):
             column = str((self.varstable.item(i,0)).text())
             value = str((self.varstable.item(i,1)).text())
             filter = filter + "A.%s = '%s'" %(column,value)
-            
+
 #        filter = filter + ') AND A.houseid = B.houseid'
 #        if self.table == 'persons':
 #            filter = filter + ' AND A.personid = B.personid'
-        
+
 #        state = """SELECT DISTINCT %s FROM %s WHERE %s"""%(vars,tablename,filter)
         state = """SELECT %s FROM %s WHERE %s"""%(vars,tablename,filter)
         return state
@@ -790,7 +790,7 @@ class MakeSchedPlot(QDialog):
             order = 'A.houseid'
         else:
             order = 'A.houseid, A.personid'
-        
+
         #state = """SELECT DISTINCT %s FROM %s WHERE %s ORDER BY %s"""%(vars,tablename,filter,order)
         state = """SELECT %s FROM %s ORDER BY %s"""%(vars,tablename,order)
         print state
@@ -818,7 +818,7 @@ class MakeSchedPlot(QDialog):
 #            index = 450
 #        elif index >= 550 and index < 597:
 #            index = 550
-               
+
         colorpooldict = {100:'#191970',101:'#6495ED',150:'#00FFFF', # Blue Shades
              200:'#B03060',
              300:'#7B68EE',
@@ -830,7 +830,7 @@ class MakeSchedPlot(QDialog):
 
         return colorpooldict[index]
 
-        
+
     def schedule_table(self):
         cur_text = self.stablecombo.currentText()
 
@@ -842,13 +842,13 @@ class MakeSchedPlot(QDialog):
             return "schedule_ltrec_r"
 
         elif cur_text == "Schedules: Daily Pattern after Children Terminal Episodes are Allocated":
-	    return "schedule_allocterm_r"
+            return "schedule_allocterm_r"
 
-	elif cur_text == "Schedules: Daily Pattern after Children Terminal Episodes are Allocated with only Joint Activities":
-	    return "schedule_joint_allocterm_r"
+        elif cur_text == "Schedules: Daily Pattern after Children Terminal Episodes are Allocated with only Joint Activities":
+            return "schedule_joint_allocterm_r"
 
-	elif cur_text == "Schedules: Daily Pattern after Child's Last Prism is Filled":
-	    return "schedule_childrenlastprismadj_r"
+        elif cur_text == "Schedules: Daily Pattern after Child's Last Prism is Filled":
+            return "schedule_childrenlastprismadj_r"
 
         elif cur_text == "Schedules: Reconciled Including Travel Episodes":
             return "schedule_childreninctravelrec_r"
@@ -856,8 +856,8 @@ class MakeSchedPlot(QDialog):
             return "schedule_cleanaggregateactivityschedule_r"
         elif cur_text == "Schedules: Daily Pattern with Child Allocation":
             return "schedule_dailyallocrec_r"
-	elif cur_text == "Schedules: Daily Pattern after Child Allocation with only Joint Activities":
-	    return "schedule_joint_dailyallocrec_r"
+        elif cur_text == "Schedules: Daily Pattern after Child Allocation with only Joint Activities":
+            return "schedule_joint_dailyallocrec_r"
         elif cur_text == "Schedules: Reconciled Daily Pattern Skeleton with Child Allocation":
             return "schedule_inctravelrec_r"
         elif cur_text == "Schedules: Aggregated in Home Final Schedules":
@@ -866,15 +866,15 @@ class MakeSchedPlot(QDialog):
 #            return "schedule_nhts"
         else:
             return "schedule_full_r"
-	    #return "schedule_full_r"
-    
+            #return "schedule_full_r"
+
 
     def on_draw1(self):
         """ Redraws the figure
         """
-        
+
         #sdata = self.selectedResults()
-	tableName = self.schedule_table()
+        tableName = self.schedule_table()
         #pid = self.retrieve_sched(tableName)
         pid = self.retrieve_sched('schedule_full_r')
         if len(self.data) > 0 : #len(sdata) > 0:
@@ -884,28 +884,28 @@ class MakeSchedPlot(QDialog):
             rows = len(self.data) #len(sdata)
             #axes.clear()
             ticks = np.arange(rows+1)
-            
+
             ind = 0.75
             height = 0.3
-            if (self.stablecombo.currentText() == "Schedules: Daily Pattern with Child Allocation" or 
-		self.stablecombo.currentText() == "Schedules: Full Schedules" or 
-		self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules"): 
+            if (self.stablecombo.currentText() == "Schedules: Daily Pattern with Child Allocation" or
+                self.stablecombo.currentText() == "Schedules: Full Schedules" or
+                self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules"):
                 ind = 0.6
-            
+
             if self.segment1.isChecked():
                 axes.set_title("Household Schedule")
             else:
                 axes.set_title("Person Schedule")
-            
+
             for row in self.data: #sdata:
                 rowlen = len(row)
                 for i in range(2,rowlen,3):
                     axes.barh(ind, row[i], height, left=row[i-1],color=self.colors(row[i-2]), picker=True)
                 ind = ind + 1
 
-            if (self.stablecombo.currentText() == "Schedules: Daily Pattern with Child Allocation" or 
-		self.stablecombo.currentText() == "Schedules: Full Schedules" or 
-		self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules"):
+            if (self.stablecombo.currentText() == "Schedules: Daily Pattern with Child Allocation" or
+                self.stablecombo.currentText() == "Schedules: Full Schedules" or
+                self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules"):
                 ind1 = 0.3
                 trip_time = self.retrieve_trip(pid, 'Expected')
                 for row in trip_time:
@@ -924,22 +924,22 @@ class MakeSchedPlot(QDialog):
                     ind1 = ind1 + 1
 
 
-                
-	    # Also including the schedules before adjustment 
-	    
+
+            # Also including the schedules before adjustment
+
             if self.stablecombo.currentText() == "Schedules: Full Schedules":
-		self.data = []
-           	pid = self.retrieve_sched('schedule_skeleton_r')
-	    	ind2 = 0.9
-            	for row in self.data: #sdata:
+                self.data = []
+                pid = self.retrieve_sched('schedule_skeleton_r')
+                ind2 = 0.9
+                for row in self.data: #sdata:
                     rowlen = len(row)
                     for i in range(2,rowlen,3):
-                    	axes.barh(ind2, row[i], height, left=row[i-1],color=self.colors(row[i-2]), picker=True)
+                        axes.barh(ind2, row[i], height, left=row[i-1],color=self.colors(row[i-2]), picker=True)
                     ind2 = ind2 + 1
 
 
-	    
-	                
+
+
             bars=[]
             bars.append(barh(0, 0, 0, left=0,color=self.colors(100)))
             bars.append(barh(0, 0, 0, left=0,color=self.colors(101)))
@@ -951,7 +951,7 @@ class MakeSchedPlot(QDialog):
             bars.append(barh(0, 0, 0, left=0,color=self.colors(600)))
             bars.append(barh(0, 0, 0, left=0,color=self.colors(601)))
             bars.append(barh(0, 0, 0, left=0,color=self.colors(599)))
-            
+
 #            bars.append(barh(0, 0, 0, left=0,color=self.colors(150)))
 #            bars.append(barh(0, 0, 0, left=0,color=self.colors(151)))
 #            bars.append(barh(0, 0, 0, left=0,color=self.colors(201)))
@@ -965,33 +965,33 @@ class MakeSchedPlot(QDialog):
 #            bars.append(barh(0, 0, 0, left=0,color=self.colors(466)))
 #            bars.append(barh(0, 0, 0, left=0,color=self.colors(550)))
 #            bars.append(barh(0, 0, 0, left=0,color=self.colors(598)))
-            
-#            bar_names = ['IH-Sojourn','IH', 'IH-Dependent Sojourn', 'IH-Dependent', 
+
+#            bar_names = ['IH-Sojourn','IH', 'IH-Dependent Sojourn', 'IH-Dependent',
 #                        'OH-Work','Work','OH-School','School','OH-Pers Buss',
 #                        'OH-Shopping','OH-Meal','OH-Srv Passgr','OH-Social',
 #                        'OH-Dependent Pers Buss','OH-Dependent Shopping','OH-Dependent Meal','OH-Dependent Serve Passgr',
 #                        'OH-Sports/Rec','Filler','Anchor','Pick Up','Drop Off','OH-Other']
-#            
+#
 #            bar_names = ['Home','In-Home','In-Home Dependent',
 #                        'Work','School',
 #                        'Maintenance','Dependent Maintenance','Discretionary','Dependent Discretionary',
 #                        'Filler','Pick Up','Drop Off','OH-Other']
-            
+
             bar_names = ['Home','In-Home','Work','School','Maintenance','Discretionary',
                         'Anchor','Pick Up','Drop Off','OH-Other']
-            
+
             if self.stablecombo.currentText() == "Schedules: Full Schedules" or self.stablecombo.currentText() == "Schedules: Aggregated in Home Final Schedules":
                 bars.append(barh(0, 0, 0, left=0,color=self.colors(1000)))
                 bar_names.append('Expected Start Time')
-                
-            prop = matplotlib.font_manager.FontProperties(size=8)   
+
+            prop = matplotlib.font_manager.FontProperties(size=8)
             axes.legend(bars,bar_names,prop=prop,bbox_to_anchor=(1.01, 1), loc=2, borderaxespad=0.)
             axes.set_xlabel("Time (mins)")
             axes.set_ylabel("Persons")
             axes.set_xlim(-1,1441)
 
             pid.insert(0,"")
-            labels = pid                
+            labels = pid
             axes.set_yticks(ticks)
             if len(labels) >= 13:
                 axes.set_yticklabels(labels, size='xx-small')
@@ -1005,7 +1005,7 @@ class MakeSchedPlot(QDialog):
 #            Canvas.mpl_connect('pick_event', self.temp)
 #            Canvas.mpl_connect('button_press_event', self.zooming)
             self.makeTabs(Canvas)
-            
+
         else:
             msg = "Please select person or household ID"
             QMessageBox.information(self, "Warning",

@@ -13,5 +13,3 @@ class SaveProject(QWizard):
         filename = QFileDialog.getSaveFileName(self, 'Save file',
                     '/home')
         file=open(filename)
-        
-

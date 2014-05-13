@@ -7,7 +7,7 @@ class MainApp:
         self.newproject = False
         self.projectname=""
         self.projectlocation=""
-    
+
     def run(self):
         input = raw_input("Please choose one of the following:\n" +
                                 "1. Start a new project\n" +
@@ -19,14 +19,14 @@ class MainApp:
         if(input == '1'):
             self.newproject = True
             self.create_project()
- 
+
         elif(input == '2'):
             self.read_project()
-            
+
     def create_project(self):
         configroot = etree.Element('ProjectConfig')
         configtree = etree.ElementTree(configroot)
-        
+
         projectname = etree.SubElement(configroot, 'ProjectName')
         proname = raw_input("Enter Project Name: ")
         projectname.text = proname
@@ -49,9 +49,9 @@ class MainApp:
         dbconfig.set('dbusername', dbusername)
         dbpassword = raw_input("Enter database password: ")
         dbconfig.set('dbpassword', dbpassword)
-        
+
         modelconfig = etree.SubElement(configroot, 'ModelConfig')
-        
+
         longterm = etree.SubElement(modelconfig, 'LongTermModels')
         workstat = etree.SubElement(longterm, 'WorkStat')
         workstat.set('type', 'Multinomial Logit')
@@ -138,14 +138,14 @@ class MainApp:
         alt1 = etree.SubElement(alts , 'Car-Gas')
         self.attach_vars(alt1)
         alt2 = etree.SubElement(alts , 'Car-Nongas')
-        self.attach_vars(alt2)    
-        
+        self.attach_vars(alt2)
+
         prism = etree.SubElement(modelconfig, 'FixedActivityPrismModels')
         daystart = etree.SubElement(prism, 'DayStart')
-        daystart.set('type', 'Stochastic Frontier')        
+        daystart.set('type', 'Stochastic Frontier')
         self.attach_vars(daystart)
         dayend = etree.SubElement(prism, 'DayEnd')
-        dayend.set('type', 'Stochastic Frontier')   
+        dayend.set('type', 'Stochastic Frontier')
         self.attach_vars(dayend)
         numwrk = etree.SubElement(prism, 'NumWorkEpisodes')
         numwrk.set('type', 'Negative Binomial')
@@ -156,7 +156,7 @@ class MainApp:
         vars = etree.SubElement(numwrk, 'Variables')
         self.attach_vars(vars)
         wrkstrt1 = etree.SubElement(prism, 'WorkStart1')
-        wrkstrt1.set('type', 'Stochastic Frontier')   
+        wrkstrt1.set('type', 'Stochastic Frontier')
         self.attach_vars(wrkstrt1)
         wrkend1 = etree.SubElement(prism, 'WorkEnd1')
         wrkend1.set('type', 'Stochastic Frontier')
@@ -170,13 +170,13 @@ class MainApp:
         vars = etree.SubElement(numsch, 'Variables')
         self.attach_vars(vars)
         schstrt1 = etree.SubElement(prism, 'SchStart1')
-        schstrt1.set('type', 'Stochastic Frontier')   
+        schstrt1.set('type', 'Stochastic Frontier')
         self.attach_vars(schstrt1)
         schend1 = etree.SubElement(prism, 'SchEnd1')
         schend1.set('type', 'Stochastic Frontier')
         self.attach_vars(schend1)
         preschstrt = etree.SubElement(prism, 'PreSchStart')
-        preschstrt.set('type', 'Stochastic Frontier')   
+        preschstrt.set('type', 'Stochastic Frontier')
         self.attach_vars(preschstrt)
         preschend = etree.SubElement(prism, 'PreSchEnd')
         preschend.set('type', 'Stochastic Frontier')
@@ -239,7 +239,7 @@ class MainApp:
         aftschactdur.set('type', 'Logistic Regression')
         vars = etree.SubElement(aftschactdur, 'Variables')
         self.attach_vars(vars)
-        
+
         adultdaily = etree.SubElement(modelconfig, 'AdultDailyStatusModels')
         wrkdailystat = etree.SubElement(adultdaily, 'WorkDailyStatus')
         wrkdailystat.set('type', 'Probability Distribution')
@@ -250,12 +250,12 @@ class MainApp:
         dist.set('yes','0.9')
         dist.set('no','0.1')
         wrkhmstrt1 = etree.SubElement(adultdaily, 'WorkAtHomeStart1')
-        wrkhmstrt1.set('type', 'Stochastic Frontier')   
+        wrkhmstrt1.set('type', 'Stochastic Frontier')
         self.attach_vars(wrkhmstrt1)
         wrkhmend1 = etree.SubElement(prism, 'WorkAtHomeEnd1')
         wrkhmend1.set('type', 'Stochastic Frontier')
         self.attach_vars(wrkhmend1)
-        
+
         actsim = etree.SubElement(modelconfig, 'ActTravelSimulator')
         aftschactmode = etree.SubElement(actsim, 'AftSchActivityMode')
         aftschactmode.set('type', 'Multinomial Logit')
@@ -280,14 +280,14 @@ class MainApp:
         nest1 = etree.SubElement(nests, 'Nest')
         nest1.set('id', 'Destination')
         vars = etree.SubElement(nest1, 'Variables')
-        self.attach_vars(vars)        
+        self.attach_vars(vars)
         nest2 = etree.SubElement(nests, 'Nest')
         nest2.set('id', 'Mode')
         alts = etree.SubElement(nest2, 'Alternatives')
         alt1 = etree.SubElement(alts , 'SOV')
         self.attach_vars(alt1)
         alt2 = etree.SubElement(alts , 'HOV')
-        self.attach_vars(alt2)           
+        self.attach_vars(alt2)
         discactdur = etree.SubElement(actsim, 'ActivityDuration')
         discactdur.set('type', 'Logistic Regression')
         vars = etree.SubElement(discactdur, 'Variables')
@@ -321,7 +321,7 @@ class MainApp:
         configfile = open(configfileloc, 'w')
         configtree.write(configfile, pretty_print=True)
         configfile.close()
-    
+
     def attach_vars(self, node):
         var1 = etree.SubElement(node, 'Variable')
         var1.set('db', 'somedb')
@@ -332,8 +332,8 @@ class MainApp:
         var2.set('db', 'somedb')
         var2.set('table', 'sometab')
         var2.set('var', 'somevar')
-        var2.set('coeff', '0.6')          
-    
+        var2.set('coeff', '0.6')
+
     def read_project(self):
         prohome = raw_input("Enter the directory for existing project:")
         while(not os.path.isdir(prohome)):

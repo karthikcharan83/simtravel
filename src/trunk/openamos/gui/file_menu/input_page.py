@@ -6,11 +6,11 @@ from openamos.gui.misc.basic_widgets import *
 class InputPage(QWizardPage):
     def __init__(self, parent=None):
         super(InputPage, self).__init__(parent)
-        
+
         self.setTitle("Step 2: Data Input Source")
         pagelayout = QVBoxLayout()
         self.setLayout(pagelayout)
-             
+
         self.dbinputbox = QGroupBox("a. Enter database connection details")
         dblayout = QGridLayout()
         self.dbinputbox.setLayout(dblayout)
@@ -57,15 +57,13 @@ class InputPage(QWizardPage):
 
         self.connect(self.inputfilesradio, SIGNAL("toggled(bool)"), self.inputAction)
         self.connect(self.inputcombobox, SIGNAL("activated(int)"), self.inputcombobox.browseFolder)
-    
+
     def inputAction(self, checked):
         if checked:
             self.inputdbline.setEnabled(False)
-            self.inputcombobox.setEnabled(True) 
+            self.inputcombobox.setEnabled(True)
         else:
             self.inputdbline.setEnabled(True)
             self.inputcombobox.setEnabled(False)
-          
-        self.emit(SIGNAL("completeChanged()"))
 
- 
+        self.emit(SIGNAL("completeChanged()"))

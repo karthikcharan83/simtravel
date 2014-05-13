@@ -24,10 +24,10 @@ class DatabaseConfig(QDialog):
         Constructor
         '''
         self.setWindowTitle("Database Configuration")
-        
+
         pagelayout = QVBoxLayout()
         self.setLayout(pagelayout)
-        
+
         self.dbinputbox = QGroupBox("Enter database connection details")
         dblayout = QGridLayout()
         self.dbinputbox.setLayout(dblayout)
@@ -54,28 +54,28 @@ class DatabaseConfig(QDialog):
         self.passwdline.setEchoMode(QLineEdit.PasswordEchoOnEdit)
         dblayout.addWidget(self.passwdline,5,2)
         pagelayout.addWidget(self.dbinputbox)
-        
+
         self.dialogButtonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         pagelayout.addWidget(self.dialogButtonBox)
-        
+
         self.connect(self.dialogButtonBox, SIGNAL("accepted()"), self.storeDatabase)
         self.connect(self.dialogButtonBox, SIGNAL("rejected()"), SLOT("reject()"))
-        
-        
+
+
         self.configobject = configobject
         self.protocolline.setText(self.configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL))
         self.hostline.setText(self.configobject.getConfigElement(DB_CONFIG,DB_HOST))
         self.dbnameline.setText(self.configobject.getConfigElement(DB_CONFIG,DB_NAME))
         self.usernameline.setText(self.configobject.getConfigElement(DB_CONFIG,DB_USER))
         self.passwdline.setText(self.configobject.getConfigElement(DB_CONFIG,DB_PASS))
-        
-        self.setMinimumSize(350,200)
-        
 
-        
-        
+        self.setMinimumSize(350,200)
+
+
+
+
     def storeDatabase(self):
-        
+
         dataconfigelt = self.configobject.protree.find(DB_CONFIG)
         if dataconfigelt != None:
             dataconfigelt.set(DB_PROTOCOL, str(self.protocolline.text()))
@@ -86,9 +86,9 @@ class DatabaseConfig(QDialog):
 
 
         QDialog.accept(self)
-        
-        
-        
+
+
+
 def main():
     app = QApplication(sys.argv)
     wizard = DatabaseConfig()
@@ -97,5 +97,3 @@ def main():
 
 if __name__=="__main__":
     main()
-    
-        

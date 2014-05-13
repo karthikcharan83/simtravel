@@ -6,7 +6,7 @@ from openamos.core.models.abstract_random_distribution_model import RandomDistri
 class AbstractProbabilityModel(object):
     """
     This is the base class for probability models in OpenAMOS.
-    
+
     Inputs:
     probabilities - datarray object (columns give the probability for the choice)
     seed - numeric value
@@ -26,9 +26,9 @@ class AbstractProbabilityModel(object):
 
     def check(self):
         """
-        This method checks the probabilities input and raises appropriate 
+        This method checks the probabilities input and raises appropriate
         error prompts as necessary.
-        
+
         Inputs:
         None
         """
@@ -37,9 +37,9 @@ class AbstractProbabilityModel(object):
 
     def check_probabilities(self):
         """
-        The method checks to make sure that the probabilities is a 
+        The method checks to make sure that the probabilities is a
         valid array object.
-        
+
         Inputs:
         None
         """
@@ -48,9 +48,9 @@ class AbstractProbabilityModel(object):
 
     def check_sum(self):
         """
-        The method checks to make sure that the probabilities add up to 
+        The method checks to make sure that the probabilities add up to
         1 across choices.
-        
+
         Inputs:
         None
         """
@@ -66,20 +66,20 @@ class AbstractProbabilityModel(object):
         #print self.probabilities
         #print diff_from_unity
         #print diff_from_unity
-	#rowsId = diff_from_unity < 1e-6
-	#a = array(range(self.probabilities.shape[0]))+1
+        #rowsId = diff_from_unity < 1e-6
+        #a = array(range(self.probabilities.shape[0]))+1
 
-	#print self.probabilities[~rowsId], a[~rowsId]
+        #print self.probabilities[~rowsId], a[~rowsId]
 
         if not ma.all(diff_from_unity < 1e-6):
             raise ProbabilityError, """probability values do not add up """ \
-                """to one across rows"""    
+                """to one across rows"""
 
     def generate_random_numbers(self):
         """
-        The method generates a random array for making the choice of 
+        The method generates a random array for making the choice of
         the alternative.
-        
+
         Inputs:
         None
         """
@@ -90,7 +90,7 @@ class AbstractProbabilityModel(object):
         #f.write(str(list(err[:3,:])))
         #f.write('\n')
         #f.close()
-        
+
         dist = RandomDistribution(self.seed)
         rand_numbers = dist.return_random_variables(self.num_agents)
         return rand_numbers
@@ -98,7 +98,7 @@ class AbstractProbabilityModel(object):
     def cumprob(self):
         """
         The method returns the cumulative probability array.
-        
+
         Inputs:
         None
         """
@@ -107,7 +107,7 @@ class AbstractProbabilityModel(object):
     def selected_choice(self):
         """
         The method returns the selected alternative for each agent.
-        
+
         Inputs:
         None
         """
@@ -125,7 +125,7 @@ class AbstractProbabilityModel(object):
             #indicator_zero_cells[~zero_indices] = ma.masked
             indicator[~zero_indices] = False
 
-            # Indicator for the cells where the random number 
+            # Indicator for the cells where the random number
             # is less than the probability
             #indicator_less_cells = ones(self.num_agents)
             #indicator_less_cells = array([True]*self.num_agents)
@@ -136,7 +136,7 @@ class AbstractProbabilityModel(object):
 
 
             #indicator_less_zero_cells = indicator_zero_cells + indicator_less_cells
-            
+
             #indicator_less_zero_cells = indicator_less_zero_cells == 2
 
             choice[indicator] = i + 1
@@ -158,16 +158,16 @@ import unittest
 class TestBadInputAbstractProbabilityModel(unittest.TestCase):
     def setUp(self):
         self.probabilities1 = [(0.5,0.19, 0.31), (0.1, 0.2, 0.72)]
-        self.probabilities2 = DataArray(array([[0.5,0.29, 0.31], [0.1, 0.2, 0.7]]), 
+        self.probabilities2 = DataArray(array([[0.5,0.29, 0.31], [0.1, 0.2, 0.7]]),
                                         ['ch1', 'ch2', 'ch3'])
-        self.probabilities3 = DataArray(array(self.probabilities1), 
+        self.probabilities3 = DataArray(array(self.probabilities1),
                                         ['ch1', 'ch2', 'ch3'])
-        
+
     def testprobabilitylist(self):
         self.assertRaises(DataError, AbstractProbabilityModel, self.probabilities1)
 
     def testvaluessum(self):
-        self.assertRaises(ProbabilityError, AbstractProbabilityModel, 
+        self.assertRaises(ProbabilityError, AbstractProbabilityModel,
                             self.probabilities3)
 
 
@@ -197,7 +197,7 @@ class TestAbstractProbabilityModel(unittest.TestCase):
         if diff_cumprob_sum < 1e-6:
             diff_cumprob_sum = 0
         self.assertEqual(0, diff_cumprob_sum)
-        
+
 
     def testchoicecolumns(self):
         #choice_array = array([['ch1'], ['ch3']])
@@ -205,7 +205,7 @@ class TestAbstractProbabilityModel(unittest.TestCase):
         choice_array_frommodel = self.model.selected_choice()
         diff_choice = all(choice_array == choice_array_frommodel.data)
         self.assertEqual(True, diff_choice)
-        
+
 
 
 if __name__ == '__main__':

@@ -17,12 +17,12 @@ class ProbabilityModel(AbstractChoiceModel):
             raise SpecificationError, """the specification input is not a valid """\
                 """Specification object"""
         AbstractChoiceModel.__init__(self, specification)
-        
-        
+
+
     def calc_observed_utilities(self, data):
         return self.calculate_expected_values(data)
 
-    
+
     def validchoiceutilities(self, data):
         return self.calc_observed_utilities(data)
 
@@ -37,12 +37,7 @@ class ProbabilityModel(AbstractChoiceModel):
         return probabilities
 
     def calc_chosenalternative(self, data, choiceset=None, seed=1):
-        probabilities = DataArray(self.calc_probabilities(data), 
+        probabilities = DataArray(self.calc_probabilities(data),
                                   self.specification.choices)
         prob_model = AbstractProbabilityModel(probabilities, seed)
         return prob_model.selected_choice()
-        
-        
-                              
-        
-                              

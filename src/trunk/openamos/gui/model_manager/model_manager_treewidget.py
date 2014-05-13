@@ -8,7 +8,7 @@ from openamos.gui.file_menu.databaseconfig import *
 from openamos.gui.env import *
 
 
-CAMPAIGN_TYPE, FOLDER_TYPE, CALC_TYPE = range(1001, 1004) 
+CAMPAIGN_TYPE, FOLDER_TYPE, CALC_TYPE = range(1001, 1004)
 
 class Model_Manager_Treewidget(QTreeWidget):
     def __init__(self, parent = None):
@@ -21,13 +21,13 @@ class Model_Manager_Treewidget(QTreeWidget):
         self.setColumnWidth(1, 60)
         self.setColumnWidth(2, 30)
         self.setMinimumSize(360,50)
-        
+
         self.configobject = None
         self.isMove = True
         self.subcomponent = ""
 
 ## Define long term models
-#        
+#
 #        long_term_models = QTreeWidgetItem(self)
 #        long_term_models.setText(0, COMP_LONGTERM)                          #"Long Term Choices")
 #
@@ -51,7 +51,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        residential_location_choice.setText(0, COMPMODEL_RESLOC)            #"Residential Location Choice")
 #
 ## Define fixed activity location choice generator
-#        
+#
 #        fixed_activity_models = QTreeWidgetItem(long_term_models)
 #        fixed_activity_models.setText(0, COMP_FIXEDACTLOCATION)     #"Fixed Activity Location Choice Generator")
 #
@@ -68,17 +68,17 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        school_location_choice1.setText(0, COMPMODEL_SCHLOC1)        #"School location choice")
 #        school_location_choice2 = QTreeWidgetItem(children_adult)
 #        school_location_choice2.setText(0, COMPMODEL_SCHLOC2)
-#        
+#
 #        children_1 = QTreeWidgetItem(fixed_activity_models)
 #        children_1.setText(0, "Preschoolers")
 #
 #        preschool_location_choice = QTreeWidgetItem(children_1)
 #        preschool_location_choice.setText(0, COMPMODEL_PRESCHLOC)   #"Preschool location choice"
-#        
+#
 #
 #        medium_term_models = QTreeWidgetItem(self)
-#        medium_term_models.setText(0, COMP_MEDIUMTERM)         
-#        
+#        medium_term_models.setText(0, COMP_MEDIUMTERM)
+#
 ## Define Vehicle Ownership Model
 #
 #        vehicle_ownership_models = QTreeWidgetItem(medium_term_models)
@@ -86,12 +86,12 @@ class Model_Manager_Treewidget(QTreeWidget):
 #
 #        count_vehicles = QTreeWidgetItem(vehicle_ownership_models)
 #        count_vehicles.setText(0, COMPMODEL_NUMVEHS)                #"Count of Vehicles")
-#        
+#
 #
 #        Vehicle_body_fuel_type  = QTreeWidgetItem(vehicle_ownership_models)
 #        Vehicle_body_fuel_type.setText(0, COMPMODEL_NUMTYPES )      #"Vehicle body/fuel type")
 #
-## Define Fixed Activity Prism Models       
+## Define Fixed Activity Prism Models
 #
 #        fixed_activity_prism_models = QTreeWidgetItem(medium_term_models)
 #        fixed_activity_prism_models.setText(0, COMP_FIXEDACTPRISM)
@@ -119,7 +119,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        dayend_na.setText(0, "Children (5-17 years) and\nAdult Students")
 #        dayend_ps = QTreeWidgetItem(dayend)
 #        dayend_ps.setText(0, "Pre-school Children\n(0-4 years)")
-#        
+#
 #        work_episodes = QTreeWidgetItem(fixed_activity_prism_models)
 #        work_episodes.setText(0, COMPMODEL_WRKEPISODES)
 #
@@ -128,7 +128,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        latest_oneepiso = QTreeWidgetItem(one_episode_workers)
 #        latest_oneepiso.setText(0, COMPMODEL_WORKSTART)
 #        early_oneepiso = QTreeWidgetItem(one_episode_workers)
-#        early_oneepiso.setText(0, COMPMODEL_WORKEND)        
+#        early_oneepiso.setText(0, COMPMODEL_WORKEND)
 #
 #
 #        two_episode_workers1 = QTreeWidgetItem(fixed_activity_prism_models)
@@ -143,44 +143,44 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        latest_twoepiso2 = QTreeWidgetItem(two_episode_workers2)
 #        latest_twoepiso2.setText(0, COMPMODEL_WORKSTART2)
 #        early_twoepiso2 = QTreeWidgetItem(two_episode_workers2)
-#        early_twoepiso2.setText(0, COMPMODEL_WORKEND2)        
-#         
+#        early_twoepiso2.setText(0, COMPMODEL_WORKEND2)
+#
 #        schoolprisms = QTreeWidgetItem(fixed_activity_prism_models)
 #        schoolprisms.setText(0, COMPMODEL_SCHEPISODES)
 #        latest_school = QTreeWidgetItem(schoolprisms)
 #        latest_school.setText(0, COMPMODEL_SCHSTART)
 #        early_school = QTreeWidgetItem(schoolprisms)
-#        early_school.setText(0, COMPMODEL_SCHEND)        
-#                 
+#        early_school.setText(0, COMPMODEL_SCHEND)
+#
 #        preschoolprisms = QTreeWidgetItem(fixed_activity_prism_models)
 #        preschoolprisms.setText(0, COMPMODEL_PRESCHEPISODES)
 #        latest_preschool = QTreeWidgetItem(preschoolprisms)
 #        latest_preschool.setText(0, COMPMODEL_PRESCHSTART)
 #        early_preschool = QTreeWidgetItem(preschoolprisms)
-#        early_preschool.setText(0, COMPMODEL_PRESCHEND) 
+#        early_preschool.setText(0, COMPMODEL_PRESCHEND)
 #
-## Define Activity Skeleton Reconciliation System        
+## Define Activity Skeleton Reconciliation System
 #
 #        skeleton_reconciliation_system = QTreeWidgetItem(medium_term_models)
 #        skeleton_reconciliation_system.setText(0, COMP_ACTSKELRECONCILIATION)
-#        
+#
 #        skeleton_reconciliation = QTreeWidgetItem(skeleton_reconciliation_system)
 #        skeleton_reconciliation.setText(0, COMPMODEL_ASRECONCIL)    #"Activity Skeleton Reconciliation")
-#        
+#
 #        person_constraints_1 = QTreeWidgetItem(skeleton_reconciliation_system)
 #        person_constraints_1.setText(0, COMPMODEL_ASCONST)          #"Within person constraints")
-#        
+#
 #        adjustment_1 = QTreeWidgetItem(skeleton_reconciliation_system)
 #        adjustment_1.setText(0, COMPMODEL_ASADJUST )                #"Adjustments to the activity skeleton based on expected Travel Time from previous day")
-#        
+#
 #        short_term_models = QTreeWidgetItem(self)
-#        short_term_models.setText(0, COMP_SHORTTERM) 
+#        short_term_models.setText(0, COMP_SHORTTERM)
 #
 ## Define Child Daily Status and Allocation Model
 #
 #        child_model = QTreeWidgetItem(medium_term_models)
 #        child_model.setText(0, COMP_CHILDSTATUS)
-#        
+#
 #        sch_status = QTreeWidgetItem(child_model)
 #        sch_status.setText(0, COMPMODEL_SCHSTATUS)
 #        children_preschool = QTreeWidgetItem(sch_status)
@@ -189,16 +189,16 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        children_school1.setText(0, COMPMODEL_SCHDAILYSTATUS)         #"Children (Status \55 School)")
 #
 #        child_dependent = QTreeWidgetItem(child_model)
-#        child_dependent.setText(0, COMPMODEL_CHIDDEPEND) 
+#        child_dependent.setText(0, COMPMODEL_CHIDDEPEND)
 #        children_hmindep = QTreeWidgetItem(child_dependent)
 #        children_hmindep.setText(0, COMPMODEL_HMINDEP)
 #        children_schindep = QTreeWidgetItem(child_dependent)
 #        children_schindep.setText(0, COMPMODEL_SCHDAILYINDEP)
 #        children_aftschindep = QTreeWidgetItem(child_dependent)
 #        children_aftschindep.setText(0, COMPMODEL_AFTSCHDAILYINDEP)
-#        
+#
 #        aft_sch_activity = QTreeWidgetItem(child_model)
-#        aft_sch_activity.setText(0, COMPMODEL_AFTSCHACTIVITY)         
+#        aft_sch_activity.setText(0, COMPMODEL_AFTSCHACTIVITY)
 #        children_aftschacttype = QTreeWidgetItem(aft_sch_activity)
 #        children_aftschacttype.setText(0, COMPMODEL_AFTSCHACTTYPE)
 #        children_aftschactdest = QTreeWidgetItem(aft_sch_activity)
@@ -207,12 +207,12 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        children_aftschactdur.setText(0, COMPMODEL_AFTSCHACTDUR)
 #        children_aftschactjointact = QTreeWidgetItem(aft_sch_activity)
 #        children_aftschactjointact.setText(0, COMPMODEL_AFTSCHJOINTACT)
-#        
-#        
+#
+#
 ##        children_1 = QTreeWidgetItem(child_model)
 ##        children_1.setText(0, COMPMODEL_CSCHILD0t4)                 #"Children (0-4 years old)")
 ##        children_2 = QTreeWidgetItem(child_model)
-##        children_2.setText(0, COMPMODEL_CSCHILD5t17) 
+##        children_2.setText(0, COMPMODEL_CSCHILD5t17)
 #
 #
 #
@@ -227,95 +227,95 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        assign_stayhmchild_nonwrk = QTreeWidgetItem(adult_model)
 #        assign_stayhmchild_nonwrk.setText(0, COMPMODEL_ASDEPSTAYHM_NONWORK)   #"Assign each dependent child to a household adult subject to the fixed activity schedule of the adult")
 #        assign_chauffchild = QTreeWidgetItem(adult_model)
-#        assign_chauffchild.setText(0, COMPMODEL_ASDEPCHAUFF)        
+#        assign_chauffchild.setText(0, COMPMODEL_ASDEPCHAUFF)
 #        work_today = QTreeWidgetItem(adult_model)
 #        work_today.setText(0, COMPMODEL_WRKDAILYSTATUS)
 #
-#        
+#
 ## Define Activity Travel Pattern Simulator
 #        activity_travel_pattern_simulator = QTreeWidgetItem(short_term_models)
 #        activity_travel_pattern_simulator.setText(0, COMP_ACTTRAVSIMULATOR)
-#        
+#
 #        time_slice = QTreeWidgetItem(activity_travel_pattern_simulator)
 #        time_slice.setText(0, COMPMODEL_SMSLICE)                    #"Within a time slice")
-#        
+#
 #        children_with_activity = QTreeWidgetItem(activity_travel_pattern_simulator)
 #        children_with_activity.setText(0, "Children with after school dependent activities")
 #
 #        activity_pursued_1 = QTreeWidgetItem(children_with_activity)
 #        activity_pursued_1.setText(0, COMPMODEL_SMACTIVEPURSUE)     #"Can activity be pursued jointly with a Household member?")
-#        
+#
 #        assign_to_non_hhold = QTreeWidgetItem(children_with_activity)
 #        assign_to_non_hhold.setText(0, COMPMODEL_SMACTIVEASSIGNED)  #"Activity assigned to a Non-household member comprising Joint Activity with Non-household member")
-#        
+#
 #        assign_to_hhold = QTreeWidgetItem(children_with_activity)
 #        assign_to_hhold.setText(0, COMPMODEL_SMASSIGNACTIVE)        #"Assign the activity to Household member comprising Joint Activity with household member")
-#        
+#
 #        mode_choice_model = QTreeWidgetItem(children_with_activity)
 #        mode_choice_model.setText(0, COMPMODEL_AFTSCHACTIVITYMODE)       #"Mode choice model for intra-household joint trips with children")
-#        
+#
 #        all_other_individuals = QTreeWidgetItem(activity_travel_pattern_simulator)
 #        all_other_individuals.setText(0, "All other individuals")
-#        
+#
 #        adult_individuals = QTreeWidgetItem(all_other_individuals)
 #        adult_individuals.setText(0, COMPMODEL_SMINDIVIDUAL)        #"Adult individuals, children with independent activities")
-#        
+#
 #        travel_time = QTreeWidgetItem(all_other_individuals)
 #        travel_time.setText(0, COMPMODEL_SMTRIPTIME)                #"Is travel time to next fixed activity \74 time available in the prism?")
-#        
+#
 #        activity_choice = QTreeWidgetItem(all_other_individuals)
 #        activity_choice.setText(0, COMPMODEL_ACTIVITYTYPE)             #"Activity Type Choice; Mode-Destination Choice")
-#        
+#
 #        actual_start_time = QTreeWidgetItem(all_other_individuals)
 #        actual_start_time.setText(0, COMPMODEL_SMSTARTTIME)         #"Actual start time for the activity")
-#        
+#
 #        time_in_activity = QTreeWidgetItem(all_other_individuals)
 #        time_in_activity.setText(0, COMPMODEL_ACTIVITYDURATION)         #"Is there enough time to engage in the activity?")
-#        
+#
 #        proceed_next_activity = QTreeWidgetItem(all_other_individuals)
 #        proceed_next_activity.setText(0, COMPMODEL_SMPROCEED)       #"Proceed to next fixed activity")
-#        
+#
 #        mode_choice_next_activity = QTreeWidgetItem(all_other_individuals)
 #        mode_choice_next_activity.setText(0, COMPMODEL_FIXEDACTIVITYMODE)   #"Mode Choice to the next fixed activity")
-#        
+#
 #        hov = QTreeWidgetItem(all_other_individuals)
 #        hov.setText(0, COMPMODEL_SMISHOV)                           #"Is the mode of the trip HOV?")
-#        
+#
 #        activity_pursued_2 = QTreeWidgetItem(all_other_individuals)
 #        activity_pursued_2.setText(0, COMPMODEL_SMACTIVEPURSED)     #"Can activity be pursued jointly with Household members?")
-#        
+#
 #        check_if_join_activity = QTreeWidgetItem(all_other_individuals)
 #        check_if_join_activity.setText(0, COMPMODEL_JOINTACTIVITY)   #"For each available household member, check to see if he/she will join the activity?")
-#        
+#
 #        activity_non_hhold = QTreeWidgetItem(all_other_individuals)
 #        activity_non_hhold.setText(0, COMPMODEL_SMACTIVENON)        #"Joint Activity with Non-household member")
-#        
+#
 #        activity_hhold = QTreeWidgetItem(all_other_individuals)
 #        activity_hhold.setText(0, COMPMODEL_SMACTIVEHOUSE)          #"Joint Activity with household member")
-#        
+#
 #        sov_hov = QTreeWidgetItem(activity_travel_pattern_simulator)
 #        sov_hov.setText(0, COMPMODEL_TRIPVEHICLE)                      #"If mode is SOV or HOV Driver identify vehicle")
-#        
+#
 #        activity_travel_pattern = QTreeWidgetItem(activity_travel_pattern_simulator)
 #        activity_travel_pattern.setText(0, COMPMODEL_SMPATTERN)     #"Activity-travel patterns for all individuals within the time-slice")
-#        
+#
 ## Define Activity Travel Reconciliation System
 #        travel_reconciliation_system = QTreeWidgetItem(short_term_models)
 #        travel_reconciliation_system.setText(0, COMP_ACTTRAVRECONCILIATION)
 #
 #        pattern_reconciliation = QTreeWidgetItem(travel_reconciliation_system)
 #        pattern_reconciliation.setText(0, COMPMODEL_ATRECONCIL)             #"Activity-travel Pattern Reconciliation")
-#        
+#
 #        person_constraints_2 = QTreeWidgetItem(travel_reconciliation_system)
 #        person_constraints_2.setText(0, COMPMODEL_ATPERCONST)               #"Within person constraints")
-#        
+#
 #        hhold_constraints = QTreeWidgetItem(travel_reconciliation_system)
 #        hhold_constraints.setText(0, COMPMODEL_ATHOUCONST)                  #"Within household constraints")
-#        
+#
 #        adjustment_2 = QTreeWidgetItem(travel_reconciliation_system)
 #        adjustment_2.setText(0, COMPMODEL_ATADJUST)                         #"Duration adjustment after arrival")
 #
-#        
+#
 #
 #        time_use_utility_calculator = QTreeWidgetItem(self)
 #        time_use_utility_calculator.setText(0, COMP_TIMEUSEUTILITY)
@@ -326,7 +326,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.connect(self, SIGNAL('customContextMenuRequested(const QPoint&)'),self.on_context_menu)
-        
+
 #        self.connect(self, SIGNAL('itemClicked (QTreeWidgetItem *,int)'), self.treeItemSelected)
 #        self.connect(self, SIGNAL('itemClicked (QTreeWidgetItem *,int)'), self.openModelSelected)
         self.connect(self, SIGNAL('itemChanged (QTreeWidgetItem *,int)'), self.saveSkip)
@@ -337,7 +337,7 @@ class Model_Manager_Treewidget(QTreeWidget):
         for elt in projelts:
             if elt.tag != MODELCONFIG and elt.tag != "DTAConnection":
                 root_term = QTreeWidgetItem(self)
-                root_term.setText(0, str(elt.tag))        
+                root_term.setText(0, str(elt.tag))
 
     def setTreeWidget(self):
         if self.configobject != None:
@@ -345,12 +345,12 @@ class Model_Manager_Treewidget(QTreeWidget):
             #root_term1.setText(0, "Component")
             #compelts = self.configobject.getComponents()
             #self.components(root_term1, compelts)
-            
+
             compelts = self.configobject.getModelConfigChildren()
             if compelts is not None:
                 root_term = QTreeWidgetItem(self)
                 root_term.setText(0, "Component")
-                 
+
                 for comp in compelts:
                     if comp.tag == "Component" or comp.tag == "Component1":
                         self.components(root_term, comp)
@@ -365,9 +365,9 @@ class Model_Manager_Treewidget(QTreeWidget):
                             else:
                                 element = QTreeWidgetItem(component_term)
                                 element.setText(0, subcomp.tag)
-                            
-                        
-                  
+
+
+
     def components(self, root_term, comp):
 
         comtitle = str(comp.get(NAME))
@@ -380,7 +380,7 @@ class Model_Manager_Treewidget(QTreeWidget):
             component_term.setHidden(True)
         component_term.setText(0, compname)
         component_term.setFlags(Qt.ItemIsEnabled | Qt.ItemIsUserCheckable)
-        
+
         for key in comp.keys():
             if key == "skip" or key == "completed":
                 attr = "%s"%(comp.get(key))
@@ -388,7 +388,7 @@ class Model_Manager_Treewidget(QTreeWidget):
                     if attr == "True":
                         component_term.setCheckState(2, Qt.Checked)
                     else:
-                        component_term.setCheckState(2, Qt.Unchecked)                     
+                        component_term.setCheckState(2, Qt.Unchecked)
                 else:
                     component_term.setIcon(1, QIcon("./images/%s" %(attr)))
 
@@ -401,13 +401,13 @@ class Model_Manager_Treewidget(QTreeWidget):
             else:
                 name = str(elt.get("name")).lower()
                 if name in MODELSMAP.keys():
-                    name = title + ": " + MODELSMAP[name][0] 
+                    name = title + ": " + MODELSMAP[name][0]
                     element_term = QTreeWidgetItem(component_term)
                     element_term.setText(0, name)
                 else:
                     name = title + ": " + name
                     element_term = QTreeWidgetItem(component_term)
-                    element_term.setText(0, name)                            
+                    element_term.setText(0, name)
 
 
 #    def setTreeWidgetEle(self,elt,tree_term):
@@ -417,10 +417,10 @@ class Model_Manager_Treewidget(QTreeWidget):
 #                attr = "%s: %s"%(key,elt.get(key))
 #                attr_term = QTreeWidgetItem(attribute_term)
 #                attr_term.setText(0, attr)
-#            
+#
 #            for subelt in elt.getchildren():
 #                element_term = QTreeWidgetItem(tree_term)
-#                element_term.setText(0, subelt.tag)     
+#                element_term.setText(0, subelt.tag)
 
 
     def on_context_menu(self,point):
@@ -437,13 +437,13 @@ class Model_Manager_Treewidget(QTreeWidget):
                 two = menubar.addAction("Add ComponentList")
                 self.connect(one,SIGNAL("triggered()"),self.addComponent)
                 self.connect(two,SIGNAL("triggered()"),self.addComponentList)
-                
+
         elif item.text(0) == "Component List":
             one = menubar.addAction("Add Analysis Interval")
             two = menubar.addAction("Add Sub-Component")
             self.connect(one,SIGNAL("triggered()"),self.analy_inter)
-            self.connect(two,SIGNAL("triggered()"),self.addSubComponent)            
-            
+            self.connect(two,SIGNAL("triggered()"),self.addSubComponent)
+
         elif father.text(0) == "Component" or father.text(0) == "Component List":
             open_com = menubar.addAction("Open Component")
             menubar.addSeparator()
@@ -461,7 +461,7 @@ class Model_Manager_Treewidget(QTreeWidget):
             twelve = menubar.addAction("Add Delete Based On")
             menubar.addSeparator()
             remove = menubar.addAction("Delete Component")
-            
+
             self.connect(open_com,SIGNAL("triggered()"),self.openComponent)
             self.connect(one,SIGNAL("triggered()"),self.add_model)
             self.connect(two,SIGNAL("triggered()"),self.dbtable)
@@ -473,10 +473,10 @@ class Model_Manager_Treewidget(QTreeWidget):
             self.connect(eight,SIGNAL("triggered()"),self.hist_info)
             self.connect(nine,SIGNAL("triggered()"),self.aggregate)
             self.connect(ten,SIGNAL("triggered()"),self.analysis_filter)
-            self.connect(eleven,SIGNAL("triggered()"),self.preprocess) 
+            self.connect(eleven,SIGNAL("triggered()"),self.preprocess)
             self.connect(twelve,SIGNAL("triggered()"),self.delete_basedon)
             self.connect(remove,SIGNAL("triggered()"),self.remove_element)
-            
+
         else:
 #            foreparent = father.parent()
             one = menubar.addAction("Open Element")
@@ -485,18 +485,18 @@ class Model_Manager_Treewidget(QTreeWidget):
             self.connect(remove,SIGNAL("triggered()"),self.remove_element)
             self.connect(one,SIGNAL("triggered()"),self.openElementSelected)
 
-            
+
         menubar.popup(self.mapToGlobal(point))
 
 
     def moveup(self):
-        
+
         if self.isMove == True:
             self.isMove = False
             index = []
             father = None
             item = self.currentItem()
-#            if item.text(0) != "Attribute": 
+#            if item.text(0) != "Attribute":
             if item != None:
                 father = item.parent()
                 if father != None:
@@ -507,7 +507,7 @@ class Model_Manager_Treewidget(QTreeWidget):
                         father.removeChild(item)
                         father.insertChild(i-1, item)
                         self.setCurrentItem(item)
-    
+
             while father != None:
                 item = father.parent()
                 if item != None:
@@ -515,20 +515,20 @@ class Model_Manager_Treewidget(QTreeWidget):
                     index.append(i)
                     father = father.parent
                 father = item
-            
+
             if len(index) > 0 and index[0] > 0:
                 index.reverse()
                 self.configobject.moveup(index)
         self.isMove = True
-            
-            
+
+
     def movedown(self):
-        
+
         if self.isMove == True:
             self.isMove = False
             index = []
             item = self.currentItem()
-#            if item.text(0) != "Attribute": 
+#            if item.text(0) != "Attribute":
             if item != None:
                 father = item.parent()
                 if father != None:
@@ -539,8 +539,8 @@ class Model_Manager_Treewidget(QTreeWidget):
                     if i < max_i-1:
                         father.removeChild(item)
                         father.insertChild(i+1, item)
-                        self.setCurrentItem(item)            
-              
+                        self.setCurrentItem(item)
+
             while father != None:
                 item = father.parent()
                 if item != None:
@@ -548,11 +548,11 @@ class Model_Manager_Treewidget(QTreeWidget):
                     index.append(i)
                     father = father.parent
                 father = item
-            
+
             if len(index) > 0 and index[0] < max_i-1:
                 index.reverse()
                 self.configobject.movedown(index)
-                    
+
             self.isMove = True
 
 
@@ -561,8 +561,8 @@ class Model_Manager_Treewidget(QTreeWidget):
         self.setProjectElement()
         self.setTreeWidget()
 #        self.setAllComSimStatuses()
-        
-        
+
+
 #    def setAllComSimStatuses(self):
 #        self.setCompSimStatus(COMPMODEL_NUMVEHS)
 #        self.setCompSimStatus(COMPMODEL_NUMTYPES)
@@ -577,7 +577,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        self.setCompSimStatus(COMPMODEL_SCHSTATUS)
 #        self.setCompSimStatus(COMPMODEL_CHIDDEPEND)
 #        self.setCompSimStatus(COMPMODEL_AFTSCHACTIVITY)
-#        
+#
 #
 #    def setCompSimStatus(self,comptitle):
 #        treecomp = self.findItems(QString(comptitle),Qt.MatchFixedString | Qt.MatchRecursive)[0]
@@ -612,7 +612,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #        if itemlower.find("model") > -1:
 #            index = self.findIndex(item)
 #            model = self.configobject.getElement(index)
-#            
+#
 #            if model != None:
 #                diag = AbtractSpecDialog(self.configobject,"","",model)
 #                diag.exec_()
@@ -635,21 +635,21 @@ class Model_Manager_Treewidget(QTreeWidget):
             self.subcomponent = "Component"
             diag = AbtractMixedDialog(self.configobject,model,4,self)
             diag.exec_()
-            
+
     def addComponentList(self):
         model = self.configobject.protree.find(MODELCONFIG)
         if model != None:
             element = etree.Element("ComponentList")
             model.append(element)
             component_term = QTreeWidgetItem(self.currentItem())
-            component_term.setText(0, "Component List") 
-            
+            component_term.setText(0, "Component List")
+
     def addSubComponent(self):
         model = self.configobject.getElements("ComponentList")
         if model[0] != None:
             self.subcomponent = "SubComponent"
             diag = AbtractMixedDialog(self.configobject,model[0],4,self)
-            diag.exec_() 
+            diag.exec_()
 
     def openElementSelected(self):
         item = self.currentItem()
@@ -661,16 +661,16 @@ class Model_Manager_Treewidget(QTreeWidget):
                 itemname = itemname.replace("Model: ","")
                 diag = AbtractSpecDialog(self.configobject,"",itemname,index,self)
                 diag.exec_()
-                
+
                 self.father.refreshflowchart()
         else:
             model = self.find_model()[0]
             if model != None:
                 diag = AbtractMixedDialog(self.configobject,model,1,self)
-                diag.exec_()   
+                diag.exec_()
 
     def openComponent(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             diag = AbtractMixedDialog(self.configobject,model,3,self)
             diag.exec_()
@@ -680,91 +680,91 @@ class Model_Manager_Treewidget(QTreeWidget):
         if model != None:
             diag = AbtractSpecDialog(self.configobject,"","",model,self)
             diag.exec_()
-                        
+
     def spatial_cons(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "SpatialConstraints"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
 
     def dynamic_spat(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "DynamicSpatialConstraints"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def consis_chek(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "ConsistencyChecks"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def dele_reco(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "DeleteRecords"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
 
     def analy_inter(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "AnalysisInterval"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def hist_info(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "HistoryInformation"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def aggregate(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "Aggregate"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def analysis_filter(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "AnalysisIntervalFilter"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def preprocess(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "PreProcessData"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def delete_basedon(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "DeleteBasedOn"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-            
+
     def dbtable(self):
-        model = self.find_model()[0]        
+        model = self.find_model()[0]
         if model != None:
             self.subcomponent = "DBTables"
             diag = AbtractMixedDialog(self.configobject,model,2,self)
             diag.exec_()
-   
+
     def find_model(self):
         item = self.currentItem()
         index = self.findIndex(item)
         model = self.configobject.getElement(index)
-        return [model, index] 
-         
-# 
+        return [model, index]
+
+#
 #     def treeItemSelected(self,item,col):
 #         diagtitle = None
 #         diag = None
@@ -774,8 +774,8 @@ class Model_Manager_Treewidget(QTreeWidget):
 #             modelkey = MODELKEY_NUMVEHS
 #         elif str(item.text(col)).lower() == COMPMODEL_NUMTYPES.lower():
 #             diagtitle = COMPMODEL_NUMTYPES
-#             modelkey = MODELKEY_VEHTYPE   
-# 
+#             modelkey = MODELKEY_VEHTYPE
+#
 #         elif str(item.text(col)).lower() == ('Adult Workers').lower():
 #             seg = str((item.parent()).text(0)).lower()
 #             if seg == COMPMODEL_DAYSTART.lower():
@@ -791,7 +791,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #                 modelkey = MODELKEY_DAYSTART_AN
 #             elif seg == COMPMODEL_DAYEND.lower():
 #                 diagtitle = COMPMODEL_DAYEND
-#                 modelkey = MODELKEY_DAYEND_AN                
+#                 modelkey = MODELKEY_DAYEND_AN
 #         elif str(item.text(col)).lower() == ('Children (5-17 years) and\nAdult Students').lower():
 #             seg = str((item.parent()).text(0)).lower()
 #             if seg == COMPMODEL_DAYSTART.lower():
@@ -799,7 +799,7 @@ class Model_Manager_Treewidget(QTreeWidget):
 #                 modelkey = MODELKEY_DAYSTART_NA
 #             elif seg == COMPMODEL_DAYEND.lower():
 #                 diagtitle = COMPMODEL_DAYEND
-#                 modelkey = MODELKEY_DAYEND_NA  
+#                 modelkey = MODELKEY_DAYEND_NA
 #         elif str(item.text(col)).lower() == ('Pre-school Children\n(0-4 years)').lower():
 #             seg = str((item.parent()).text(0)).lower()
 #             if seg == COMPMODEL_DAYSTART.lower():
@@ -807,8 +807,8 @@ class Model_Manager_Treewidget(QTreeWidget):
 #                 modelkey = MODELKEY_DAYSTART_PS
 #             elif seg == COMPMODEL_DAYEND.lower():
 #                 diagtitle = COMPMODEL_DAYEND
-#                 modelkey = MODELKEY_DAYEND_PS 
-# 
+#                 modelkey = MODELKEY_DAYEND_PS
+#
 #         elif str(item.text(col)).lower() == COMPMODEL_WRKEPISODES.lower():
 #             diagtitle = COMPMODEL_WRKEPISODES
 #             modelkey = MODELKEY_WRKEPISODES
@@ -830,54 +830,54 @@ class Model_Manager_Treewidget(QTreeWidget):
 #         elif str(item.text(col)).lower() == COMPMODEL_WORKEND2.lower():
 #             diagtitle = COMPMODEL_WORKEND2
 #             modelkey = MODELKEY_WORKEND2
-# 
+#
 #         elif str(item.text(col)).lower() == COMPMODEL_SCHSTART.lower():
 #             diagtitle = COMPMODEL_SCHSTART
 #             modelkey = MODELKEY_SCHSTART
 #         elif str(item.text(col)).lower() == COMPMODEL_SCHEND.lower():
 #             diagtitle = COMPMODEL_SCHEND
-#             modelkey = MODELKEY_SCHEND     
-# 
+#             modelkey = MODELKEY_SCHEND
+#
 #         elif str(item.text(col)).lower() == COMPMODEL_PRESCHSTART.lower():
 #             diagtitle = COMPMODEL_PRESCHSTART
 #             modelkey = MODELKEY_PRESCHSTART
 #         elif str(item.text(col)).lower() == COMPMODEL_PRESCHEND.lower():
 #             diagtitle = COMPMODEL_PRESCHEND
-#             modelkey = MODELKEY_PRESCHEND           
-# 
+#             modelkey = MODELKEY_PRESCHEND
+#
 #         elif str(item.text(col)).lower() == COMPMODEL_PRESCHDAILYSTATUS.lower():
 #             diagtitle = COMPMODEL_PRESCHDAILYSTATUS
-#             modelkey = MODELKEY_PRESCHDAILYSTATUS   
+#             modelkey = MODELKEY_PRESCHDAILYSTATUS
 #         elif str(item.text(col)).lower() == COMPMODEL_SCHDAILYSTATUS.lower():
 #             diagtitle = COMPMODEL_SCHDAILYSTATUS
-#             modelkey = MODELKEY_SCHDAILYSTATUS  
+#             modelkey = MODELKEY_SCHDAILYSTATUS
 #         elif str(item.text(col)).lower() == COMPMODEL_HMINDEP.lower():
 #             diagtitle = COMPMODEL_HMINDEP
-#             modelkey = MODELKEY_HMINDEP 
+#             modelkey = MODELKEY_HMINDEP
 #         elif str(item.text(col)).lower() == COMPMODEL_SCHDAILYINDEP.lower():
 #             diagtitle = COMPMODEL_SCHDAILYINDEP
-#             modelkey = MODELKEY_SCHDAILYINDEP 
+#             modelkey = MODELKEY_SCHDAILYINDEP
 #         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHDAILYINDEP.lower():
 #             diagtitle = COMPMODEL_AFTSCHDAILYINDEP
-#             modelkey = MODELKEY_AFTSCHDAILYINDEP 
+#             modelkey = MODELKEY_AFTSCHDAILYINDEP
 #         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTTYPE.lower():
 #             diagtitle = COMPMODEL_AFTSCHACTTYPE
-#             modelkey = MODELKEY_AFTSCHACTTYPE 
+#             modelkey = MODELKEY_AFTSCHACTTYPE
 #         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTDEST.lower():
 #             diagtitle = COMPMODEL_AFTSCHACTDEST
-#             modelkey = MODELKEY_AFTSCHACTDEST 
+#             modelkey = MODELKEY_AFTSCHACTDEST
 #         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHACTDUR.lower():
 #             diagtitle = COMPMODEL_AFTSCHACTDUR
-#             modelkey = MODELKEY_AFTSCHACTDUR 
+#             modelkey = MODELKEY_AFTSCHACTDUR
 #         elif str(item.text(col)).lower() == COMPMODEL_AFTSCHJOINTACT.lower():
 #             diagtitle = COMPMODEL_AFTSCHJOINTACT
-#             modelkey = MODELKEY_AFTSCHJOINTACT 
-# 
+#             modelkey = MODELKEY_AFTSCHJOINTACT
+#
 #         elif str(item.text(col)).lower() == COMPMODEL_WRKDAILYSTATUS.lower():
 #             diagtitle = COMPMODEL_WRKDAILYSTATUS
-#             modelkey = MODELKEY_WRKDAILYSTATUS 
-#             
-# 
+#             modelkey = MODELKEY_WRKDAILYSTATUS
+#
+#
 #         elif item.text(col) == COMPMODEL_SMACTIVEPURSUE:
 #             diagtitle = COMPMODEL_SMACTIVEPURSUE
 #             modelkey = MODELKEY_SMACTIVEPURSUE
@@ -923,14 +923,14 @@ class Model_Manager_Treewidget(QTreeWidget):
 #         elif item.text(col) == COMPMODEL_TRIPVEHICLE:
 #             diagtitle = COMPMODEL_TRIPVEHICLE
 #             modelkey = MODELKEY_TRIPVEHICLE
-# 
-# 
-# 
+#
+#
+#
 #         if diagtitle != None and self.configobject != None:
 #             diag = AbtractSpecDialog(self.configobject,modelkey,diagtitle)
 #             diag.exec_()
 
-        
+
     def remove_element(self):
         reply = QMessageBox.question(None, 'Remove', "Are you sure to remove?",
                                      QMessageBox.Yes, QMessageBox.No)
@@ -940,12 +940,12 @@ class Model_Manager_Treewidget(QTreeWidget):
             index = self.findIndex(item)
             self.configobject.removeElement(index)
             self.removeItemWidget(item,0)
-            
+
 
     def findIndex(self,item):
         index = []
         father = None
-        
+
         if item != None:
             father = item.parent()
 
@@ -958,14 +958,8 @@ class Model_Manager_Treewidget(QTreeWidget):
         index.reverse()
         return index
 
-class TreeWidgetItem(QTreeWidgetItem): 
-    def __init__(self, parent, name, elt): 
+class TreeWidgetItem(QTreeWidgetItem):
+    def __init__(self, parent, name, elt):
         QTreeWidgetItem.__init__(self, parent, name, elt)
         self.setText(0, name)
         self.element = elt
-
-         
-
-
-
-

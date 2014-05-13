@@ -43,5 +43,4 @@ class SpatioTemporalConstraintError(Exception):
 class PrismConstraintError(Exception):
     pass
 
-# Checking to see how SVN works 
-
+# Checking to see how SVN works

@@ -15,8 +15,8 @@ class IdentifyIndividualAttributes(Model):
         self.colNames = [self.activityAttribs.hidName,
                          self.activityAttribs.pidName,
                          self.activityAttribs.starttimeName,
-			 self.activityAttribs.endtimeName]
-        
+                         self.activityAttribs.endtimeName]
+
 
 
 
@@ -58,12 +58,12 @@ class IdentifyIndividualAttributes(Model):
         self.personIndicesOfActs[:,3] = indicesRow
 
         hid = self.personIndicesOfActs[:,0]
-        
+
         hidUnique, hid_reverse_indices = unique(hid, return_inverse=True)
 
         binsHidIndices = array(range(hid_reverse_indices.max()+2))
         histHidIndices = histogram(hid_reverse_indices, bins=binsHidIndices)
-        
+
         indicesHidRowCount = histHidIndices[0]
         indicesHidRow = indicesHidRowCount.cumsum()
 
@@ -110,9 +110,9 @@ class IdentifyIndividualAttributes(Model):
                 householdObject.add_person(personObject)
 
             hhldVerts = householdObject.retrieve_fixed_activity_vertices(seed)
-	    #for i in hhldVerts:
-	    #	print i
-	    #raw_input()
+            #for i in hhldVerts:
+            #   print i
+            #raw_input()
 
             verts += hhldVerts
 
@@ -123,8 +123,8 @@ class IdentifyIndividualAttributes(Model):
         # Updating activity list
         activityList = []
         for sched in schedulesForPerson.data:
-	    hid = sched[self.hidCol]
-	    pid = sched[self.pidCol]
+            hid = sched[self.hidCol]
+            pid = sched[self.pidCol]
 
             scheduleid = sched[self.schidCol]
             activitytype = sched[self.actTypeCol]
@@ -134,13 +134,10 @@ class IdentifyIndividualAttributes(Model):
             duration = sched[self.durCol]
             depPersonId = sched[self.depPersonCol]
 
-            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid, 
+            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
                                          starttime, endtime, duration, depPersonId)
             activityList.append(actepisode)
 
-        
+
 
         return activityList
-
-
-

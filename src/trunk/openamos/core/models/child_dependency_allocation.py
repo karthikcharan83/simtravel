@@ -14,14 +14,14 @@ class ChildDependencyAllocation(Model):
         self.dependencyAttribs = self.specification.dependencyAttribs
         self.colNames = [self.activityAttribs.hidName,
                          self.activityAttribs.pidName,
-                         self.activityAttribs.scheduleidName, 
+                         self.activityAttribs.scheduleidName,
                          self.activityAttribs.activitytypeName,
                          self.activityAttribs.starttimeName,
                          self.activityAttribs.endtimeName,
                          self.activityAttribs.locationidName,
                          self.activityAttribs.durationName,
                          self.activityAttribs.dependentPersonName]
-        
+
 
 
 
@@ -43,7 +43,7 @@ class ChildDependencyAllocation(Model):
         self.childDependencyCol = colnamesDict[self.dependencyAttribs.childDependencyName]
 
 
-        
+
     def create_indices(self, data):
         idCols = data.columns([self.activityAttribs.hidName,
                                self.activityAttribs.pidName]).data
@@ -90,14 +90,14 @@ class ChildDependencyAllocation(Model):
 
 
 
-        #raw_input('new implementation of indices')                                                                                 
+        #raw_input('new implementation of indices')
 
 
 
     def resolve_consistency(self, data, seed):
 
         actList = []
-	actListJoint = []
+        actListJoint = []
 
         data.sort([self.activityAttribs.hidName,
                    self.activityAttribs.pidName,
@@ -125,11 +125,11 @@ class ChildDependencyAllocation(Model):
                                                                  :]
 
 
-	    #if hhldIndex[0] not in [8, 1839, 6006, 13139, 15080, 22501, 25779, 32174, 
-	    # 			    34664, 35751, 40563, 71887, 
-	    #			    49815, 57273, 94554, 95335, 96768, 130599, 1353601, 149978]:
-	    	#continue
-	    #	pass
+            #if hhldIndex[0] not in [8, 1839, 6006, 13139, 15080, 22501, 25779, 32174,
+            #                       34664, 35751, 40563, 71887,
+            #                       49815, 57273, 94554, 95335, 96768, 130599, 1353601, 149978]:
+                #continue
+            #   pass
 
 
             householdObject = Household(hhldIndex[0])
@@ -141,37 +141,37 @@ class ChildDependencyAllocation(Model):
                 activityList = self.return_activity_list_for_person(schedulesForPerson)
                 personObject.add_episodes(activityList)
                 workStatus, schoolStatus, childDependency = self.return_status_dependency(schedulesForPerson)
-                personObject.add_status_dependency(workStatus, schoolStatus, 
+                personObject.add_status_dependency(workStatus, schoolStatus,
                                                    childDependency)
                 householdObject.add_person(personObject)
 
 
-	    if self.specification.terminalEpisodesAllocation:
-		householdObject.allocate_terminal_dependent_activities(seed)
-	    else:
-		householdObject.allocate_dependent_activities(seed)
+            if self.specification.terminalEpisodesAllocation:
+                householdObject.allocate_terminal_dependent_activities(seed)
+            else:
+                householdObject.allocate_dependent_activities(seed)
 
-		#householdObject.lineup_subsequent_ih_dropoffs(seed)
+                #householdObject.lineup_subsequent_ih_dropoffs(seed)
 
 
-	    reconciledSchedules = householdObject._collate_results()
-	    reconciledSchedulesJoint = householdObject._collate_results_without_dependentActs()
+            reconciledSchedules = householdObject._collate_results()
+            reconciledSchedulesJoint = householdObject._collate_results_without_dependentActs()
 
             actList += reconciledSchedules
             actListJoint += reconciledSchedulesJoint
 
-	    #if (hhldIndex[0] == 8 or hhldIndex[0] == 6006 or hhldIndex[0] == 13139 
-	    #	or hhldIndex[0] == 15080 or hhldIndex[0] == 35751
-	    # 	or hhldIndex[0] == 95335 or hhldIndex[0] == 57273  
-	    #	or hhldIndex[0] == 94554 or hhldIndex[0] == 96768 
-	    #	or hhldIndex[0] == 1353601 or hhldIndex[0] == 149978 or hhldIndex[0] == 155946):
-	    #	householdObject.persons[1].print_activity_list()
-		#raw_input()
-		pass
+            #if (hhldIndex[0] == 8 or hhldIndex[0] == 6006 or hhldIndex[0] == 13139
+            #   or hhldIndex[0] == 15080 or hhldIndex[0] == 35751
+            #   or hhldIndex[0] == 95335 or hhldIndex[0] == 57273
+            #   or hhldIndex[0] == 94554 or hhldIndex[0] == 96768
+            #   or hhldIndex[0] == 1353601 or hhldIndex[0] == 149978 or hhldIndex[0] == 155946):
+            #   householdObject.persons[1].print_activity_list()
+                #raw_input()
 
-	
+
+
         #return DataArray(actList, self.colNames), DataArray(actListJoint, self.colNames)
-	return DataArray(actList, self.colNames), DataArray(actList, self.colNames)
+        return DataArray(actList, self.colNames), DataArray(actList, self.colNames)
 
     def return_activity_list_for_person(self, schedulesForPerson):
         # Updating activity list
@@ -184,12 +184,12 @@ class ChildDependencyAllocation(Model):
             endtime = sched[self.endtimeCol]
             duration = sched[self.durCol]
             depPersonId = sched[self.depPersonCol]
-            
-            actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+            actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                          starttime, endtime, duration, depPersonId)
             activityList.append(actepisode)
 
-        
+
 
         return activityList
 
@@ -198,25 +198,25 @@ class ChildDependencyAllocation(Model):
         schoolStatus = schedulesForPerson.data[0,self.schoolStatusCol]
         childDependency = schedulesForPerson.data[0,self.childDependencyCol]
 
-        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol, 
+        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol,
         #                                                self.schoolStatusCol,
         #                                                self.childDependencyCol)
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-        
+
         # Checking for status and dependency
         # whether the merge happened correctly
-        # this can be replaced with a simple extraction as opposed 
-        # to identifying unique values, checking for single value 
+        # this can be replaced with a simple extraction as opposed
+        # to identifying unique values, checking for single value
         # and then updating the status variables
         workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
         if workStatusUnique.shape[0] > 1:
             print 'Work Status', workStatusUnique
-        
+
             raise Exception, "More than one values for status/dependency"
         else:
             workStatus = workStatusUnique[0]
-        
+
         schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
         if schoolStatusUnique.shape[0] > 1:
             print 'School Status', schoolStatusUnique
@@ -230,12 +230,12 @@ class ChildDependencyAllocation(Model):
             raise Exception, "More than one values for status/dependency"
         else:
             childDependency = childDependencyUnique[0]
-        
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
         return workStatus, schoolStatus, childDependency
 
-        
+
 
 
 
@@ -247,19 +247,19 @@ from openamos.core.data_array import DataArray
 class TestReconcileModel(unittest.TestCase):
     def setUp(self):
         self.data = genfromtxt("/home/kkonduri/simtravel/test/mag_zone/schedule_txt.csv", delimiter=",", dtype=int)
-        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime', 
+        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime',
                     'endtime', 'duration']
         self.actSchedules = DataArray(self.data, colNames)
 
 
-        
+
 
     def test_retrieve_loop_ids(self):
         houseIdsCol = self.actSchedules.columns(['houseid']).data
         houseIdsUnique = unique(houseIdsCol)
         print houseIdsUnique
 
-        
+
         for hid in houseIdsUnique:
             schedulesRowsIndForHh = houseIdsCol == hid
             schedulesForHh = self.actSchedules.rowsof(schedulesRowsIndForHh)
@@ -270,7 +270,7 @@ class TestReconcileModel(unittest.TestCase):
             for pid in pIdsUnique:
                 schedulesRowIndForPer = pIdsCol == pid
                 schedulesForPerson = schedulesForHh.rowsof(schedulesRowIndForPer)
-            
+
                 #print 'Raw schedules for hid:%s and pid:%s' %(hid, pid)
                 #print schedulesForPerson
 
@@ -282,8 +282,8 @@ class TestReconcileModel(unittest.TestCase):
                     starttime = sch[5]
                     endtime = sch[6]
                     duration = sch[7]
-                    
-                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                                  starttime, endtime, duration)
                     activityList.append(actepisode)
                 personObject = Person(hid, pid)
@@ -293,9 +293,8 @@ class TestReconcileModel(unittest.TestCase):
         #pid = unique(self.actSchedules.columns(['houseid', 'personid']).
         #acts = self.actSchedules
 
-        #def 
+        #def
 
 
 if __name__ == "__main__":
     unittest.main()
-        

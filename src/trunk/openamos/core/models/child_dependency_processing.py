@@ -11,21 +11,21 @@ class ChildDependencyProcessing(Model):
     def __init__(self, specification):
         Model.__init__(self, specification)
         self.specification = specification
-	self.childDepProcessingType = self.specification.childDepProcessingType
+        self.childDepProcessingType = self.specification.childDepProcessingType
         self.activityAttribs = self.specification.activityAttribs
         self.dailyStatusAttribs = self.specification.dailyStatusAttribs
         self.dependencyAttribs = self.specification.dependencyAttribs
         self.colNames = [self.activityAttribs.hidName,
                          self.activityAttribs.pidName,
-                         self.activityAttribs.scheduleidName, 
+                         self.activityAttribs.scheduleidName,
                          self.activityAttribs.activitytypeName,
                          self.activityAttribs.starttimeName,
                          self.activityAttribs.endtimeName,
                          self.activityAttribs.locationidName,
                          self.activityAttribs.durationName,
                          self.activityAttribs.dependentPersonName,
-			 self.activityAttribs.tripCountName]
-        
+                         self.activityAttribs.tripCountName]
+
 
 
 
@@ -43,7 +43,7 @@ class ChildDependencyProcessing(Model):
         self.endtimeCol = colnamesDict[self.activityAttribs.endtimeName]
         self.durCol = colnamesDict[self.activityAttribs.durationName]
         self.depPersonCol = colnamesDict[self.activityAttribs.dependentPersonName]
-	self.tripCountCol = colnamesDict[self.activityAttribs.tripCountName]
+        self.tripCountCol = colnamesDict[self.activityAttribs.tripCountName]
 
 
         self.schoolStatusCol = colnamesDict[self.dailyStatusAttribs.schoolStatusName]
@@ -52,7 +52,7 @@ class ChildDependencyProcessing(Model):
         self.childDependencyCol = colnamesDict[self.dependencyAttribs.childDependencyName]
 
 
-        
+
     def create_indices(self, data):
         idCols = data.columns([self.activityAttribs.hidName,
                                self.activityAttribs.pidName]).data
@@ -96,9 +96,9 @@ class ChildDependencyProcessing(Model):
 
 
     def resolve_consistency(self, data, seed):
-	print data.varnames
+        print data.varnames
         actList = []
-	actListJoint = []
+        actListJoint = []
 
         data.sort([self.activityAttribs.hidName,
                    self.activityAttribs.pidName,
@@ -108,20 +108,20 @@ class ChildDependencyProcessing(Model):
         self.create_indices(data)
         self.create_col_numbers(data._colnames)
 
-	#if self.childDepProcessingType == 'Dummy':
-	#    return data
+        #if self.childDepProcessingType == 'Dummy':
+        #    return data
 
         for hhldIndex in self.hhldIndicesOfPersons:
-	    ti = time.time()
+            ti = time.time()
             firstPersonRec = hhldIndex[1]
             lastPersonRec = hhldIndex[2]
 
             persIndicesForActsForHhld = self.personIndicesOfActs[firstPersonRec:
                                                                      lastPersonRec,
                                                                  :]
-	    #if hhldIndex[0] not in [8843,20008,20440,30985,48365,54850,60085,64006,68037,73093,77192,84903,84963]:
-		# 1047
-	    #	continue
+            #if hhldIndex[0] not in [8843,20008,20440,30985,48365,54850,60085,64006,68037,73093,77192,84903,84963]:
+                # 1047
+            #   continue
             householdObject = Household(hhldIndex[0])
 
             for perIndex in persIndicesForActsForHhld:
@@ -130,38 +130,38 @@ class ChildDependencyProcessing(Model):
                 activityList = self.return_activity_list_for_person(schedulesForPerson)
                 personObject.add_episodes(activityList)
                 workStatus, schoolStatus, childDependency = self.return_status_dependency(schedulesForPerson)
-                personObject.add_status_dependency(workStatus, schoolStatus, 
+                personObject.add_status_dependency(workStatus, schoolStatus,
                                                    childDependency)
                 householdObject.add_person(personObject)
 
-		
+
             #print 'household object created in - %.4f' %(time.time()-ti)
-	    if self.specification.terminalEpisodesAllocation:
-		householdObject.allocate_terminal_dependent_activities(seed)
-	    elif self.childDepProcessingType == 'Allocation':
-		householdObject.allocate_dependent_activities(seed)
-	    elif self.childDepProcessingType == 'Resolution':
-		householdObject.lineup_activities(seed)
-	    elif self.childDepProcessingType == 'Fix Trip Purpose':
-		householdObject.fix_trippurpose(seed)
-	    elif self.childDepProcessingType == 'Extract Tour Attributes':
-		householdObject.extract_tripattributes(seed)
+            if self.specification.terminalEpisodesAllocation:
+                householdObject.allocate_terminal_dependent_activities(seed)
+            elif self.childDepProcessingType == 'Allocation':
+                householdObject.allocate_dependent_activities(seed)
+            elif self.childDepProcessingType == 'Resolution':
+                householdObject.lineup_activities(seed)
+            elif self.childDepProcessingType == 'Fix Trip Purpose':
+                householdObject.fix_trippurpose(seed)
+            elif self.childDepProcessingType == 'Extract Tour Attributes':
+                householdObject.extract_tripattributes(seed)
 
-		#raw_input('extract tour attributes')
-	
-		pass
+                #raw_input('extract tour attributes')
 
-	    reconciledSchedules = householdObject._collate_results()
+                pass
+
+            reconciledSchedules = householdObject._collate_results()
             actList += reconciledSchedules
             #print 'created and reconciled in - %.4f' %(time.time()-ti)
-	return DataArray(actList, self.colNames)
+        return DataArray(actList, self.colNames)
 
     def return_activity_list_for_person(self, schedulesForPerson):
         # Updating activity list
         activityList = []
-        for sched in schedulesForPerson:	
-	    hid = sched[self.hidCol]
-	    pid = sched[self.pidCol]
+        for sched in schedulesForPerson:
+            hid = sched[self.hidCol]
+            pid = sched[self.pidCol]
             scheduleid = sched[self.schidCol]
             activitytype = sched[self.actTypeCol]
             locationid = sched[self.locidCol]
@@ -169,15 +169,15 @@ class ChildDependencyProcessing(Model):
             endtime = sched[self.endtimeCol]
             duration = sched[self.durCol]
             depPersonId = sched[self.depPersonCol]
-	    tripCount = sched[self.tripCountCol]
-            
+            tripCount = sched[self.tripCountCol]
+
             actepisode = ActivityEpisode(hid, pid, scheduleid,
-					 activitytype, locationid, 
+                                         activitytype, locationid,
                                          starttime, endtime, duration, depPersonId,
-					 tripCount)
+                                         tripCount)
             activityList.append(actepisode)
 
-        
+
 
         return activityList
 
@@ -186,26 +186,26 @@ class ChildDependencyProcessing(Model):
         schoolStatus = schedulesForPerson[0,self.schoolStatusCol]
         childDependency = schedulesForPerson[0,self.childDependencyCol]
 
-        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol, 
+        #print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol,
         #                                                self.schoolStatusCol,
         #                                                self.childDependencyCol)
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-        
+
         # Checking for status and dependency
         # whether the merge happened correctly
-        # this can be replaced with a simple extraction as opposed 
-        # to identifying unique values, checking for single value 
+        # this can be replaced with a simple extraction as opposed
+        # to identifying unique values, checking for single value
         # and then updating the status variables
-	"""
+        """
         workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
         if workStatusUnique.shape[0] > 1:
             print 'Work Status', workStatusUnique
-        
+
             raise Exception, "More than one values for status/dependency"
         else:
             workStatus = workStatusUnique[0]
-        
+
         schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
         if schoolStatusUnique.shape[0] > 1:
             print 'School Status', schoolStatusUnique
@@ -219,13 +219,13 @@ class ChildDependencyProcessing(Model):
             raise Exception, "More than one values for status/dependency"
         else:
             childDependency = childDependencyUnique[0]
-        
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-	"""
+        """
         return workStatus, schoolStatus, childDependency
 
-        
+
 
 
 
@@ -237,19 +237,19 @@ from openamos.core.data_array import DataArray
 class TestReconcileModel(unittest.TestCase):
     def setUp(self):
         self.data = genfromtxt("/home/kkonduri/simtravel/test/mag_zone/schedule_txt.csv", delimiter=",", dtype=int)
-        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime', 
+        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime',
                     'endtime', 'duration']
         self.actSchedules = DataArray(self.data, colNames)
 
 
-        
+
 
     def test_retrieve_loop_ids(self):
         houseIdsCol = self.actSchedules.columns(['houseid']).data
         houseIdsUnique = unique(houseIdsCol)
         print houseIdsUnique
 
-        
+
         for hid in houseIdsUnique:
             schedulesRowsIndForHh = houseIdsCol == hid
             schedulesForHh = self.actSchedules.rowsof(schedulesRowsIndForHh)
@@ -260,7 +260,7 @@ class TestReconcileModel(unittest.TestCase):
             for pid in pIdsUnique:
                 schedulesRowIndForPer = pIdsCol == pid
                 schedulesForPerson = schedulesForHh.rowsof(schedulesRowIndForPer)
-            
+
                 #print 'Raw schedules for hid:%s and pid:%s' %(hid, pid)
                 #print schedulesForPerson
 
@@ -272,8 +272,8 @@ class TestReconcileModel(unittest.TestCase):
                     starttime = sch[5]
                     endtime = sch[6]
                     duration = sch[7]
-                    
-                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                                  starttime, endtime, duration)
                     activityList.append(actepisode)
                 personObject = Person(hid, pid)
@@ -283,9 +283,8 @@ class TestReconcileModel(unittest.TestCase):
         #pid = unique(self.actSchedules.columns(['houseid', 'personid']).
         #acts = self.actSchedules
 
-        #def 
+        #def
 
 
 if __name__ == "__main__":
     unittest.main()
-        

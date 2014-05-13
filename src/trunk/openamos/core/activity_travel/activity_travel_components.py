@@ -21,5 +21,3 @@ class HouseholdStructureInfo(object):
         return ("""Tablename - %s, keys - %s, %s"""\
                     """\n\tStructures - %s """
                 %(self.tableName, self.houseid, self.personid, self.structuresDict))
-
-    

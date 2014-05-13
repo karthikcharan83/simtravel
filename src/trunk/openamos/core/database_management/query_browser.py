@@ -1,8 +1,8 @@
 #main class. this class will be used to define the database connection.
 #it will create/drop database, schema and tables
- 
 
-#include all the import 
+
+#include all the import
 import sys
 import os
 import time
@@ -20,9 +20,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import class_mapper
 from sqlalchemy import schema, types
 from sqlalchemy.types import Integer, SmallInteger, \
-			     Numeric, Float, \
-			     VARCHAR, String, CLOB, Text,\
-			     Boolean, DateTime
+                             Numeric, Float, \
+                             VARCHAR, String, CLOB, Text,\
+                             Boolean, DateTime
 
 from database_configuration import DataBaseConfiguration
 from database_connection import DataBaseConnection
@@ -54,7 +54,7 @@ class TRIP(object): pass
 class PERSON_TRIP(object): pass
 
 class OFFICE(object): pass
- 
+
 class TEMP(object): pass
 
 class SCHOOL(object): pass
@@ -73,9 +73,9 @@ class SCHEDULE_R(object):pass
 class TRAVEL_SKIMS(object):pass
 
 class QueryBrowser(object):
-    
+
     ########## initialization ##########
-    #initialize the class 
+    #initialize the class
     def __init__(self, dbconfig):
 
         if not isinstance(dbconfig, DataBaseConfiguration):
@@ -101,23 +101,23 @@ class QueryBrowser(object):
         """
         self.dbcon_obj = DataBaseConnection(dbconfig)
         print self.dbcon_obj
-    
+
     ########## initialization ends ##########
 
     ########## methods for mapping ##########
-    
+
     #separate function for mapper
     def table_mapper(self, class_name, table_name):
         """
         This method is used to create a mapper to the table in the database
-        
+
         Input:
         Class name and Table name
-        
+
         Output:
         Creates a table mapper object
         """
-        
+
         #before creating the mapper check if the table exists
         self.table_name = table_name
         self.class_name = class_name
@@ -128,21 +128,21 @@ class QueryBrowser(object):
                 #print 'table name is %s and class name is %s'%(table_name, class_name)
                 #load the table
                 new_table = Table(self.table_name, self.dbcon_obj.metadata, autoload=True)
-                
+
                 #create mapper
-                class_name = class_name.upper()                
+                class_name = class_name.upper()
                 mapper(eval(class_name), new_table)
 
                 #create an object for the mapper
                 self.temp_object = eval(class_name)()
-                
+
                 #print the session and mapper object
                 #print 'the session object is %s and the mapper object is %s\n'%(self.dbcon_obj.session, self.temp_object)
                 return self.temp_object
             except Exception, e:
                 print 'Failed to create mapper'
                 print e
-                #raise Exception                                
+                #raise Exception
         else:
             print 'Table - %s does not exist in the database. Cannot create a mapper' %(table_name)
             return None
@@ -153,21 +153,21 @@ class QueryBrowser(object):
         """
         This method is used to create mapper objects for all the classes/tables
         This method calls the table_mapper method to map a table to a class
-        
+
         Input:
         None
-        
+
         Output:
-        Mapper objects for all classes        
+        Mapper objects for all classes
         """
-        
+
         #print 'map all the classes'
         """
         #for class Vechile
         class_name = 'VECHICLE'
         table_name = 'vehicle'
         self.vehicle = self.table_mapper(class_name, table_name)
-                
+
         #for class Links
         class_name = 'LINKS'
         table_name = 'links'
@@ -177,13 +177,13 @@ class QueryBrowser(object):
         class_name = 'LINK_OD'
         table_name = 'link_od'
         self.link_od = self.table_mapper(class_name, table_name)
-        
-        
+
+
         #for class Destination_Opportunities
         class_name = 'DESTINATION_OPPORTUNITIES'
         table_name = 'destination_opportunities'
         self.destination_opportunities = self.table_mapper(class_name, table_name)
-        
+
         #for class Person_Schedule
         class_name = 'PERSON_SCHEDULE'
         table_name = 'person_schedule'
@@ -193,12 +193,12 @@ class QueryBrowser(object):
         class_name = 'TRIP'
         table_name = 'trip'
         self.trip = self.table_mapper(class_name, table_name)
-        
+
         #for class Person_Trip
         class_name = 'PERSON_TRIP'
         table_name = 'person_trip'
         self.person_trip = self.table_mapper(class_name, table_name)
-        
+
         #for class Office
         class_name = 'OFFICE'
         table_name = 'office'
@@ -226,7 +226,7 @@ class QueryBrowser(object):
         class_name = 'PERSONS'
         table_name = 'persons'
         self.table_mapper(class_name, table_name)
-        
+
         # RUNTIME TABLES FOLLOW HERE
         class_name = 'PERSONS_R'
         table_name = 'persons_r'
@@ -238,13 +238,13 @@ class QueryBrowser(object):
 
         class_name = 'VEHICLES_R'
         table_name = 'vehicles_r'
-        self.table_mapper(class_name, table_name)        
+        self.table_mapper(class_name, table_name)
 
         #for class TSP
         class_name = 'TSP_R'
         table_name = 'tsp_r'
         self.table_mapper(class_name, table_name)
-        
+
         #for class Schedule
         class_name = 'SCHEDULE_R'
         table_name = 'schedule_r'
@@ -255,7 +255,7 @@ class QueryBrowser(object):
 
 
     ########## methods for select query ##########
-    
+
     #select all rows from the table
     def select_all_from_table(self, class_name):
         """
@@ -267,11 +267,11 @@ class QueryBrowser(object):
         Output:
         Returns all the rows in the table
         """
-        self.dbcon_obj.new_sessionInstance()                
+        self.dbcon_obj.new_sessionInstance()
         #get the column list for the table
         new_class_name = class_name.upper()
         new_table_name = new_class_name.lower()
-        
+
         col = []
         temp_table = Table(new_table_name, self.dbcon_obj.metadata, autoload=True)
         for cl in temp_table.c:
@@ -288,14 +288,14 @@ class QueryBrowser(object):
 
         print ' '
         """
-        #print 'sample_str is %s'%sample_str                
-        
+        #print 'sample_str is %s'%sample_str
+
         resultArray = self.createResultArray(query)
-            
+
         # Returns the query as a DataArray object
         data = DataArray(resultArray, cols_list)
 
-        self.dbcon_obj.close_sessionInstance()        
+        self.dbcon_obj.close_sessionInstance()
 
         return data
 
@@ -311,11 +311,11 @@ class QueryBrowser(object):
         Output:
         Returns the rows that satisfy the selection criteria
         """
-        
+
         #get the column list for the table
         new_class_name = class_name.upper()
         new_table_name = new_class_name.lower()
-        
+
         col = []
         temp_table = Table(new_table_name, self.dbcon_obj.metadata, autoload=True)
         #print 'table object is %s'%temp_table
@@ -331,40 +331,40 @@ class QueryBrowser(object):
             for each in query:
                 counter = counter + 1
                 row_list.append(each)
-                
+
             if counter == 0:
                 print 'No rows selected.\n'
             else:
                 for each_ins in row_list:
-                    print each_ins            
+                    print each_ins
             print 'Select query successful.\n'
             """
-            return query, col            
+            return query, col
         except:
             print 'Error retrieving the information. Query failed.\n'
 
 
     #select and print the join
-    def select_join(self, db_dict, column_names, table_names, max_dict=None, 
+    def select_join(self, db_dict, column_names, table_names, max_dict=None,
                     spatialConst_list=None, analysisInterval=None, subsample=None):
         """
         self, table1_list, table2_list, column_name
         This method is used to select the join of tables and display them.
-        
+
         Input:
         Database configuration object, table names, columns and values.
-        
-        DB_DICT {'households': ['htaz', 'numchild', 'inclt35k', 'hhsize'], 
-                 'persons': ['male', 'schstatus', 'one', 'houseid', 'personid'], 
+
+        DB_DICT {'households': ['htaz', 'numchild', 'inclt35k', 'hhsize'],
+                 'persons': ['male', 'schstatus', 'one', 'houseid', 'personid'],
                  'schedule_r': ['scheduleid', 'activitytype']}
-        COLUMN_NAMES {'households': ['houseid'], 
+        COLUMN_NAMES {'households': ['houseid'],
                       'schedule_r': ['personid', 'houseid']}
         TABLE_NAMES ['persons', 'households', 'schedule_r']
         MAX_DICT {'schedule_r': ['scheduleid']}
-        SPATIALCONST_LIST [Table - travel_skims; 
+        SPATIALCONST_LIST [Table - travel_skims;
                            Field - tt
-                           Orifin Field - origin; 
-                           Destination Field - destination; 
+                           Orifin Field - origin;
+                           Destination Field - destination;
                            Sample Field - destination
                            Start Constraint - Table - schedule_r; Location Field - locationid; Time Field - endtime
                            End Constraint - Table - schedule_r; Location Field - locationid; Time Field - starttime
@@ -375,28 +375,28 @@ class QueryBrowser(object):
 
          Test SQL String for above inputs:
          select households.htaz,households.numchild,households.inclt35k,households.hhsize,persons.male,persons.schstatus,persons.one,
-         persons.houseid,persons.personid,schedule_r.activitytype,temp.scheduleid,stl.locationid as st_locationid,enl.locationid 
-         as en_locationid,sptime.st_endtime,sptime.en_starttime from persons  left join households on 
-         ( persons.houseid=households.houseid ) left join (select personid,houseid, max(scheduleid) 
-         as scheduleid from schedule_r group by personid,houseid) as temp on 
-         ( temp.personid=persons.personid and temp.houseid=persons.houseid )  
-         left join schedule_r on 
-         ( persons.personid=schedule_r.personid and persons.houseid=schedule_r.houseid and schedule_r.scheduleid=temp.scheduleid) 
-         join (select st.personid personid,st.houseid houseid, min(st.endtime) st_endtime,min(en.starttime) 
-               en_starttime from schedule_r as st inner join schedule_r as en on 
-               (  st.personid = en.personid and st.houseid = en.houseid  and st.endtime=195 and en.starttime>195) 
-               group by st.personid,st.houseid) as sptime on ( sptime.personid = persons.personid and sptime.houseid = persons.houseid ) 
-               left join schedule_r stl on 
-               ( stl.personid = persons.personid and stl.houseid = persons.houseid and sptime.st_endtime = stl.endtime)  
-               left join schedule_r enl on 
-               ( enl.personid = persons.personid and enl.houseid = persons.houseid and sptime.en_starttime = enl.starttime) 
+         persons.houseid,persons.personid,schedule_r.activitytype,temp.scheduleid,stl.locationid as st_locationid,enl.locationid
+         as en_locationid,sptime.st_endtime,sptime.en_starttime from persons  left join households on
+         ( persons.houseid=households.houseid ) left join (select personid,houseid, max(scheduleid)
+         as scheduleid from schedule_r group by personid,houseid) as temp on
+         ( temp.personid=persons.personid and temp.houseid=persons.houseid )
+         left join schedule_r on
+         ( persons.personid=schedule_r.personid and persons.houseid=schedule_r.houseid and schedule_r.scheduleid=temp.scheduleid)
+         join (select st.personid personid,st.houseid houseid, min(st.endtime) st_endtime,min(en.starttime)
+               en_starttime from schedule_r as st inner join schedule_r as en on
+               (  st.personid = en.personid and st.houseid = en.houseid  and st.endtime=195 and en.starttime>195)
+               group by st.personid,st.houseid) as sptime on ( sptime.personid = persons.personid and sptime.houseid = persons.houseid )
+               left join schedule_r stl on
+               ( stl.personid = persons.personid and stl.houseid = persons.houseid and sptime.st_endtime = stl.endtime)
+               left join schedule_r enl on
+               ( enl.personid = persons.personid and enl.houseid = persons.houseid and sptime.en_starttime = enl.starttime)
 
 
 
         Output:
         Displays the rows based on the join and the selection criterion.
         """
-        self.dbcon_obj.new_sessionInstance()        
+        self.dbcon_obj.new_sessionInstance()
 
         print 'DB_DICT', db_dict
         print 'COLUMN_NAMES', column_names
@@ -406,13 +406,13 @@ class QueryBrowser(object):
         print 'ANALYSISINTERVAL', analysisInterval
         print 'SUBSAMPLE', subsample
 
-        #db_dict = {'households': ['urb', 'numchild', 'inclt35k', 'ownhome', 'one', 'drvrcnt', 'houseid'], 
-        #           'vehicles_r': ['vehtype', 'vehid'], 
+        #db_dict = {'households': ['urb', 'numchild', 'inclt35k', 'ownhome', 'one', 'drvrcnt', 'houseid'],
+        #           'vehicles_r': ['vehtype', 'vehid'],
         #           'households_r': ['numvehs']}
         #columns_names = ['houseid']
         #table_names = ['households', 'households_r', 'vehicles_r']
         #max_dict = {'vehicles_r':['vehid']}
-        
+
         # Prism Query or or just a Travel Time Query with Vertices
         # ADD APPROPRIATE JOIN/?INNER JOINS
 
@@ -429,8 +429,8 @@ class QueryBrowser(object):
         tabs_list = []
         #col_name = column_name
         final_col_list = db_dict.values()
-        table_list = db_dict.keys()      
-        
+        table_list = db_dict.keys()
+
         """
         #check if the table exists. If not return none
         if chk_table.lower() in [each.lower() for each in table_list]:
@@ -439,7 +439,7 @@ class QueryBrowser(object):
             print 'table %s is not present in the table list'%chk_table
             return None
         """
-        
+
         #similarly check if the table in the list exists
         num_tab = len(list(set(table_list) & set(table_names)))
         if num_tab <= len(table_list):
@@ -448,7 +448,7 @@ class QueryBrowser(object):
         else:
             #print 'Tables do not exists'
             return None
-        
+
         #check for the columns passed in the dictionary
         for i in db_dict.keys():
             clist = self.dbcon_obj.get_column_list(i.lower())
@@ -461,17 +461,17 @@ class QueryBrowser(object):
                 for j in db_dict[i]:
                     #print '\tColumn - ', j
                     new_str = i.lower() + '.' + j.lower()
-                    final_list.append(new_str)                    
+                    final_list.append(new_str)
             else:
                 print ('Column passed in the dictionary does not exist in the table - ')
                 print 'Column List in the Table - ', clist
                 print 'Actual List of Columns requested from table - ', list1
-                
+
                 return None
         #print 'final_list is %s'%final_list
-        
 
-                
+
+
         #print 'FINAL LIST', final_list
         #print 'TABLE LIST', table_list
 
@@ -490,11 +490,11 @@ class QueryBrowser(object):
                 continue
             joinCondition = ''
             for col in column_names[table]:
-                joinCondition = (joinCondition 
-                                 + ' %s.%s=%s.%s ' %(mainTable, col, 
-                                                     table, col) 
+                joinCondition = (joinCondition
+                                 + ' %s.%s=%s.%s ' %(mainTable, col,
+                                                     table, col)
                                  + 'and')
-                
+
             joinCondition = joinCondition[:-3]
             joinStr = ' left join %s on (%s)' %(table, joinCondition)
             joinStrList.append(joinStr)
@@ -502,7 +502,7 @@ class QueryBrowser(object):
         #print 'JOIN STRING LIST', joinStrList
 
         #check the max flag
-        
+
         if max_dict is not None:
             max_flag = 1
             max_table = max_dict.keys()
@@ -514,7 +514,7 @@ class QueryBrowser(object):
             max_flag = 0
 
         # Index of the table containing the max dict var
-        # as it stands only querying for one count variable is 
+        # as it stands only querying for one count variable is
         # provided
         #print max_dict
         if max_dict is not None:
@@ -522,7 +522,7 @@ class QueryBrowser(object):
             maxColumn = max_dict.values()[0][0]
             index = table_list.index(maxTable)
             #print 'INDEX--->', index
-        
+
             #remove the count column from the col list
             countVarStr = '%s.%s' %(maxTable, maxColumn)
             final_list.remove(countVarStr)
@@ -542,21 +542,21 @@ class QueryBrowser(object):
             for i in column_names[maxTable]:
                 #print 'createing join string for column name - ', i
                 grpStr = grpStr + '%s,' %(i)
-                joinCondition = (joinCondition 
-                                 + ' temp.%s=%s.%s ' %(i, 
-                                                       mainTable, i) 
+                joinCondition = (joinCondition
+                                 + ' temp.%s=%s.%s ' %(i,
+                                                       mainTable, i)
                                  + 'and')
             grpStr = grpStr[:-1]
             joinCondition = joinCondition[:-3]
-            
+
         #combine left join along with the count variable/max condition
             mJoinStr = joinStrList.pop(index-1)
-            mJoinStrIncMaxConditionVar = (mJoinStr[:-1] + 
-                                          'and %s.%s=temp.%s)' 
+            mJoinStrIncMaxConditionVar = (mJoinStr[:-1] +
+                                          'and %s.%s=temp.%s)'
                                           %(maxTable, maxColumn, maxColumn))
-            
+
             joinStrList.append(""" left join (select %s, max(%s) as %s from """
-                               """%s group by %s) as temp on (%s) """ %(grpStr, maxColumn, 
+                               """%s group by %s) as temp on (%s) """ %(grpStr, maxColumn,
                                                                         maxColumn,maxTable, grpStr,
                                                                         joinCondition)
                                + mJoinStrIncMaxConditionVar)
@@ -576,21 +576,21 @@ class QueryBrowser(object):
                     enTable = i.endConstraint.table
                     #enLocationField = 'en_' + i.endConstraint.locationField
                     enLocationCol = 'enl.%s' %i.endConstraint.locationField
-                    #enTimeField = 'en_' + i.endConstraint.timeField                    
+                    #enTimeField = 'en_' + i.endConstraint.timeField
                     enTimeCol = 'en.%s' %i.endConstraint.timeField
 
                     timeCols = [stTimeCol, enTimeCol]
 
                     table_list.append(stTable)
-                    
+
 
                     # left join for end location
-                    
+
                     # time cols are part of sptime
                     timeColsNewNames = []
                     for j in timeCols:
                         timeColsNewNames.append(j.replace('.', '_'))
-                        
+
                     timeColsStr = ''
                     for j in range(len(timeCols)):
                         # minimum of the time cols gives the first prism
@@ -610,7 +610,7 @@ class QueryBrowser(object):
                     for j in column_names[stTable]:
                         spInnerJoinCondition += ' %s.%s = %s.%s and' %('st', j, 'en', j)
                     spInnerJoinCondition = spInnerJoinCondition[:-3]
-                        
+
                     spJoinCondition = ''
                     for j in column_names[stTable]:
                         spJoinCondition += ' %s.%s = %s.%s and' %('sptime', j, mainTable, j)
@@ -618,7 +618,7 @@ class QueryBrowser(object):
 
                     # Left join condition for prism start location
                     stLocJoinCondition = ''
-                    stLocCondCols = column_names[stTable] 
+                    stLocCondCols = column_names[stTable]
                     for j in stLocCondCols:
                         stLocJoinCondition += ' %s.%s = %s.%s and' %('stl', j, mainTable, j)
                     stLocJoinCondition += ' sptime.st_%s = %s.%s' %(i.startConstraint.timeField,
@@ -631,23 +631,23 @@ class QueryBrowser(object):
 
                     # Left join condition for prism end location
                     enLocJoinCondition = ''
-                    enLocCondCols = column_names[stTable] 
+                    enLocCondCols = column_names[stTable]
                     for j in enLocCondCols:
                         enLocJoinCondition += ' %s.%s = %s.%s and' %('enl', j, mainTable, j)
                     enLocJoinCondition += ' sptime.en_%s = %s.%s' %(i.endConstraint.timeField,
                                                                'enl', i.endConstraint.timeField)
-                    final_list.append('enl.%s as en_%s' %(i.endConstraint.locationField, 
+                    final_list.append('enl.%s as en_%s' %(i.endConstraint.locationField,
                                                        i.endConstraint.locationField))
                     cols_list.append('en_%s' %i.endConstraint.locationField)
                     #enLocJoinCondition = enLocJoinCondition[:-3]
 
-                    
+
                     # TSP consistency check
                     # nextepisode_starttime > lastepisode_endtime
                     #consistencyStr = '%s < %s' %(stTimeCol, endTimeCol)
-                    
 
-                    analysisPeriodStr = ('%s=%s and %s>%s' 
+
+                    analysisPeriodStr = ('%s=%s and %s>%s'
                                          %(stTimeCol, analysisInterval,
                                            enTimeCol, analysisInterval))
 
@@ -657,8 +657,8 @@ class QueryBrowser(object):
                                           """on ( %s and %s) group by"""\
                                           """ %s) """\
                                           """as sptime on (%s)"""
-                                      % (spGrpNewNameStr, timeColsStr, 
-                                         stTable, 'st', 
+                                      % (spGrpNewNameStr, timeColsStr,
+                                         stTable, 'st',
                                          enTable, 'en',
                                          spInnerJoinCondition, analysisPeriodStr,
                                          spGrpStr,
@@ -668,61 +668,61 @@ class QueryBrowser(object):
                     # left join for start location
 
                     stLocJoinStr = (""" left join %s %s on """\
-                                        """(%s) """ 
+                                        """(%s) """
                                     %(stTable, 'stl', stLocJoinCondition))
 
 
                     enLocJoinStr = (""" left join %s %s on """\
-                                        """(%s) """ 
+                                        """(%s) """
                                     %(enTable, 'enl', enLocJoinCondition))
 
 
                     joinStrList.append(spatialJoinStr)
                     joinStrList.append(stLocJoinStr)
                     joinStrList.append(enLocJoinStr)
-                    
+
                     cols_list += timeColsNewNames
-                    
+
 
                     for i in timeColsNewNames:
                         final_list.append('sptime.%s' %(i))
                     # Only one time-space prism can be retrieved within a component
                     # there cannot be two TSP's in the same component
                     break
-                                         
-                                         
-                                         
-                    
-                    
-                    
+
+
+
+
+
+
         # Generating the col list
         colStr = ''
         for i in final_list:
             colStr = colStr + '%s,' %(i)
         colStr = colStr[:-1]
-        
+
         # Build the SQL string
         allJoinStr = ''
         for i in joinStrList:
             allJoinStr = allJoinStr + '%s' %i
-            
+
 
         sql_string = 'select %s from %s %s' %(colStr, mainTable, allJoinStr)
         print 'SQL string for query - ', sql_string
-            
+
 
 
         #convert all the table names to upper case
         for each in table_list:
             tabs_list.append(each.upper())
         #print 'tabs_list is %s'%tabs_list
-        
+
         #separate all the columns from the lists
         new_keys = db_dict.keys()
         for i in new_keys:
             cols_list = cols_list + db_dict[i]
         #print 'cols_list is %s'%cols_list
-        
+
         try:
             sample_str = ''
             ctr = 0
@@ -734,28 +734,28 @@ class QueryBrowser(object):
                     sample_str = sample_str + ', ' + i
                 query = self.dbcon_obj.session.query((sample_str))
 
-            #print 'sample_str is %s'%sample_str                
-                
+            #print 'sample_str is %s'%sample_str
+
             result = query.from_statement(sql_string).values(*cols_list)
-                        
+
             resultArray = self.createResultArray(result)
 
             # Returns the query as a DataArray object
             data = DataArray(resultArray, cols_list)
 
             data.sort(primCols)
-            self.dbcon_obj.close_sessionInstance()        
-        
+            self.dbcon_obj.close_sessionInstance()
+
             return data
         except Exception, e:
             print e
             print 'Error retrieving the information. Query failed.'
-                 
+
 
     ########## methods for select query end ##########
 
     ########## methods for delete query ##########
-    
+
     def createResultArray(self, result, fillValue=0):
         t = time.time()
 
@@ -773,10 +773,10 @@ class QueryBrowser(object):
         if mask.any():
             data[mask] = fillValue
 
-        #Sorting the array by primary cols identifying the agent as 
+        #Sorting the array by primary cols identifying the agent as
         # postgres seems to return queries without any order
-            
-        
+
+
         # Convert it back to a regular array to enable all the other processing
         print '\tSize of the data set that was retrieved - ', data.shape
         print '\tRecords were processed after query in %.4f' %(time.time()-t)
@@ -799,9 +799,9 @@ class QueryBrowser(object):
 
         print 'testing delete'
         new_class_name = class_name.upper()
-        
+
         new_table_name = new_class_name.lower()
-        
+
         col = []
         temp_table = Table(new_table_name, self.dbcon_obj.metadata, autoload=True)
         #print 'table object is %s'%temp_table
@@ -815,16 +815,16 @@ class QueryBrowser(object):
             #based on the count determine if any rows were selected
             if delete_query.count() == 0:
                 print 'No rows were fetched. Cannot complete delete operation.'
-            else:                
+            else:
                 for each_ins in delete_query:
                     #print 'each is %s'%each_ins
                     self.dbcon_obj.session.delete(each_ins)
             """
-            #print 'Selected rows delete successful.'                    
+            #print 'Selected rows delete successful.'
         except Exception, e:
             print e
             print 'Selected rows delete failed'
-        
+
 
     #delete all rows i.e. empty table
     def delete_all(self, class_name):
@@ -837,12 +837,12 @@ class QueryBrowser(object):
         Output:
         Deletes all rows in the table
         """
-        self.dbcon_obj.new_sessionInstance()        
+        self.dbcon_obj.new_sessionInstance()
         new_class_name = class_name.upper()
 
         new_table_name = new_class_name.lower()
         #print 'table name is %s and class name is %s'%(new_class_name, new_table_name)
-        
+
         #fetch al rows of the table and then delete
         col = []
         temp_table = Table(new_table_name, self.dbcon_obj.metadata, autoload=True)
@@ -862,7 +862,7 @@ class QueryBrowser(object):
                     self.dbcon_obj.session.delete(instance)
             """
             #print '\t    Delete all records successful.'
-            self.dbcon_obj.close_sessionInstance()        
+            self.dbcon_obj.close_sessionInstance()
         except Exception, e:
             print e
             print '\t    Delete all records failed.'
@@ -885,11 +885,11 @@ class QueryBrowser(object):
         Values inserted in to the table
         """
 
-    
+
         #method 4
         #before inserting data delete the index
         index_cols = self.delete_index(class_name.lower())
-        
+
         #make a string of the columns
         col_str = ''
         col_count = 0
@@ -925,7 +925,7 @@ class QueryBrowser(object):
 
 
     def insert_nrows(self, class_name, arr, col_str):
-        self.dbcon_obj.new_sessionInstance()        
+        self.dbcon_obj.new_sessionInstance()
         arr_str = str(arr)[1:-1]
         #print arr_str
 
@@ -933,19 +933,19 @@ class QueryBrowser(object):
             insert_stmt = "insert into %s (%s) values %s"%(class_name.lower(), col_str, arr_str)
             #print insert_stmt
             result = self.dbcon_obj.connection.execute(insert_stmt)
-            self.dbcon_obj.close_sessionInstance()        
+            self.dbcon_obj.close_sessionInstance()
         except Exception, e:
             print '\t    Error while inserting data in the table'
             print e.message
-        self.dbcon_obj.close_sessionInstance()        
-        
+        self.dbcon_obj.close_sessionInstance()
+
 
     ########## methods for insert query end ##########
-    
+
     ########## methods for creating and deleting index##########
     #create an index
     def create_index(self, class_name, col_list):
-        self.dbcon_obj.new_sessionInstance()        
+        self.dbcon_obj.new_sessionInstance()
         index_stmt = ''
         columns = ''
         count = 0
@@ -960,15 +960,15 @@ class QueryBrowser(object):
         try:
             self.result = self.dbcon_obj.connection.execute(index_stmt)
             #print '\t    Index %s created'%index_name
-            self.dbcon_obj.close_sessionInstance()        
+            self.dbcon_obj.close_sessionInstance()
         except Exception, e:
             print '\t    Error while creating an index'
             print e
 
-            
+
     #delete an index
     def delete_index(self, class_name):
-        self.dbcon_obj.new_sessionInstance()        
+        self.dbcon_obj.new_sessionInstance()
         index_stmt = ''
         columns = []
         count = 0
@@ -985,14 +985,14 @@ class QueryBrowser(object):
                 count = count + 1
             self.result = self.dbcon_obj.connection.execute(index_stmt)
             print '\t    Index %s deleted'%index_name
-            self.dbcon_obj.close_sessionInstance()        
+            self.dbcon_obj.close_sessionInstance()
             return columns
         except Exception, e:
             print '\t    Error while creating an index'
             print e
-        
+
     ########## methods for creating and deleting index##########
-    
+
 
 #unit test to test the code
 import unittest
@@ -1001,22 +1001,22 @@ import unittest
 class TestMainClass(unittest.TestCase):
     #only initialize objects here
     def setUp(self):
-        self.protocol = 'postgres'		
+        self.protocol = 'postgres'
         self.user_name = 'postgres'
         self.password = '1234'
         self.host_name = 'localhost'
         self.database_name = 'postgres'
 
-    
+
     def testMainClass(self):
         newobject = MainClass(self.protocol, self.user_name, self.password, self.host_name, self.database_name)
         #newobject = MainClass(self.protocol, self.user_name, self.password, self.host_name, self.database_name, self.database_config_object, self.dbcon_obj)
         """ create a connection to the database """
         newobject.dbcon_obj.new_connection()
-        
+
         """ create mapper objects for all classes """
         newobject.create_mapper_for_all_classes()
-        
+
         """ to select all rows from the table """
         class_name = 'School'
         #newobject.select_all_fom_table(class_name)
@@ -1040,7 +1040,7 @@ class TestMainClass(unittest.TestCase):
 
         newobject.select_join(db_dict, column_names, table_names, max_dict)
         #newobject.select_join(temp_dict, column_name, chk_table)
-        
+
         """ delete all records """
         class_name = 'School'
         #newobject.delete_all(class_name)
@@ -1050,27 +1050,27 @@ class TestMainClass(unittest.TestCase):
         col_name = 'teacher'
         value = 'ab'
         #newobject.delete_selected_rows(class_name, col_name, value)
-        
+
         """ to select all rows from the table """
         class_name = 'School'
         #newobject.select_all_fom_table(class_name)
-        
+
         """ to insert rows """
         class_name = 'Person2'
         arr = na.arange(1000000).reshape(500000,2)
         col_list = ['age', 'id']
         #print arr
-        newobject.insert_into_table(arr, col_list, class_name)        
-        
+        newobject.insert_into_table(arr, col_list, class_name)
+
         """ create an index """
         class_name = 'Person2'
         col_list = ['id', 'age']
         #newobject.create_index(class_name, col_list)
-        
+
         """ delete an index """
         class_name = 'Person2'
         #newobject.delete_index(class_name)
-        
+
         """ close the connection to the database """
         newobject.dbcon_obj.close_connection()
 

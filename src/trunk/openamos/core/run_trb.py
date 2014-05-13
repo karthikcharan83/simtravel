@@ -124,4 +124,3 @@ if __name__ == "__main__":
     os.system("python /workspace/misc/stats.py")
     os.system("mv /workspace/misc/worker.txt /workspace/projects/mag_zone_dynamic/year_2009/iteration_16/worker.txt")
     os.system("mv /workspace/misc/non-worker.txt /workspace/projects/mag_zone_dynamic/year_2009/iteration_16/worker.txt")
-

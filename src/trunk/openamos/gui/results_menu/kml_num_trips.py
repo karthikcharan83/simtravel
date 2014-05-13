@@ -15,7 +15,7 @@ from openamos.gui.misc.basic_widgets import *
 import sys,math,random,time
 from lxml import etree
 from copy import deepcopy
-from datetime import date #datetime, 
+from datetime import date #datetime,
 
 XHTML_NAMESPACE = "http://www.google.com/kml/ext/2.2"
 
@@ -23,7 +23,7 @@ class kml_trips(QDialog):
     '''
     classdocs
     '''
-    
+
     def __init__(self, config, parent = None):
         QDialog.__init__(self, parent)
         '''
@@ -33,10 +33,10 @@ class kml_trips(QDialog):
         self.setMinimumSize(QSize(400,350))
         self.setWindowTitle("Save Travel or Activity Characteristics in KML")
         self.setWindowIcon(QIcon("./images/run.png"))
-        
+
         pagelayout = QVBoxLayout()
         self.setLayout(pagelayout)
-        
+
         segment = QGroupBox(self)
         addsegment = QHBoxLayout()
         segment.setLayout(addsegment)
@@ -45,7 +45,7 @@ class kml_trips(QDialog):
         self.actiradio = QRadioButton("Activity Characteristics")
         addsegment.addWidget(self.tripradio)
         addsegment.addWidget(self.actiradio)
-        
+
         self.fromtobox = QGroupBox(self)
         addfromto = QHBoxLayout()
         self.fromtobox.setLayout(addfromto)
@@ -54,25 +54,25 @@ class kml_trips(QDialog):
         self.toradio = QRadioButton("Destination Zone")
         addfromto.addWidget(self.fromradio)
         addfromto.addWidget(self.toradio)
-        
+
         dbinputbox = QGroupBox("")
         vbox = QVBoxLayout()
         dbinputbox.setLayout(vbox)
-        
+
         filelabel = QLabel("Select Folder and Type KML name")
         kmlwidget = QWidget(self)
         kmllayout = QHBoxLayout()
         kmllayout.setContentsMargins(0,0,0,0)
         kmlwidget.setLayout(kmllayout)
-        
+
         self.kmlname = LineEdit()
         self.kmlname.setDisabled(True)
         kmllayout.addWidget(self.kmlname)
         self.kmlbutton = QPushButton('...')
         self.kmlbutton.setMaximumWidth(30)
         kmllayout.addWidget(self.kmlbutton)
-        
-        activitylabel = QLabel("Select Activity Type")       
+
+        activitylabel = QLabel("Select Activity Type")
         self.activitieswidget = QListWidget()
         self.activitieswidget.setSelectionMode(QAbstractItemView.MultiSelection)
         self.activitieswidget.setMaximumWidth(300)
@@ -84,16 +84,16 @@ class kml_trips(QDialog):
             activities.append(active)
         activities.sort()
         self.activitieswidget.addItems(activities)
-        
+
         self.isAll = QCheckBox("Check to select all activities.")
-        
+
         vbox.addWidget(self.fromtobox)
         vbox.addWidget(filelabel)
         vbox.addWidget(kmlwidget)
         vbox.addWidget(activitylabel)
         vbox.addWidget(self.activitieswidget)
         vbox.addWidget(self.isAll)
-        
+
         progresswidget = QWidget(self)
         progresslayout = QHBoxLayout()
         progresswidget.setLayout(progresslayout)
@@ -103,7 +103,7 @@ class kml_trips(QDialog):
         progresslayout.addWidget(self.progresslabel)
         progresslayout.addWidget(self.dialogButtonBox)
         progresslayout.setContentsMargins(0,0,0,0)
-        
+
         pagelayout.addWidget(segment)
         pagelayout.addWidget(dbinputbox)
         pagelayout.addWidget(progresswidget)
@@ -117,25 +117,25 @@ class kml_trips(QDialog):
 
 
     def connects(self):
-#        protocol = 'postgres'        
+#        protocol = 'postgres'
 #        user_name = 'postgres'
 #        password = 'Dyou65221'
 #        host_name = 'localhost'
 #        database_name = 'mag_zone'
-        protocol = self.configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)        
+        protocol = self.configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)
         user_name = self.configobject.getConfigElement(DB_CONFIG,DB_USER)
         password = self.configobject.getConfigElement(DB_CONFIG,DB_PASS)
         host_name = self.configobject.getConfigElement(DB_CONFIG,DB_HOST)
         database_name = self.configobject.getConfigElement(DB_CONFIG,DB_NAME)
-        
+
         self.database_config_object = DataBaseConfiguration(protocol, user_name, password, host_name, database_name)
         self.new_obj = DataBaseConnection(self.database_config_object)
         self.new_obj.new_connection()
 
     def disconnects(self):
         self.new_obj.close_connection()
-        
-        
+
+
     def save_folder(self):
         dialog = QFileDialog()
         filename = dialog.getSaveFileName(self,"Save KML","","KML file (*.kml)")
@@ -146,13 +146,13 @@ class kml_trips(QDialog):
         if self.isAll.isChecked():
             for i in range(self.activitieswidget.count()):
                 temp = self.activitieswidget.item(i)
-                temp.setSelected(True)  
+                temp.setSelected(True)
         else:
             for i in range(self.activitieswidget.count()):
                 temp = self.activitieswidget.item(i)
-                temp.setSelected(False)              
+                temp.setSelected(False)
 
-        
+
     def kml_name(self, filename):
         parse = ""
         if filename.find("/"):
@@ -167,7 +167,7 @@ class kml_trips(QDialog):
         t1 = time.time()
         self.progresslabel.setText("Processing....")
         self.repaint()
-        
+
         filename = str(self.kmlname.text())
         try:
 
@@ -175,7 +175,7 @@ class kml_trips(QDialog):
                 self.new_obj = None
                 self.connects()
                 self.cursor = self.new_obj.cursor
-                
+
                 self.fieldname = []
                 NSMAP = {'gx' : XHTML_NAMESPACE} # the default namespace (no prefix)
                 xhtml = etree.Element("kml", nsmap=NSMAP)
@@ -183,11 +183,11 @@ class kml_trips(QDialog):
                 name = etree.SubElement(docu, "name")
                 name.text = str(self.kml_name(filename))
                 self.overlay(docu)
-        
+
                 index = 1
                 for i in range(index):
                     self.draw_line_poly(docu,i)
-                    
+
                 folder1 = etree.SubElement(docu,"Folder")
                 name_fold1 = etree.SubElement(folder1,"name")
                 if self.tripradio.isChecked():
@@ -196,14 +196,14 @@ class kml_trips(QDialog):
                     name_fold1.text = "Activity_Zones"
                 self.putschema(folder1)
                 self.place_boundary(folder1)
-                  
+
                 folder2 = etree.SubElement(docu,"Folder")
                 name_fold2 = etree.SubElement(folder2,"name")
                 if self.tripradio.isChecked():
                     name_fold2.text = "Trip_Frequencies_Zones"
                 else:
                     name_fold2.text = "Activity_Frequencies_Zones"
-                
+
                 self.table = ""
                 self.zoneid = ""
                 if self.tripradio.isChecked():
@@ -215,29 +215,29 @@ class kml_trips(QDialog):
                 else:
                     self.table = "schedule_full_r"
                     self.zoneid = "locationid"
-                    
+
                 for i in range(48):
                     start = i*30
                     end = i*30 + 30
                     self.place_icon(folder2,start,end)
-                  
-                newkml = etree.ElementTree(xhtml)
-                newkml.write(filename,pretty_print=True) 
 
-                f = open(filename,"r+") 
+                newkml = etree.ElementTree(xhtml)
+                newkml.write(filename,pretty_print=True)
+
+                f = open(filename,"r+")
                 old = f.read() # read everything in the file
                 f.seek(0)
-                f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + old) # write the new line before 
+                f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + old) # write the new line before
                 f.close()
-            
-            
+
+
             t2 = time.time()
             print 'time taken is ---> %s'%(t2-t1)
-            
+
             QMessageBox.information(self, "",
-                            QString("""KML importing is successful"""), 
+                            QString("""KML importing is successful"""),
                             QMessageBox.Yes)
-            
+
         except Exception, e:
             print '\tError while creating the KML file'
             print e
@@ -328,11 +328,11 @@ class kml_trips(QDialog):
         col_line.text = str(selcolor[1])
         width = etree.SubElement(line, "width")
         width.text = '2'
-        
+
         poly = etree.SubElement(style,"PolyStyle")
         col_poly = etree.SubElement(poly,"color")
         col_poly.text = str(selcolor[1])
-        
+
         style = etree.SubElement(docu, "Style")
         style.set("id","boundary")
         line = etree.SubElement(style, "LineStyle")
@@ -340,7 +340,7 @@ class kml_trips(QDialog):
         col_line.text = str("ff0000ff")
         width = etree.SubElement(line, "width")
         width.text = '1'
-        
+
         poly = etree.SubElement(style,"PolyStyle")
         fill = etree.SubElement(poly,"fill")
         fill.text = "0"
@@ -373,7 +373,7 @@ class kml_trips(QDialog):
 
 
     def place_polygon(self,folder,i,start,endtime):
-        place = etree.SubElement(folder,"Placemark")        
+        place = etree.SubElement(folder,"Placemark")
         name = etree.SubElement(place,"name")
         name.text = " "
 
@@ -400,14 +400,14 @@ class kml_trips(QDialog):
 #        while isColor:
 #            color = color + 1
 #            if upper >= trips and lower <= trips:
-#                isColor = False 
+#                isColor = False
 #            upper = upper - inter
 #            lower = lower - inter
-        
+
         style = etree.SubElement(place,"styleUrl")
         style.text = "#colors"
-        
-        
+
+
 #        extend = etree.SubElement(place,"ExtendedData")
 #        schema = etree.SubElement(extend,"SchemaData")
 #        schema.set("schemaUrl","#TAZs_Project_Feature")
@@ -416,8 +416,8 @@ class kml_trips(QDialog):
 #            Simple = etree.SubElement(schema,"SimpleData")
 #            Simple.set("name",str(self.fieldname[j]))
 #            Simple.text = str(i[j+3])
-        
-        
+
+
         poly = etree.SubElement(place,"Polygon")
         extrude = etree.SubElement(poly,"extrude")
         extrude.text = "1"
@@ -425,23 +425,23 @@ class kml_trips(QDialog):
         altitude.text = "relativeToGround"
         outer = etree.SubElement(poly,"outerBoundaryIs")
         linering = etree.SubElement(outer,"LinearRing")
-        
+
         coord = etree.SubElement(linering,"coordinates")
         xy = points.split(",")
         x = float(xy[0])
         y = float(xy[1])
         z = trips * 20
-        
+
         coords = "%f,%f,%d " %(x-0.003,y-0.003,z)
         coords = coords + "%f,%f,%d " %(x+0.003,y-0.003,z)
         coords = coords + "%f,%f,%d " %(x+0.003,y+0.003,z)
         coords = coords + "%f,%f,%d " %(x-0.003,y+0.003,z)
         coords = coords + "%f,%f,%d" %(x-0.003,y-0.003,z)
-        
+
         coord.text = coords
 
     def place_empty(self,folder,start,endtime):
-        place = etree.SubElement(folder,"Placemark")        
+        place = etree.SubElement(folder,"Placemark")
         name = etree.SubElement(place,"name")
         name.text = " "
 
@@ -453,7 +453,7 @@ class kml_trips(QDialog):
 
         style = etree.SubElement(place,"styleUrl")
         style.text = "#colors"
-        
+
 #        poly = etree.SubElement(place,"Polygon")
 #        extrude = etree.SubElement(poly,"extrude")
 #        extrude.text = "1"
@@ -463,7 +463,7 @@ class kml_trips(QDialog):
 #        linering = etree.SubElement(outer,"LinearRing")
 #        coord = etree.SubElement(linering,"coordinates")
 
-        
+
 
 
     def origin_time(self,itime):
@@ -477,20 +477,20 @@ class kml_trips(QDialog):
         else:
             temp = (itime - 1200)/60
             hour = "%d" %(temp)
-            
+
         otime = "%sT%s:00:00Z" %(date.today(),hour)
         return otime
-    
-    
+
+
     def putschema(self,folder):
         schema = etree.SubElement(folder, "Schema")
         schema.set("name","TAZs_Project_Feature")
         schema.set("id","TAZs_Project_Feature")
-        
+
         SQL = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name='shape_zone'"
         self.cursor.execute(SQL)
         temp = self.cursor.fetchall()
-        
+
         for i in temp:
             name = str(i[0])
             dtype = str(i[1])
@@ -502,7 +502,7 @@ class kml_trips(QDialog):
             elif dtype.find("numeric") > -1 or dtype.find("double") > -1 or dtype.find("float") > -1:
                 etype = "float"
 
-            if etype <> "":     
+            if etype <> "":
                 field = etree.SubElement(schema, "SimpleField")
                 field.set("name",name)
                 field.set("type",etype)
@@ -516,10 +516,10 @@ class kml_trips(QDialog):
         tazdata = self.cursor.fetchall()
 
         for i in tazdata:
-            place = etree.SubElement(folder,"Placemark")        
+            place = etree.SubElement(folder,"Placemark")
             name = etree.SubElement(place,"name")
             name.text = " "
-    
+
             points = str(i[0])
             points = points.replace("<MultiGeometry>","")
             points = points.replace("</MultiGeometry>","")
@@ -531,28 +531,28 @@ class kml_trips(QDialog):
             points = points.replace("</LinearRing>","")
             points = points.replace("<coordinates>","")
             points = points.replace("</coordinates>","")
-    
+
             style = etree.SubElement(place,"styleUrl")
             style.text = "#boundary"
-            
+
             extend = etree.SubElement(place,"ExtendedData")
             schema = etree.SubElement(extend,"SchemaData")
             schema.set("schemaUrl","#TAZs_Project_Feature")
-    
+
             for j in range(len(self.fieldname)):
                 Simple = etree.SubElement(schema,"SimpleData")
                 Simple.set("name",str(self.fieldname[j]))
                 Simple.text = str(i[j+1])
-            
+
             poly = etree.SubElement(place,"Polygon")
             outer = etree.SubElement(poly,"outerBoundaryIs")
             linering = etree.SubElement(outer,"LinearRing")
             coord = etree.SubElement(linering,"coordinates")
-            
+
             coords = "%s" %(points)
             coord.text = coords
-            
-        
+
+
     def choosecolor(self):
         color = ["colors"]
         code = ["d7701919","d7ed9564","d7eeff66","d7ffff00","d76030b0","d7ee687b","d70000ff","d70000b3",
@@ -560,7 +560,7 @@ class kml_trips(QDialog):
                 "d7006400","d700fc7c","d7000000","d78b3d48","d72f6b55","d732cd32","d76bb7bd","d7a09e5f",
                 "d700ffff","d700d7ff","d70b86b8","d70045ff","d7008cff","d79314ff","d78515c7","d7db7093",
                 "d7c9c9cd","d7b0c0cd","d7b7d5ee","d765778b","d7e0eeee","d7e0eef4","d7838b83","d7cd0000"]
-        
+
         i = 0
         if len(self.activitieswidget.selectedItems()) > 1:
             i = random.randint(0,38)
@@ -583,7 +583,7 @@ class kml_trips(QDialog):
             513:'OH-Social Visit',514:'OH-Sports/Rec',
             600:'Pick Up',601:'Drop Off',
             900:'OH-Other'}
-        
+
         return activitytype
 
 
@@ -609,7 +609,7 @@ class kml_trips(QDialog):
 #        parser = etree.XMLParser(remove_blank_text=True)
 #        self.kml = etree.parse('C:\Documents and Settings\dhyou\My Documents\SimTRAVEL\KML\dd.kml',parser)
 #
-#        
+#
 #        docuelt = self.kml
 #        for comp in docuelt.getiterator('kml'):
 #            print comp.nsmap
@@ -619,14 +619,14 @@ class kml_trips(QDialog):
 #            print comp.get("id")
 #            if str(comp.get("id")) == "sn_noicon":
 #                comp.set("id", str("noicon"))
-#        
+#
 #        self.kml.write('C:\Documents and Settings\dhyou\My Documents\SimTRAVEL\KML\dd.kml', pretty_print=True)
-#        
-#        
+#
+#
 #        f = open("C:\Documents and Settings\dhyou\My Documents\SimTRAVEL\KML\dd.kml", "r+")
 #        old = f.read() # read everything in the file
 #        f.seek(0) # rewind
-#        f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + old) # write the new line before 
+#        f.write('<?xml version="1.0" encoding="UTF-8"?>\n' + old) # write the new line before
 #        f.close()
 #
 #
@@ -642,7 +642,7 @@ class kml_trips(QDialog):
 
 
 
-         
+
 
 def main():
     app = QApplication(sys.argv)
@@ -652,8 +652,8 @@ def main():
 
 if __name__=="__main__":
     main()
-    
-    
+
+
 
 #    def chooseicon(self,i):
 #        iconnames = ["site-home","site-work","site-school","site-business","site-shop",
@@ -670,15 +670,15 @@ if __name__=="__main__":
 #                    "http://maps.google.com/mapfiles/kml/shapes/donut.png",
 #                    "C:/Documents and Settings/dhyou/My Documents/SimTRAVEL/KML/09_02_osa_icons_png/osa_arrow_green_left.png",
 #                    "C:/Documents and Settings/dhyou/My Documents/SimTRAVEL/KML/09_02_osa_icons_png/osa_arrow_yellow_right.png"]
-#        
-#        
+#
+#
 #        choose = []
 #        choose.append(iconnames[i])
 #        choose.append(iconaddr[i])
-#        
+#
 #        return choose
 
-    
+
 #    def place_line(self,folder,tazdata):
 #        place = etree.SubElement(folder,"Placemark")
 #        name = etree.SubElement(place,"name")
@@ -687,19 +687,19 @@ if __name__=="__main__":
 #        descript.text = "HouseID:14787 PersonID:1"
 #        style = etree.SubElement(place,"styleUrl")
 #        style.text = "#yellowLine"
-#        
+#
 #        line = etree.SubElement(place,"LineString")
 #        tessel = etree.SubElement(line,"tessellate")
 #        tessel.text = "1"
 #        altitude = etree.SubElement(line,"altitudeMode")
 #        altitude.text = "relativeToGround"
-#        
+#
 #        coord = etree.SubElement(line,"coordinates")
-#        
+#
 #        coordinates = ""
 #        for i in range(len(tazdata)-1):
 #            stay = tazdata[i][4] + "," + tazdata[i][5] + ",0 "
-#            move = tazdata[i+1][4] + "," + tazdata[i+1][5] + ",0 " 
+#            move = tazdata[i+1][4] + "," + tazdata[i+1][5] + ",0 "
 #            coordinates = coordinates + stay + move
-#        
+#
 #        coord.text = coordinates

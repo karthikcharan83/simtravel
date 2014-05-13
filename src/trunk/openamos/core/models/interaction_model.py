@@ -9,8 +9,8 @@ class InteractionModel(Model):
 
     def calculate_expected_values(self, data):
         """
-        The method returns the product using the coefficients 
-        in the specification input as power. 
+        The method returns the product using the coefficients
+        in the specification input as power.
 
         Inputs:
         data - DataArray object
@@ -18,18 +18,18 @@ class InteractionModel(Model):
         num_choices = self.specification.number_choices
         expected_value_array = DataArray(zeros((data.rows, num_choices)),
                                          self.choices)
-	self.inverse = self.specification.inverse[0]
+        self.inverse = self.specification.inverse[0]
         for i in range(num_choices):
             coefficients = self.coefficients[i]
             expected_value_array.data[:,i] = data.calculate_product(coefficients, inverse=self.inverse)
         return expected_value_array
-        
+
 
     def calc_predvalue(self, data, seed=1):
         """
-        The method returns evaluates the product for the 
+        The method returns evaluates the product for the
         different choices using the coefficients in the specification
-        input as power. 
+        input as power.
 
         Inputs:
         data - DataArray object
@@ -48,16 +48,16 @@ class TestInteractionModel(unittest.TestCase):
     def setUp(self):
         choice = ['age_tt_product']
         coefficients = [{'age':1, 'tt':1}]
-        
+
         data = array([[1,15],[2,10]])
-        
+
         self.data = DataArray(data, ['Age', 'TT'])
         self.specification = Specification(choice, coefficients)
 
     def testvalues(self):
         model = InteractionModel(self.specification)
         pred_value = model.calc_predvalue(self.data)
-        
+
         pred_act = self.data.calculate_product(self.specification.coefficients[0])
 
         pred_diff = all(pred_value.data[:,0] == pred_act)
@@ -66,4 +66,3 @@ class TestInteractionModel(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    

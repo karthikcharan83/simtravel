@@ -10,9 +10,9 @@ class CountRegressionModel(Model):
     """
     The is the base class for count regression models in OpenAMOS. The class
     implements both poisson and negative-binomial regression models.
-    
+
     Inputs:
-    count_specification - CountSpecification object 
+    count_specification - CountSpecification object
     """
     def __init__(self, count_specification):
         if not isinstance(count_specification, CountSpecification):
@@ -27,20 +27,20 @@ class CountRegressionModel(Model):
         """
         The method returns the expected values for the different choices using
         the coefficients specified in the specification input.
-        
+
         Inputs:
         data - DataArray object
         """
-        
+
         return data.calculate_equation(self.coefficients[0])
 
     def calc_probabilities(self, data):
         """
         The method returns the probabilities for the different count alternatives
-        for the choice variable under consideration. Based on whether 
-        model is specified as poisson/negative-binomial, the appropriate 
+        for the choice variable under consideration. Based on whether
+        model is specified as poisson/negative-binomial, the appropriate
         probabilities are calculated.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -67,17 +67,17 @@ class CountRegressionModel(Model):
         """
         The method returns the chosen alternaitve among the count choices
         for the choice variable under consideration
-        
+
         Inputs:
         data - DataArray object
         """
-        
-        probabilities = DataArray(self.calc_probabilities(data), 
+
+        probabilities = DataArray(self.calc_probabilities(data),
                                   self.specification.choices)
-        prob_model = AbstractProbabilityModel(probabilities, 
+        prob_model = AbstractProbabilityModel(probabilities,
                                               self.specification.seed)
         return prob_model.selected_choice()
-        
+
 
 import unittest
 from openamos.core.data_array import DataArray
@@ -88,12 +88,12 @@ class TestBadInputCountRegressionModel(unittest.TestCase):
         coefficients = [{'Constant':2, 'Var1':2.11}]
         data = array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]])
         self.data = DataArray(data, ['CONSTANT', 'VAR1'])
-        
+
         self.specification = CountSpecification(choices, coefficients)
         self.specification1 = [choices, coefficients]
 
     def testspecification(self):
-        self.assertRaises(SpecificationError, CountRegressionModel, 
+        self.assertRaises(SpecificationError, CountRegressionModel,
                           self.specification1)
 
 
@@ -104,10 +104,10 @@ class TestCountRegressionModel(unittest.TestCase):
         self.coefficients = [{'Constant':2, 'Var1':2.11}]
         data = array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]])
         self.data = DataArray(data, ['CONSTANT', 'VAR1'])
-        
+
         self.specification = CountSpecification(choices, self.coefficients)
         self.model = CountRegressionModel(self.specification)
-        
+
     def testprobabilitiespoisson(self):
         prob = zeros((4,3))
         exp_value = self.data.calculate_equation(self.coefficients[0])
@@ -120,7 +120,7 @@ class TestCountRegressionModel(unittest.TestCase):
         self.assertEqual(True, prob_diff)
 
     def testselectionpoisson(self):
-        choice_act = array([['episodes3'], ['episodes3'], ['episodes1'], 
+        choice_act = array([['episodes3'], ['episodes3'], ['episodes1'],
                             ['episodes2']])
         choice_model = self.model.calc_chosenalternative(self.data)
         choice_diff = all(choice_act == choice_model)

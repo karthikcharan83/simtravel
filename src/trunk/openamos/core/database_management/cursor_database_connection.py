@@ -1,8 +1,8 @@
 #main class. this class will be used to define the database connection.
 #it will create/drop database, schema and tables
- 
 
-#include all the import 
+
+#include all the import
 import traceback
 import sys
 import os
@@ -13,9 +13,9 @@ import sqlalchemy
 from psycopg2 import extensions
 from sqlalchemy.schema import MetaData, Column, Table
 from sqlalchemy.types import Integer, SmallInteger, \
-			     Numeric, Float, \
-			     VARCHAR, String, CLOB, Text,\
-			     Boolean, DateTime
+                             Numeric, Float, \
+                             VARCHAR, String, CLOB, Text,\
+                             Boolean, DateTime
 
 from database_configuration import DataBaseConfiguration
 
@@ -42,12 +42,12 @@ class DataBaseConnection(object):
         self.host_name = dbconfig.host_name
         self.database_name = dbconfig.database_name
 
-    
+
     #checks if the database engine is installed
     def check_if_database_engine_exits(self):
         """
         This method checks if the database engine has been installed.
-        The types of databases checked are as below. The installed 
+        The types of databases checked are as below. The installed
         engines are stored in an array.
 
         Input:
@@ -76,13 +76,13 @@ class DataBaseConnection(object):
             raise Exception('Required database is not installed')
             sys.exit()
 
-    
-    #checks if the database exists			
+
+    #checks if the database exists
     def check_if_database_exists(self):
         """
-        This method opens a raw connection to the postgres database 
-        and checks if the database name passed by the database 
-        configuration object already exists or not. If the database 
+        This method opens a raw connection to the postgres database
+        and checks if the database name passed by the database
+        configuration object already exists or not. If the database
         does not exists the database is created by another method.
 
         Input:
@@ -90,10 +90,10 @@ class DataBaseConnection(object):
 
         Output:
         Returns a boolean value indicating the database exists or not.
-        """		
-		
         """
-        Before checking for database check if the database engine 
+
+        """
+        Before checking for database check if the database engine
         is installed or not. If database is not installed then exit.
         """
         installed_db = self.check_if_database_engine_exits()
@@ -118,7 +118,7 @@ class DataBaseConnection(object):
                 #create a cursor
                 self.cursor = self.connection.cursor()
                 self.cursor.execute("select datname from pg_database")
-                
+
                 dbs = [db[0] for db in self.cursor.fetchall()]
                 database_flag = self.database_name in dbs
 
@@ -143,18 +143,18 @@ class DataBaseConnection(object):
     #this function creates a new database
     def create_database(self, new_database):
         """
-        This method creates a new database by the database name passed 
+        This method creates a new database by the database name passed
         in the database configuration object.
-    
+
         Input:
         Database name
-        
+
         Output:
         Database created if it does not exists
         """
 
         db_flag = self.check_if_database_exists()
-	print 'new database is %s'%new_database
+        print 'new database is %s'%new_database
         #db_flag = 0
         if not db_flag:
         #since the database does not exist we create a new database.
@@ -181,16 +181,16 @@ class DataBaseConnection(object):
     def drop_database(self):
         """
         This method is used to drop the database.
-    
+
         Input:
         Database name
-    
+
         Output:
         Database dropped and boolean returned
         """
-    
+
         #Before dropping the database check if the database exists or not
-        db_flag = self.check_if_database_exists()		
+        db_flag = self.check_if_database_exists()
         if db_flag:
             try:
                 self.connection = dbapi2.connect("host=%s user=%s password=%s port=5432"%(self.host_name, self.user_name, self.password))
@@ -203,16 +203,16 @@ class DataBaseConnection(object):
         else:
             print 'Database does not exists. Cannot drop database.'
 
-    
+
     #get the list of databases
     def get_list_databases(self):
         """
-        This method is used to get the list of all the databases for the 
+        This method is used to get the list of all the databases for the
         database engine
-        
+
         Input:
         Database configuration object
-        
+
         Output:
         List of databases present.
         """
@@ -233,7 +233,7 @@ class DataBaseConnection(object):
                 #create a cursor
                 self.cursor = self.connection.cursor()
                 self.cursor.execute("select datname from pg_database")
-                
+
                 dbs = [db[0] for db in self.cursor.fetchall()]
                 self.cursor.close()
                 self.connection.close()
@@ -242,29 +242,29 @@ class DataBaseConnection(object):
                 self.cursor.close()
                 self.connection.close()
                 print e
-    
-    
+
+
     #create a new connection with the database name
     def new_connection(self):
         """
-        This method creates a new connection to the database with the databse name. 
-        This method is used to create a new connection that will be furthur used 
+        This method creates a new connection to the database with the databse name.
+        This method is used to create a new connection that will be furthur used
         for data manipulation.
 
-        Input:  
+        Input:
         Database configuration object
-    
+
         Output:
         New connection created
         """
-        
+
         #before connecting to the database check if the database exists
         db_flag = self.check_if_database_exists()
         if db_flag:
             #create a connection and try to establish a session with the database
             try:
                 self.connection = dbapi2.connect("host=%s dbname=%s user=%s password=%s port=5432"
-                                                 %(self.host_name, self.database_name, 
+                                                 %(self.host_name, self.database_name,
                                                    self.user_name, self.password))
                 self.cursor = self.connection.cursor()
                 print 'New connection created.\n'
@@ -274,12 +274,12 @@ class DataBaseConnection(object):
         else:
             print 'Database %s does not exists. Cannot create connection to the database'%self.database_name
 
-    
-    #close the connection            
+
+    #close the connection
     def close_connection(self):
         """
         This method is used to close the database connection.
-    
+
         Input:
         Database configuration object
 
@@ -302,9 +302,9 @@ class DataBaseConnection(object):
                 self.cursor = None
                 self.connection = None
                 sys.exit()
-    
 
-    #check if table exists 
+
+    #check if table exists
     def check_if_table_exists(self, table_name):
         """
         This method checks if the table exists in the database.
@@ -320,7 +320,7 @@ class DataBaseConnection(object):
             self.cursor.execute("SELECT table_name FROM INFORMATION_SCHEMA.TABLES where table_schema = 'public'")
             tables = self.cursor.fetchall()
             tbs = [tb[0] for tb in tables]
-	    #print tbs
+            #print tbs
             table_exists = self.table_name in tbs
             return table_exists
         except Exception, e:
@@ -402,12 +402,12 @@ class DataBaseConnection(object):
             print 'Table does not exist. Create a new table'
             column = ''
             for col, ctype, cdefault in zip(columns, ctypes, cdefaults):
-		if cdefault is None:
-	            column = column + col + ' ' + ctype + ', ' 
-		elif cdefault[:7] == 'nextval':
-	            column = column + col + ' ' + 'serial NOT NULL' + ', ' 			
-		else:
-	            column = column + col + ' ' + ctype + ' DEFAULT ' + cdefault + ', ' 						
+                if cdefault is None:
+                    column = column + col + ' ' + ctype + ', '
+                elif cdefault[:7] == 'nextval':
+                    column = column + col + ' ' + 'serial NOT NULL' + ', '
+                else:
+                    column = column + col + ' ' + ctype + ' DEFAULT ' + cdefault + ', '
             pkey = ''
             for col, key in zip(columns, keys):
                 if key == '1' or key == 1:
@@ -440,7 +440,7 @@ class DataBaseConnection(object):
         Output:
         Table is dropped from the database
         """
-        
+
         #before dropping the table check if the table exists
         self.table_name = table_name
         table_flag = self.check_if_table_exists(table_name)
@@ -530,7 +530,7 @@ class DataBaseConnection(object):
                     ON TC.CONSTRAINT_TYPE = \'PRIMARY KEY\' AND \
                     TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME \
                     WHERE TC.TABLE_NAME = \'%s\' ORDER BY KU.TABLE_NAME, KU.ORDINAL_POSITION"%table_name
-        
+
         if table_flag:
             try:
                 self.cursor.execute(sql_str)
@@ -542,10 +542,10 @@ class DataBaseConnection(object):
                 print e
         else:
             print 'Table %s does not exist. Cannot get the table keys'%table_name
-    
+
     ##################### adding 2 new functions #########################
 
-    #temp function prints the values of the database configuration object	
+    #temp function prints the values of the database configuration object
     def temp_function(self):
         """
         This is a test function.
@@ -553,7 +553,7 @@ class DataBaseConnection(object):
 
         Input:
         Database configuration object
-		
+
         Output:
         Display the object details
         """
@@ -573,9 +573,9 @@ import unittest
 
 #define a class for testing
 class TestDataBaseConnection(unittest.TestCase):
-	#only initialize objects here
+        #only initialize objects here
     def setUp(self):
-        self.protocol = 'postgres'		
+        self.protocol = 'postgres'
         self.user_name = 'postgres'
         self.password = '1234'
         self.host_name = 'localhost'
@@ -607,9 +607,7 @@ class TestDataBaseConnection(unittest.TestCase):
         #print table_name, columns, ctypes, keys
         #db_obj.create_table(table_name, columns, ctypes, keys)
         db_obj.close_connection()
-        
+
 
 if __name__ == '__main__':
     unittest.main()
-	
-

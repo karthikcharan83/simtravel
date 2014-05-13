@@ -25,30 +25,30 @@ class AbtractSpecDialog(QDialog):
 
     def __init__(self, configobject, key, title = '', index=None, parent=None):
         super(AbtractSpecDialog, self).__init__(parent)
-        
+
         self.setWindowTitle(title)
         self.setMinimumSize(800,550)
-        
+
         self.configobject = configobject
         self.modelkey = key
         self.modelindex = index
-        
+
         if index == None:
             model = self.configobject.modelSpecInConfig(self.modelkey)
         if index != None:
             model = self.configobject.getElement(index)
-    
-            
-        
+
+
+
         self.themodel = model
         self.populateFromDatabase()
-        
+
         wholelayout = QVBoxLayout()
         self.setLayout(wholelayout)
 #        wholewidget = QWidget()
 #        self.glayout = QGridLayout()
 #        wholewidget.setLayout(self.glayout)
-        
+
         self.modeltypegb = QGroupBox("") #"Model Type")
         modeltypegblayout = QGridLayout()
         self.modeltypegb.setMaximumHeight(60)
@@ -62,10 +62,10 @@ class AbtractSpecDialog(QDialog):
                                    QString(RECON_SCHEDULE),QString(FIXEDACT_SCHEDULE),
                                    QString(AGGACT_SCHEDULE),QString(CHILD_ALLOCAT),QString(CHILD_ALLOCAT_TERM),QString(CHILD_DEPEND),QString(PERS_TRIP_ARRIVAL),
                                    QString(SCH_ADJUST),QString(IDEN_UNIQUE),QString(IDEN_INDIVIDUAL)])
-        
+
         self.specialmodel = [IDEN_INDIVIDUAL, RECON_SCHEDULE, FIXEDACT_SCHEDULE, AGGACT_SCHEDULE, CHILD_ALLOCAT, \
                              CHILD_ALLOCAT_TERM, CHILD_DEPEND, PERS_TRIP_ARRIVAL, IDEN_UNIQUE, SCH_ADJUST,]
-        
+
         dependentlb = QLabel("Dependent Variable: ")
         self.dependentcb = QComboBox()
         self.dependentcb.addItems(self.dependents())
@@ -73,14 +73,14 @@ class AbtractSpecDialog(QDialog):
         modeltypegblayout.addWidget(self.modeltypecb,1,0)
         modeltypegblayout.addWidget(dependentlb,0,1)
         modeltypegblayout.addWidget(self.dependentcb,1,1)
-        
 
-        
+
+
         self.attributegb = QGroupBox("")
         attributegblayout = QGridLayout() #QHBoxLayout()
         self.attributegb.setLayout(attributegblayout)
         self.attributegb.setVisible(False)
-        
+
         attriwidget1 = QWidget()
         attrilayout1 = QGridLayout()
         attriwidget1.setLayout(attrilayout1)
@@ -101,16 +101,16 @@ class AbtractSpecDialog(QDialog):
         self.vertexcb.setMaximumWidth(250)
         self.lowertxt.setMaximumWidth(250)
         self.uppertxt.setMaximumWidth(250)
-                
+
         attributegblayout.addWidget(self.nametxt,0,1)
         attributegblayout.addWidget(self.vertexcb,1,1)
         attributegblayout.addWidget(self.lowertxt,2,1)
         attributegblayout.addWidget(self.uppertxt,3,1)
-        
+
 #        self.attrinamecb = QComboBox()
 #        attrilayout1.addWidget(attriname,0,0)
 #        attrilayout1.addWidget(self.attrinamecb,0,1)
-#        
+#
 #        selectvalue = QLabel("Select Attribute Value: ")
 #        self.attrivaluecb = QComboBox()
 #        entervalue = QLabel("or Enter Attribute Value: ")
@@ -119,10 +119,10 @@ class AbtractSpecDialog(QDialog):
 #        attrilayout1.addWidget(self.attrivaluecb,1,1)
 #        attrilayout1.addWidget(entervalue,2,0)
 #        attrilayout1.addWidget(self.attrivaluetxt,2,1)
-#        
+#
 #        attriwidget2 = QWidget()
 #        attrilayout2 = QVBoxLayout()
-#        attriwidget2.setLayout(attrilayout2)    
+#        attriwidget2.setLayout(attrilayout2)
 #        self.addbutton = QPushButton('>>')
 #        self.addbutton.setMaximumWidth(80)
 #        attrilayout2.addWidget(self.addbutton)
@@ -146,8 +146,8 @@ class AbtractSpecDialog(QDialog):
 #        attributegblayout.addWidget(self.attritable)
 #        self.glayout.addWidget(self.attributegb,2,0)
         self.fill_attribute(model)
-        
-        
+
+
         self.filters = FilterWidget("Sub-Population",self)
         self.filters.setVisible(False)
 #        self.glayout.addWidget(self.filters,4,0)
@@ -157,14 +157,14 @@ class AbtractSpecDialog(QDialog):
         show_action3 = self.createaction("",self.showgb3,"arrow","")
         tool3.addAction(show_action3)
 #        self.glayout.addWidget(tool3,5,0)
-        
+
         self.untilcondition = FilterWidget("Run Condition",self)
         self.untilcondition.setVisible(False)
 #        self.glayout.addWidget(self.untilcondition,6,0)
-        
+
         self.modwidget = QWidget()
 #        self.glayout.addWidget(self.modwidget,8,0)
-        
+
         buttonwidget = QWidget(self)
         buttonlayout = QHBoxLayout()
         buttonlayout.setContentsMargins(0,11,0,11)
@@ -174,17 +174,17 @@ class AbtractSpecDialog(QDialog):
         self.dialogButtonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttonlayout.addWidget(self.dialogButtonBox)
 
-        
+
         self.tabwidget = QTabWidget()
         self.tabwidget.addTab(self.attributegb,"Model Attributes")
         self.tabwidget.addTab(self.filters,"Sub-Population")
         self.tabwidget.addTab(self.untilcondition,"Run Conditions")
-        
+
 #        wholelayout.addWidget(scrollArea)
         wholelayout.addWidget(self.modeltypegb)
         wholelayout.addWidget(self.tabwidget)
         wholelayout.addWidget(buttonwidget)
- 
+
         self.connect(self.modeltypecb, SIGNAL("currentIndexChanged(int)"), self.changeModelWidget)
         self.connect(self.dialogButtonBox, SIGNAL("accepted()"), self.storeSpec)
         self.connect(self.dialogButtonBox, SIGNAL("rejected()"), SLOT("reject()"))
@@ -197,9 +197,9 @@ class AbtractSpecDialog(QDialog):
         else:
             self.modeltypecb.setCurrentIndex(0)
             self.changeModelWidget()
-            
+
         self.models = [] # In order to compare between previous and current model
-        
+
 
     def fill_attribute(self,model):
         elements = self.configobject.getDElements("Model")
@@ -211,9 +211,9 @@ class AbtractSpecDialog(QDialog):
                     value = str(elt.get(key)).lower()
                     if value not in values:
                         values.append(value)
-        
+
         self.vertexcb.addItems(values)
-        
+
         if model.tag != COMP:
             self.nametxt.setText(str(model.get(NAME)))
             if VERTEX in model.keys():
@@ -225,7 +225,7 @@ class AbtractSpecDialog(QDialog):
             if "upper_threshold" in model.keys():
                 self.uppertxt.setText(str(model.get("upper_threshold")))
 
-  
+
 
     def addDependent(self):
         current = str(self.dependentcb.currentText())
@@ -245,8 +245,8 @@ class AbtractSpecDialog(QDialog):
             if value not in items:
                 items.append(value)
         items.append("Other")
-              
-        return items        
+
+        return items
 
     def createaction(self, text, slot=None, icon=None,
                      tip=None, signal="triggered()"):
@@ -260,13 +260,13 @@ class AbtractSpecDialog(QDialog):
             self.connect(action, SIGNAL(signal), slot)
 
         return action
-    
+
     def showgb1(self):
         self.attributegb.setVisible(True)
         self.filters.setVisible(False)
         self.untilcondition.setVisible(False)
         self.modwidget.setVisible(False)
-    
+
     def showgb2(self):
         self.attributegb.setVisible(False)
         self.filters.setVisible(True)
@@ -278,19 +278,19 @@ class AbtractSpecDialog(QDialog):
         self.filters.setVisible(False)
         self.untilcondition.setVisible(True)
         self.modwidget.setVisible(False)
-        
+
     def showgb4(self):
         self.attributegb.setVisible(False)
         self.filters.setVisible(False)
         self.untilcondition.setVisible(False)
-        self.modwidget.setVisible(True)        
+        self.modwidget.setVisible(True)
 
     def loadFromConfigObject1(self):
         modelspecified = self.configobject.modelSpecInConfig(self.modelkey)
         #self.loadFromConfigObject2(modelspecified)
-    
+
     def loadFromConfigObject2(self, modelspecified):
-        
+
         if modelspecified is not None:
             form = modelspecified.get(FORMULATION)
             if form == MODELFORM_REG:
@@ -340,16 +340,16 @@ class AbtractSpecDialog(QDialog):
             elif form == IDEN_INDIVIDUAL:
                 modtxt = IDEN_INDIVIDUAL
 
-            
+
             ind = self.modeltypecb.findText(modtxt)
             self.modeltypecb.setCurrentIndex(ind)
-            
+
             print "%s - %s" %(modtxt,ind)
-            
+
 
         self.changeModelWidget()
 #        self.populateColumns()
-        
+
         if modelspecified is not None:
             self.populateDependent(modelspecified)
             self.populateRununtilWidget(modelspecified)
@@ -357,7 +357,7 @@ class AbtractSpecDialog(QDialog):
             seed = int(modelspecified.get(SEED))
             self.modwidget.seedline.setValue(seed)
             formtext = self.modeltypecb.currentText()
-            
+
             if formtext == PROB_MODEL:
                 self.populateAltsWidget(modelspecified)
                 self.populateVarsWidget(modelspecified)
@@ -367,7 +367,7 @@ class AbtractSpecDialog(QDialog):
                     if MODELTYPE in varianceelt.keys():
                         self.modwidget.varianceuline.setText(varianceelt.get(VALUE))
                     else:
-                        self.modwidget.variancevline.setText(varianceelt.get(VALUE)) 
+                        self.modwidget.variancevline.setText(varianceelt.get(VALUE))
             if formtext == LOGSF_MODEL:
                 self.populateVarsWidget(modelspecified)
                 for varianceelt in modelspecified.getiterator(VARIANCE):
@@ -412,7 +412,7 @@ class AbtractSpecDialog(QDialog):
                 for altelt in modelspecified.getiterator(ALTERNATIVE):
                     altstable = self.modwidget.choicetable
                     altstable.insertRow(altstable.rowCount())
-            
+
                     altitem = QTableWidgetItem()
                     alt = altelt.get(ID)
                     altbranch = altelt.get(BRANCH)
@@ -420,7 +420,7 @@ class AbtractSpecDialog(QDialog):
                         alt = (altbranch.split('/',1))[1] + '/' + alt
                     altitem.setText(alt)
                     altstable.setItem(altstable.rowCount()-1, 0, altitem)
-                    
+
                     altspecs = []
                     for varelt in altelt.getiterator(VARIABLE):
                         varspec = []
@@ -434,7 +434,7 @@ class AbtractSpecDialog(QDialog):
                     nestable.insertRow(nestable.rowCount())
                     nesname = QTableWidgetItem()
                     nesname.setText(neselt.get(NAME))
-                    nestable.setItem(nestable.rowCount()-1, 0, nesname) 
+                    nestable.setItem(nestable.rowCount()-1, 0, nesname)
                     nescoeff = QTableWidgetItem()
                     nescoeff.setText(neselt.get(COEFF))
                     nestable.setItem(nestable.rowCount()-1, 1, nescoeff)
@@ -449,7 +449,7 @@ class AbtractSpecDialog(QDialog):
                             key = "Daily Status"
                         else:
                             key = str(altelt.tag)
-                            
+
                         altspecs = []
                         for varelt in altelt.getchildren():
                             print "%s - %s" %(key, varelt.tag)
@@ -460,8 +460,8 @@ class AbtractSpecDialog(QDialog):
                             altspecs.append(varspec)
                         self.modwidget.specs[key] = altspecs
                         i = i+1
-                        
-                    
+
+
 
     def populateDependent(self,modelelt):
         set = modelelt.find(DEPVARIABLE)
@@ -470,7 +470,7 @@ class AbtractSpecDialog(QDialog):
             ind = self.dependentcb.findText(value)
             self.dependentcb.setCurrentIndex(ind)
 
-                    
+
     def populateRununtilWidget(self,modelelt):
         set = modelelt.find(RUNUNTILSET)
         if set <> None:
@@ -489,7 +489,7 @@ class AbtractSpecDialog(QDialog):
                 tempkey = filt.keys()
                 ind = self.untilcondition.conditions[i].subpoptab.findText(filt.get(TABLE))
                 self.untilcondition.conditions[i].subpoptab.setCurrentIndex(ind)
-                if str(filt.get(TABLE)) != "runtime": 
+                if str(filt.get(TABLE)) != "runtime":
                     self.untilcondition.conditions[i].subpopvartext.setDisabled(True)
                     self.untilcondition.conditions[i].subpopvartext.setVisible(False)
                     self.untilcondition.conditions[i].subpopvar.setDisabled(False)
@@ -501,17 +501,17 @@ class AbtractSpecDialog(QDialog):
                     self.untilcondition.conditions[i].subpopvartext.setVisible(True)
                     self.untilcondition.conditions[i].subpopvar.setDisabled(True)
                     self.untilcondition.conditions[i].subpopvar.setVisible(False)
-                    self.untilcondition.conditions[i].subpopvartext.setText(filt.get(COLUMN)) 
+                    self.untilcondition.conditions[i].subpopvartext.setText(filt.get(COLUMN))
                 ind = self.untilcondition.conditions[i].subpopop.findText(filt.get(COND))
                 self.untilcondition.conditions[i].subpopop.setCurrentIndex(ind)
                 if VALUE in tempkey:
-                    self.untilcondition.conditions[i].isEnableValue.setChecked(True)              
+                    self.untilcondition.conditions[i].isEnableValue.setChecked(True)
                     self.untilcondition.conditions[i].subpopval.setText(filt.get(VALUE))
                 else:
                     self.untilcondition.conditions[i].isEnableValue.setChecked(False)
                     ind = self.untilcondition.conditions[i].subpopvtab.findText(filt.get(VTABLE))
                     self.untilcondition.conditions[i].subpopvtab.setCurrentIndex(ind)
-                    if str(filt.get(VTABLE)) != "runtime": 
+                    if str(filt.get(VTABLE)) != "runtime":
                         self.untilcondition.conditions[i].subpopvalvartext.setDisabled(True)
                         self.untilcondition.conditions[i].subpopvalvartext.setVisible(False)
                         self.untilcondition.conditions[i].subpopvalvar.setDisabled(False)
@@ -528,7 +528,7 @@ class AbtractSpecDialog(QDialog):
             self.untilcondition.setChecked(True)
         else:
             self.untilcondition.setChecked(False)
-  
+
 
     def populateFilterWidget(self,modelelt):
         set = modelelt.find(FILTERSET)
@@ -537,19 +537,19 @@ class AbtractSpecDialog(QDialog):
                 self.filters.logical.setCurrentIndex(0)
             else:
                 self.filters.logical.setCurrentIndex(1)
-            
+
         filters = modelelt.findall(FILTER)
         if len(filters) > 0:
             self.filters.remove()
             for i in range(len(filters)):
                 self.filters.addFiter()
-             
+
             i = 0
             for filt in modelelt.getiterator(FILTER):
                 tempkey = filt.keys()
                 ind = self.filters.conditions[i].subpoptab.findText(filt.get(TABLE))
                 self.filters.conditions[i].subpoptab.setCurrentIndex(ind)
-                if str(filt.get(TABLE)) != "runtime": 
+                if str(filt.get(TABLE)) != "runtime":
                     self.filters.conditions[i].subpopvartext.setDisabled(True)
                     self.filters.conditions[i].subpopvartext.setVisible(False)
                     self.filters.conditions[i].subpopvar.setDisabled(False)
@@ -561,17 +561,17 @@ class AbtractSpecDialog(QDialog):
                     self.filters.conditions[i].subpopvartext.setVisible(True)
                     self.filters.conditions[i].subpopvar.setDisabled(True)
                     self.filters.conditions[i].subpopvar.setVisible(False)
-                    self.filters.conditions[i].subpopvartext.setText(filt.get(COLUMN))                   
+                    self.filters.conditions[i].subpopvartext.setText(filt.get(COLUMN))
                 ind = self.filters.conditions[i].subpopop.findText(filt.get(COND))
-                self.filters.conditions[i].subpopop.setCurrentIndex(ind)                
+                self.filters.conditions[i].subpopop.setCurrentIndex(ind)
                 if VALUE in tempkey:
-                    self.filters.conditions[i].isEnableValue.setChecked(True)              
+                    self.filters.conditions[i].isEnableValue.setChecked(True)
                     self.filters.conditions[i].subpopval.setText(filt.get(VALUE))
                 else:
                     self.filters.conditions[i].isEnableValue.setChecked(False)
                     ind = self.filters.conditions[i].subpopvtab.findText(filt.get(VTABLE))
                     self.filters.conditions[i].subpopvtab.setCurrentIndex(ind)
-                    if str(filt.get(VTABLE)) != "runtime": 
+                    if str(filt.get(VTABLE)) != "runtime":
                         self.filters.conditions[i].subpopvalvartext.setDisabled(True)
                         self.filters.conditions[i].subpopvalvartext.setVisible(False)
                         self.filters.conditions[i].subpopvalvar.setDisabled(False)
@@ -588,7 +588,7 @@ class AbtractSpecDialog(QDialog):
             self.filters.setChecked(True)
         else:
             self.filters.setChecked(False)
-                   
+
 #    def populateFilterWidget(self,modelelt):
 #        temp = modelelt.find(FILTER)
 #        if temp <> None:
@@ -598,16 +598,16 @@ class AbtractSpecDialog(QDialog):
 #                ind = self.subpopvar.findText(filt.get(COLUMN))
 #                self.subpopvar.setCurrentIndex(ind)
 #                ind = self.subpopop.findText(filt.get(COND))
-#                self.subpopop.setCurrentIndex(ind)                
+#                self.subpopop.setCurrentIndex(ind)
 #                self.subpopval.setText(filt.get(VALUE))
 #        else:
 #            self.subpopgb.setChecked(False)
-    
+
     def populateVarsWidget(self,modelelt):
         for varelt in modelelt.getiterator(VARIABLE):
             varstable = self.modwidget.varstable
             varstable.insertRow(varstable.rowCount())
-            
+
             tableitem = QTableWidgetItem()
             tableitem.setText(varelt.get(TABLE))
             tableitem.setFlags(tableitem.flags() & ~Qt.ItemIsEditable)
@@ -626,7 +626,7 @@ class AbtractSpecDialog(QDialog):
         for altelt in modelelt.getiterator(ALTERNATIVE):
             altstable = self.modwidget.choicetable
             altstable.insertRow(altstable.rowCount())
-            
+
             altitem = QTableWidgetItem()
             altitem.setText(altelt.get(ID))
             altstable.setItem(altstable.rowCount()-1, 0, altitem)
@@ -640,7 +640,7 @@ class AbtractSpecDialog(QDialog):
         for altelt in modelelt.getiterator(ALTERNATIVE):
             altstable = self.modwidget.choicetable
             altstable.insertRow(altstable.rowCount())
-            
+
             altitem1 = QTableWidgetItem()
             altitem1.setText(altelt.get(ID))
             altstable.setItem(altstable.rowCount()-1, 0, altitem1)
@@ -657,9 +657,9 @@ class AbtractSpecDialog(QDialog):
                 disableitem.setFlags(disableitem.flags() & ~Qt.ItemIsEnabled)
                 disableitem.setBackgroundColor(Qt.darkGray)
             i = i+1
-    
-    def changeModelWidget(self, idx=0): 
-          
+
+    def changeModelWidget(self, idx=0):
+
         self.modwidget.setParent(None)
         formtext = self.modeltypecb.currentText()
         if formtext == PROB_MODEL:
@@ -683,7 +683,7 @@ class AbtractSpecDialog(QDialog):
         elif formtext == RECON_SCHEDULE or formtext == FIXEDACT_SCHEDULE or formtext == AGGACT_SCHEDULE or formtext == CHILD_ALLOCAT or \
         formtext == PERS_TRIP_ARRIVAL or formtext == SCH_ADJUST or formtext == IDEN_INDIVIDUAL or formtext == CHILD_ALLOCAT_TERM or formtext == CHILD_DEPEND:
             self.modwidget = SchduleModWidget(self)
-        
+
 #        self.glayout.addWidget(self.modwidget,8,0)
         self.tabwidget.tabRemoved(3)
         self.tabwidget.addTab(self.modwidget,"Model Specification")
@@ -695,30 +695,30 @@ class AbtractSpecDialog(QDialog):
 #        self.subpopvar.clear()
 #        seltab = str(self.subpoptab.currentText())
 #        self.subpopvar.addItems(self.coldict[seltab])
-        
-        
-    
+
+
+
     def storeSpec(self):
         if self.checkInputs():
             #modelmap = MODELMAP[self.modelkey]
             #modelkey = modelmap[1]
             #modelkey = self.modelkey
-    
+
             #modelelt = None
             #model = self.configobject.modelSpecInConfig(self.modelkey)
-            
+
             if self.themodel.tag == COMP:
                 model = etree.SubElement(self.themodel,MODEL)
             else:
                 model = self.themodel
-                
+
 #            self.setModelAttribute(model)
             self.addDepVarToElt(model)
             self.setFilterToElt(model)
-            self.setRununtilToElt(model)         
+            self.setRununtilToElt(model)
             #tempmodel = deepcopy(model)
             formtext = self.modeltypecb.currentText()
-            
+
             if formtext == SF_MODEL:
                 self.setModeltoElt(model,MODELFORM_REG,SF_MODEL)
                 self.setVariance2(model)
@@ -728,20 +728,20 @@ class AbtractSpecDialog(QDialog):
                 self.setModeltoElt(model,MODELFORM_REG,LOGSF_MODEL)
                 self.setVariance2(model)
                 self.saveVariables(model)
-                
+
             elif formtext == COUNT_MODEL:
                 self.setModeltoElt(model,MODELFORM_CNT,COUNT_MODEL)
                 if self.modwidget.nbradio.isChecked():
                     model.set(MODELTYPE,NEGBIN_MODEL)
                 else:
                     model.set(MODELTYPE,POI_MODEL)
-                
+
                 if type == NEGBIN_MODEL:
                     variance = model.find(VARIANCE)
                     variance.set(VALUE,str(self.modwidget.odline.text()))
                     variance.set(MODELTYPE,'Overdispersion')
-                self.saveVariables(model) 
-    
+                self.saveVariables(model)
+
             elif formtext == ORD_MODEL:
                 if self.modwidget.probradio.isChecked():
                     self.setModeltoElt(model,MODELFORM_ORD,PROBIT)
@@ -749,17 +749,17 @@ class AbtractSpecDialog(QDialog):
                     self.setModeltoElt(model,MODELFORM_ORD,LOGIT)
                 self.saveAlternatives(model)
                 self.saveVariables(model)
-    
+
             elif formtext == GC_MNL_MODEL:
                 self.saveVariables(model)
-            
+
             elif formtext == MNL_MODEL:
                 self.modwidget.storeVarsTable(self.modwidget.choicetable.currentRow())
-                
+
                 self.setModeltoElt(model,MODELFORM_MNL,ALTSPEC)
                 for alter in model.findall(ALTERNATIVE):
                     model.remove(alter)
-                    
+
                 numrows = self.modwidget.choicetable.rowCount()
                 specs = self.modwidget.specs
                 for i in range(numrows):
@@ -773,12 +773,12 @@ class AbtractSpecDialog(QDialog):
                     for j in range(numvars):
                         specrow = altspecs[j]
                         self.addVariabletoElt(altelt,specrow[0],specrow[1],specrow[2])
-                    model.append(altelt)  
-            
+                    model.append(altelt)
+
             elif formtext == NL_MODEL:
                 self.modwidget.storeVarsTable(self.modwidget.choicetable.currentItem())
                 self.setModeltoElt(model,MODELFORM_NL,NL_MODEL)
-                
+
                 for alter in model.findall(ALTERNATIVE):
                     model.remove(alter)
 
@@ -807,7 +807,7 @@ class AbtractSpecDialog(QDialog):
 
                 for branch in model.findall(BRANCH):
                     model.remove(branch)
-                    
+
                 numnests = self.modwidget.nesttable.rowCount()
                 for i in range(numnests):
                     nestname = str((self.modwidget.nesttable.item(i,0)).text())
@@ -816,7 +816,7 @@ class AbtractSpecDialog(QDialog):
                     neselt.set(NAME,nestname)
                     neselt.set(COEFF,nestiv)
                     model.append(neselt)
-                                      
+
             elif formtext == LOGREG_MODEL:
                 self.setModeltoElt(model,MODELFORM_REG,LOGREG_MODEL)
                 self.setVariance(model)
@@ -826,17 +826,17 @@ class AbtractSpecDialog(QDialog):
                 self.setModeltoElt(model,MODELFORM_REG,LINEAR_MODEL)
                 self.setVariance(model)
                 self.saveVariables(model)
-                
+
             elif formtext == IDEN_UNIQUE:
                 self.setModeltoElt(model,IDEN_UNIQUE)
                 self.setVariance(model)
                 self.saveVariables(model)
-                        
+
             elif formtext == PROB_MODEL:
                 self.setModeltoElt(model,PROB_MODEL)
                 for alter in model.findall(ALTERNATIVE):
                     model.remove(alter)
-                    
+
                 numrows = self.modwidget.choicetable.rowCount()
                 for i in range(numrows):
                     altname = str((self.modwidget.choicetable.item(i,0)).text())
@@ -844,13 +844,13 @@ class AbtractSpecDialog(QDialog):
                     altelt = etree.SubElement(model,ALTERNATIVE)
                     altelt.set(ID,altname)
                     altelt.set(VALUE,altvalue)
-                    
+
                     valtable = str((self.modwidget.varstable.item(i,0)).text())
                     valname = str((self.modwidget.varstable.item(i,1)).text())
                     valcoff = str((self.modwidget.varstable.item(i,2)).text())
                     self.addVariabletoElt(altelt,valtable,valname,valcoff)
                     model.append(altelt)
-                    
+
             elif formtext == RECON_SCHEDULE or formtext == FIXEDACT_SCHEDULE or formtext == AGGACT_SCHEDULE or formtext == CHILD_ALLOCAT \
             or formtext == PERS_TRIP_ARRIVAL or formtext == SCH_ADJUST or formtext == IDEN_INDIVIDUAL or formtext == CHILD_ALLOCAT_TERM or formtext == CHILD_DEPEND:
                 if formtext == RECON_SCHEDULE:
@@ -865,12 +865,12 @@ class AbtractSpecDialog(QDialog):
                     self.setModeltoElt(model,PERS_TRIP_ARRIVAL)
                 elif formtext == SCH_ADJUST:
                     self.setModeltoElt(model,SCH_ADJUST)
-                    
+
                 for elt in model.getchildren():
                     if elt.tag == "ActivityAttributes" or elt.tag == "DailyStatus" or elt.tag == "Dependency" or \
                     elt.tag == "OccupancyInvalid" or elt.tag == "ArrivalTime" or elt.tag == "PersonsArrivedAttributes" or elt.tag == "Id":
                         model.remove(elt)
-                
+
                 self.modwidget.storeVarsTable(self.modwidget.choicelist.currentItem())
                 numrows = self.modwidget.choicelist.count()
                 specs = self.modwidget.specs
@@ -882,8 +882,8 @@ class AbtractSpecDialog(QDialog):
                         alter = "ActivityAttributes"
                     elif key == "Daily Status":
                         alter = "DailyStatus"
-        
-                    
+
+
                     isPut = False
                     altelt = etree.Element(alter)
                     catagories = specs[key]
@@ -899,20 +899,20 @@ class AbtractSpecDialog(QDialog):
 
                     if isPut:
                         model.append(altelt)
-                        
+
             if self.themodel.tag == COMP:
                 father = self.parent()
                 item = father.currentItem()
                 element_term = QTreeWidgetItem(item)
                 element_term.setText(0, MODEL)
-                                        
+
 #            if not self.configobject.comparemodels(self.modelkey):
 #                print 'Successful to change'
 #                model.set(DMODEL,'True')
-            
-            QDialog.accept(self)          
 
-    
+            QDialog.accept(self)
+
+
 #    def setModelAttribute(self,model): #(self,name,formulation,type,otherattr=None):
 #        keys = model.keys()
 #        numrows = self.attritable.rowCount()
@@ -922,7 +922,7 @@ class AbtractSpecDialog(QDialog):
 #            model.set(key,value)
 #            if key in keys:
 #                keys.remove(key)
-#            
+#
 #        for i in keys:
 #            del model.attrib[i]
 
@@ -946,7 +946,7 @@ class AbtractSpecDialog(QDialog):
         else:
             if elt.get(MODELTYPE) != None:
                 elt.set(MODELTYPE,'')
-        
+
         value = str(self.vertexcb.currentText())
         if value == "":
             if VERTEX in keys:
@@ -957,29 +957,29 @@ class AbtractSpecDialog(QDialog):
         value = str(self.lowertxt.text())
         if value == "":
             if "lower_threshold" in keys:
-                del elt.attrib["lower_threshold"]            
+                del elt.attrib["lower_threshold"]
         else:
             elt.set("lower_threshold",value)
-        
+
         value = str(self.uppertxt.text())
         if value == "":
             if "upper_threshold" in keys:
-                del elt.attrib["upper_threshold"]            
+                del elt.attrib["upper_threshold"]
         else:
-            elt.set("upper_threshold",value)        
-        
+            elt.set("upper_threshold",value)
+
         value = str(self.modwidget.seedline.value())
         elt.set(SEED,value)
-        
+
 #        seed = str(elt.get(SEED))
 #        user = str(elt.get(DMODEL))
 #        del elt.attrib[SEED]
 #        del elt.attrib[DMODEL]
-#        
+#
 #        elt.set(SEED,seed)
 #        elt.set(DMODEL,user)
 
-        
+
     def addDepVarToElt(self,model):
         value = str(self.dependentcb.currentText())
         depend = model.find(DEPVARIABLE)
@@ -1000,7 +1000,7 @@ class AbtractSpecDialog(QDialog):
         for elt in model.getchildren():
             if elt.tag == FILTER or elt.tag == FILTERSET:
                 model.remove(elt)
-                
+
         if self.filters.isChecked():
             if len(self.filters.conditions) > 1:
                 self.subFilterset(model)
@@ -1023,8 +1023,8 @@ class AbtractSpecDialog(QDialog):
             else:
                 runelt.set(COLUMN,str(self.filters.conditions[i].subpopvartext.text()))
             runelt.set(COND,str(self.filters.conditions[i].subpopop.currentText()))
-            
-            
+
+
             if self.filters.conditions[i].isEnableValue.isChecked():
                 value = str(self.filters.conditions[i].subpopval.text())
                 runelt.set(VALUE,value)
@@ -1037,13 +1037,13 @@ class AbtractSpecDialog(QDialog):
                 else:
                     vcolumn = str(self.filters.conditions[i].subpopvalvartext.text())
                     runelt.set(VCOLUMN,vcolumn)
-                    
-     
+
+
     def setRununtilToElt(self,model):
         for elt in model.getchildren():
             if elt.tag == RUNUNTIL or elt.tag == RUNUNTILSET:
                 model.remove(elt)
-                
+
         if self.untilcondition.isChecked():
             if len(self.untilcondition.conditions) > 1:
                 self.subRununtilset(model)
@@ -1066,8 +1066,8 @@ class AbtractSpecDialog(QDialog):
             else:
                 runelt.set(COLUMN,str(self.untilcondition.conditions[i].subpopvartext.text()))
             runelt.set(COND,str(self.untilcondition.conditions[i].subpopop.currentText()))
-            
-            
+
+
             if self.untilcondition.conditions[i].isEnableValue.isChecked():
                 value = str(self.untilcondition.conditions[i].subpopval.text())
                 runelt.set(VALUE,value)
@@ -1085,7 +1085,7 @@ class AbtractSpecDialog(QDialog):
         for elt in model.getchildren():
             if elt.tag == VARIANCE:
                 model.remove(elt)
-                
+
         elt = etree.SubElement(model,VARIANCE)
         value = str(self.modwidget.variancevline.text())
         elt.set(VALUE,value)
@@ -1094,21 +1094,21 @@ class AbtractSpecDialog(QDialog):
         for elt in model.getchildren():
             if elt.tag == VARIANCE:
                 model.remove(elt)
-                
+
         elt = etree.SubElement(model,VARIANCE)
         value = str(self.modwidget.variancevline.text())
         elt.set(VALUE,value)
-        
+
         elt = etree.SubElement(model,VARIANCE)
         value = str(self.modwidget.varianceuline.text())
         elt.set(VALUE,value)
-        elt.set(MODELTYPE,"Half Normal")                       
+        elt.set(MODELTYPE,"Half Normal")
 #    def addFiltToElt(self,elt):
 #        for set in elt.findall(FILTERSET):
 #            elt.remove(set)
 #        for filter in elt.findall(FILTER):
 #            elt.remove(filter)
-#        
+#
 #        if self.subpopgb.isChecked():
 #            if len(self.filter1) > 1:
 #                fset = etree.SubElement(elt,FILTERSET)
@@ -1116,7 +1116,7 @@ class AbtractSpecDialog(QDialog):
 #                    fset.set(MODELTYPE,'and')
 #                else:
 #                    fset.set(MODELTYPE,'or')
-#            
+#
 #            i = 0
 #            while i < len(self.filter1):
 #                if (str(self.filter4[i].text()) != ''):
@@ -1126,7 +1126,7 @@ class AbtractSpecDialog(QDialog):
 #                    filter.set(COND,str(self.filter3[i].currentText()))
 #                    filter.set(VALUE,str(self.filter4[i].text()))
 #                i = i + 1
-                
+
     def saveAlternatives(self,elt):
         for alter in elt.findall(ALTERNATIVE):
             elt.remove(alter)
@@ -1149,8 +1149,8 @@ class AbtractSpecDialog(QDialog):
     def saveVariables(self,elt):
         for vari in elt.findall(VARIABLE):
             elt.remove(vari)
-        self.addVariables(elt)        
-                
+        self.addVariables(elt)
+
     def addVariables(self,elt):
         numrows = self.modwidget.varstable.rowCount()
         for i in range(numrows):
@@ -1158,25 +1158,25 @@ class AbtractSpecDialog(QDialog):
             colname = (self.modwidget.varstable.item(i,1)).text()
             coeff = (self.modwidget.varstable.item(i,2)).text()
             self.addVariabletoElt(elt,tablename,colname,coeff)
-        
+
     def addVariabletoElt(self,elt,tablename,colname,coeff):
         variableelt = etree.SubElement(elt, VARIABLE)
         variableelt.set(TABLE,str(tablename))
         variableelt.set(COLUMN,str(colname))
         variableelt.set(COEFF,str(coeff))
-    
+
     def populateFromDatabase(self):
-        self.protocol = self.configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)        
+        self.protocol = self.configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)
         self.user_name = self.configobject.getConfigElement(DB_CONFIG,DB_USER)
         self.password = self.configobject.getConfigElement(DB_CONFIG,DB_PASS)
         self.host_name = self.configobject.getConfigElement(DB_CONFIG,DB_HOST)
         self.database_name = self.configobject.getConfigElement(DB_CONFIG,DB_NAME)
         self.database_config_object = DataBaseConfiguration(self.protocol, self.user_name, self.password, self.host_name, self.database_name)
-        
+
         new_obj = DataBaseConnection(self.database_config_object)
         new_obj.new_connection()
         tables = new_obj.get_table_list()
-        
+
         self.tablelist = []
         self.coldict = {}
         for table in tables:
@@ -1206,18 +1206,18 @@ class AbtractSpecDialog(QDialog):
             res = True
         except:
             res = False
-        
+
         return res
-    
-    
+
+
     def checkInput_table1(self):
         numrows = self.modwidget.choicetable.rowCount()
         for i in range(numrows):
-            
+
             if self.modwidget.choicetable.item(i,1) == None:
-                    QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
-                    return False
-                
+                QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
+                return False
+
             coeff = unicode((self.modwidget.choicetable.item(i,1)).text())
             if not self.checkFloat(coeff):
                 QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
@@ -1226,18 +1226,18 @@ class AbtractSpecDialog(QDialog):
 #                if float(coeff) < 0.0:
 #                    QMessageBox.warning(self, "Warning", "The value of an alternative must be greater than or equal to zero.")
 #                    return False
-                
+
         return True
-    
-    
+
+
     def checkInput_table2(self):
         numrows = self.modwidget.varstable.rowCount()
         for i in range(numrows):
-            
+
             if self.modwidget.varstable.item(i,2) == None:
-                    QMessageBox.warning(self, "Warning", "Coefficient must be numeric.")
-                    return False
-                
+                QMessageBox.warning(self, "Warning", "Coefficient must be numeric.")
+                return False
+
             coeff = unicode((self.modwidget.varstable.item(i,2)).text())
             if not self.checkFloat(coeff):
                 QMessageBox.warning(self, "Warning", "Coefficient must be numeric.")
@@ -1246,19 +1246,19 @@ class AbtractSpecDialog(QDialog):
 #                if float(coeff) < 0.0:
 #                    QMessageBox.warning(self, "Warning", "Coefficient must be greater than or equal to zero.")
 #                    return False
-                
+
         return True
-    
-    
+
+
     def checkInputs(self):
         res = True
-        
+
         if self.filters.isChecked():
             for i in range(len(self.filters.conditions)):
                 value = str(self.filters.conditions[i].subpopval.text())
                 if value != "":
                     if not self.checkFloat(value):
-                        QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")            
+                        QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
                         return False
                 else:
                     vtable = str(self.filters.conditions[i].subpopvtab.currentText())
@@ -1267,13 +1267,13 @@ class AbtractSpecDialog(QDialog):
                     if vtable == "" or (vcolumn1 == "" and vcolumn2 == ""):
                         QMessageBox.warning(self, "Warning", "Value Table and Value Variable should be filled in Sub-Population.")
                         return False
-                
+
         if self.untilcondition.isChecked():
             for i in range(len(self.untilcondition.conditions)):
                 value = str(self.untilcondition.conditions[i].subpopval.text())
                 if value != "":
                     if not self.checkFloat(value):
-                        QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")            
+                        QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
                         return False
                 else:
                     vtable = str(self.untilcondition.conditions[i].subpopvtab.currentText())
@@ -1283,15 +1283,15 @@ class AbtractSpecDialog(QDialog):
                         QMessageBox.warning(self, "Warning", "Value Table and Value Variable should be filled in Run Condition.")
                         return False
 
-                
+
         if self.modeltypecb.currentText() == PROB_MODEL:
             numrows = self.modwidget.choicetable.rowCount()
             for i in range(numrows):
-                
+
                 if self.modwidget.choicetable.item(i,1) == None:
                     QMessageBox.warning(self, "Warning", "The value of an alternative must be entered as a number.")
                     return False
-                    
+
                 colname = unicode((self.modwidget.choicetable.item(i,1)).text())
                 if not self.checkFloat(colname):
                     QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
@@ -1300,11 +1300,11 @@ class AbtractSpecDialog(QDialog):
                     if float(colname) < 0.0:
                         QMessageBox.warning(self, "Warning", "The value of an alternative must be greater than or equal to zero.")
                         return False
-                
+
 #                if self.modwidget.choicetable.item(i,2) == None:
 #                    QMessageBox.warning(self, "Warning", "Probability must be entered between 0.0 and 1.0.")
 #                    return False
-                
+
                 coeff = unicode((self.modwidget.varstable.item(i,2)).text())
                 if self.checkFloat(coeff):
                     coeff1 = float(coeff)
@@ -1314,9 +1314,9 @@ class AbtractSpecDialog(QDialog):
                 else:
                     QMessageBox.warning(self, "Warning", "Probability must be numeric.")
                     return False
-                                   
+
         elif self.modeltypecb.currentText() == COUNT_MODEL:
-            
+
             dispersion = unicode(self.modwidget.odline.text())
             if self.modwidget.odline.isEnabled():
                 if not self.checkFloat(dispersion):
@@ -1326,15 +1326,15 @@ class AbtractSpecDialog(QDialog):
                     if float(dispersion) < 0.0:
                         QMessageBox.warning(self, "Warning", "Overdispersion must be greater than or equal to zero.")
                         return False
-            
+
             if not self.checkInput_table1():
                 return False
-            
+
             if not self.checkInput_table2():
                 return False
-            
+
         elif self.modeltypecb.currentText() == SF_MODEL:
-            
+
             variancev = unicode(self.modwidget.variancevline.text())
             if not self.checkFloat(variancev):
                 QMessageBox.warning(self, "Warning", "Variance (v) - Normal must be numeric.")
@@ -1343,7 +1343,7 @@ class AbtractSpecDialog(QDialog):
                 if float(variancev) < 0.0:
                     QMessageBox.warning(self, "Warning", "Variance (v) - Normal must be greater than or equal to zero.")
                     return False
-                
+
             varianceu = unicode(self.modwidget.varianceuline.text())
             if not self.checkFloat(varianceu):
                 QMessageBox.warning(self, "Warning", "Variance (u) - Half Normal must be numeric.")
@@ -1352,23 +1352,23 @@ class AbtractSpecDialog(QDialog):
                 if float(varianceu) < 0.0:
                     QMessageBox.warning(self, "Warning", "Variance (u) - Half Normal must be greater than or equal to zero.")
                     return False
-                
+
             if not self.checkInput_table2():
                 return False
-            
+
         elif self.modeltypecb.currentText() == GC_MNL_MODEL:
-            
+
             if not self.checkInput_table2():
                 return False
-            
+
         elif self.modeltypecb.currentText() == MNL_MODEL:
-            
+
             if not self.checkInput_table1():
                 return False
-            
+
 #            if not self.checkInput_table2():
 #                return False
-            
+
             numrows = self.modwidget.choicetable.rowCount()
             specs = self.modwidget.specs
             for i in range(numrows):
@@ -1381,17 +1381,17 @@ class AbtractSpecDialog(QDialog):
                     if not self.checkFloat(specrow[2]):
                         QMessageBox.warning(self, "Warning", "The value of a coefficient must be numeric.")
                         return False
-                    
-            
+
+
         elif self.modeltypecb.currentText() == ORD_MODEL:
-            
+
             numrows = self.modwidget.choicetable.rowCount()
             for i in range(numrows):
-                
+
                 if self.modwidget.choicetable.item(i,1) == None:
                     QMessageBox.warning(self, "Warning", "The value of an alternative must be entered as a number.")
                     return False
-                
+
                 value = unicode((self.modwidget.choicetable.item(i,1)).text())
                 if not self.checkFloat(value):
                     QMessageBox.warning(self, "Warning", "The value of an alternative must be numeric.")
@@ -1400,11 +1400,11 @@ class AbtractSpecDialog(QDialog):
                     if float(value) < 0.0:
                         QMessageBox.warning(self, "Warning", "The value of an alternative must be greater than or equal to zero.")
                         return False
-                
+
 #                if self.modwidget.choicetable.item(i,2) == None:
 #                    QMessageBox.warning(self, "Warning", "Threshold must be entered as a number greater than 0.0.")
 #                    return False
-                
+
                 if i > 0:
                     thresh = unicode((self.modwidget.choicetable.item(i,2)).text())
                     if self.checkFloat(thresh):
@@ -1417,25 +1417,25 @@ class AbtractSpecDialog(QDialog):
                     else:
                         QMessageBox.warning(self, "Warning", "Threshold must be numeric.")
                         return False
-                            
-                
+
+
             if not self.checkInput_table2():
                 return False
-            
+
         elif self.modeltypecb.currentText() == NL_MODEL:
-            
+
             if not self.checkInput_table1():
                 return False
-            
+
             if not self.checkInput_table2():
                 return False
-            
+
         elif self.modeltypecb.currentText() == LOGREG_MODEL:
-            
+
             if not self.checkInput_table2():
-                return False           
-        
-        
+                return False
+
+
         return res
 #        res = False
 #        if self.modwidget.checkInputs():
@@ -1450,21 +1450,21 @@ class FilterWidget(QGroupBox):
         father = self.parent()
         self.tablelist = father.tablelist
         self.coldict = father.coldict
-        
+
         self.setTitle(title)
         self.setCheckable(True)
         self.setChecked(False)
         self.setVisible(True)
         subpoplayout = QVBoxLayout()
         self.setLayout(subpoplayout)
-        
+
         upwidget = QWidget(self)
         upwidgetlayout = QHBoxLayout()
         upwidget.setLayout(upwidgetlayout)
         self.logical = QComboBox()
         self.logical.addItems([QString(OP_AND), QString(OP_OR)])
         upwidgetlayout.addWidget(self.logical)
-        
+
         btnwidget = QWidget(self)
         btnwidgetlayout = QHBoxLayout()
         btnwidget.setLayout(btnwidgetlayout)
@@ -1473,59 +1473,59 @@ class FilterWidget(QGroupBox):
         self.delbutton = QPushButton('Delete')
         btnwidgetlayout.addWidget(self.delbutton)
         upwidgetlayout.addWidget(btnwidget)
-        
+
         dummylabel1 = QLabel("")
         upwidgetlayout.addWidget(dummylabel1)
         dummylabel2 = QLabel("")
         upwidgetlayout.addWidget(dummylabel2)
         subpoplayout.addWidget(upwidget)
-        
+
         conditionwidget = QWidget()
         self.conditionlayout = QVBoxLayout()
         conditionwidget.setLayout(self.conditionlayout)
         self.conditionlayout.setContentsMargins(0,0,0,0)
-        
+
         self.conditions = []
 #         condition = ConditionWidget(self)
 #         self.conditions.append(condition)
 #         self.conditionlayout.addWidget(condition)
         subpoplayout.addWidget(conditionwidget)
-        
+
         dummylabel3 = QLabel("")
         subpoplayout.addWidget(dummylabel3)
 
 
         self.connect(self.addbutton, SIGNAL("clicked(bool)"), self.addFiter)
         self.connect(self.delbutton, SIGNAL("clicked(bool)"), self.deleteFiter)
-        
-        
+
+
     def addFiter(self):
 #        temp = QVBoxLayout()
 #        temp = self.layout()
-#        
+#
 #        numrow = temp.count()
         condition = ConditionWidget(self)
         self.conditions.append(condition)
 #        temp.addWidget(condition)
         self.conditionlayout.addWidget(condition)
-        
+
     def deleteFiter(self):
 #        temp = QVBoxLayout()
-#        temp = self.layout()        
+#        temp = self.layout()
         numrow = len(self.conditions)
-        
+
         if numrow > 1:
             self.conditionlayout.removeWidget(self.conditions[numrow - 1])
 #            temp.removeWidget(self.conditions[numrow - 1])
             f1 = self.conditions.pop(numrow - 1)
             f1.hide()
             f1.destroy()
-        
+
         self.conditionlayout.update()
 #        temp.update()
 
     def remove(self):
-        
+
         numrow = len(self.conditions)
         i = numrow
         while i > 0:
@@ -1535,12 +1535,12 @@ class FilterWidget(QGroupBox):
             f1 = self.conditions.pop(i - 1)
             f1.hide()
             f1.destroy()
-            
+
             i -= 1
-        
+
         self.conditionlayout.update()
-        
-        
+
+
     def reset(self):
         self.logical.setCurrentIndex(0)
         for i in range(len(self.conditions)):
@@ -1556,16 +1556,16 @@ class ConditionWidget(QWidget):
         father = self.parent()
         self.tablelist = father.tablelist
         self.coldict = father.coldict
-        
+
         conditionlayout = QGridLayout()
         self.setLayout(conditionlayout)
-        
+
         tablelabel = QLabel("Table")
         conditionlayout.addWidget(tablelabel,1,0)
         self.subpoptab = QComboBox()
         self.subpoptab.addItems(self.tablelist)
         conditionlayout.addWidget(self.subpoptab,2,0)
-        
+
         varlabel = QLabel("Column")
         conditionlayout.addWidget(varlabel,1,1)
         self.subpopvar = QComboBox()
@@ -1574,32 +1574,32 @@ class ConditionWidget(QWidget):
         self.subpopvartext.setDisabled(True)
         self.subpopvartext.setVisible(False)
         conditionlayout.addWidget(self.subpopvartext,2,1)
-        
+
         oplabel = QLabel("Operator")
-        conditionlayout.addWidget(oplabel,1,2)          
+        conditionlayout.addWidget(oplabel,1,2)
         self.subpopop = QComboBox()
         self.subpopop.addItems([QString(OP_EQUAL), QString(OP_NOTEQUAL),
                                 QString(OP_GT), QString(OP_LT),
                                 QString(OP_GTE), QString(OP_LTE)])
         conditionlayout.addWidget(self.subpopop,2,2)
-        
+
         #vallabel = QLabel("Value")
         self.isEnableValue = QCheckBox("Value")
         self.isEnableValue.setChecked(True)
-        conditionlayout.addWidget(self.isEnableValue,1,3)          
+        conditionlayout.addWidget(self.isEnableValue,1,3)
         self.subpopval = LineEdit()
         conditionlayout.addWidget(self.subpopval,2,3)
-        
-        vtablelabel = QLabel("Value Table")  
-        conditionlayout.addWidget(vtablelabel,1,4)          
+
+        vtablelabel = QLabel("Value Table")
+        conditionlayout.addWidget(vtablelabel,1,4)
         self.subpopvtab = QComboBox()
         self.subpopvtab.addItem("")
         self.subpopvtab.addItems(father.tablelist)
         self.subpopvtab.setDisabled(True)
         conditionlayout.addWidget(self.subpopvtab,2,4)
-        
-        valvarlabel = QLabel("Value Variable")  
-        conditionlayout.addWidget(valvarlabel,1,5)          
+
+        valvarlabel = QLabel("Value Variable")
+        conditionlayout.addWidget(valvarlabel,1,5)
         self.subpopvalvar = QComboBox()
         self.subpopvalvar.setDisabled(True)
         conditionlayout.addWidget(self.subpopvalvar,2,5)
@@ -1607,7 +1607,7 @@ class ConditionWidget(QWidget):
         self.subpopvalvartext.setDisabled(True)
         self.subpopvalvartext.setVisible(False)
         conditionlayout.addWidget(self.subpopvalvartext,2,5)
-                
+
         conditionlayout.setColumnStretch(0,1)
         conditionlayout.setColumnStretch(1,1)
         conditionlayout.setColumnStretch(2,1)
@@ -1618,7 +1618,7 @@ class ConditionWidget(QWidget):
         self.connect(self.subpoptab, SIGNAL("currentIndexChanged(int)"), self.populateColumns1)
         self.connect(self.subpopvtab, SIGNAL("currentIndexChanged(int)"), self.populateColumns2)
         self.connect(self.isEnableValue, SIGNAL("stateChanged(int)"), self.enableValue)
-        
+
     def populateColumns1(self, idx=0):
         self.subpopvar.clear()
         seltab = str(self.subpoptab.currentText())
@@ -1633,7 +1633,7 @@ class ConditionWidget(QWidget):
             self.subpopvartext.setVisible(True)
             self.subpopvar.setDisabled(True)
             self.subpopvar.setVisible(False)
-                    
+
     def populateColumns2(self, idx=0):
         self.subpopvalvar.clear()
         seltab = str(self.subpopvtab.currentText())
@@ -1648,19 +1648,19 @@ class ConditionWidget(QWidget):
             self.subpopvalvartext.setVisible(True)
             self.subpopvalvar.setDisabled(True)
             self.subpopvalvar.setVisible(False)
-            
+
     def enableValue(self):
         if self.isEnableValue.isChecked() == True:
             self.subpopval.setDisabled(False)
             self.subpopvtab.setDisabled(True)
             self.subpopvalvar.setDisabled(True)
             self.subpopvalvartext.setDisabled(True)
-        else:         
+        else:
             self.subpopval.setDisabled(True)
             self.subpopvtab.setDisabled(False)
             self.subpopvalvar.setDisabled(False)
             self.subpopvalvartext.setDisabled(False)
-                    
+
     def reset(self):
         self.subpoptab.setCurrentIndex(0)
         self.subpopvar.clear()
@@ -1689,5 +1689,4 @@ def main():
     app.exec_()
 
 if __name__=="__main__":
-    main()        
-        
+    main()

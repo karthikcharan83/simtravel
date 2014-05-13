@@ -32,11 +32,11 @@ class MainWindow(QMainWindow):
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
         self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
         self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
-        
+
         # Variable for a project properties; can be used to see if a project is open or not
         self.proconfig = None
         self.currentflowindex = -1
-        
+
         # Defining central widget
         self.centralwidgetscroll = QScrollArea()
         self.centralwidget = QWidget()
@@ -44,7 +44,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.centralwidgetscroll)
         self.centralwidget.setFixedSize(1140, 1200)
         self.centralwidgetscroll.setWidget(self.centralwidget)
-        
+
         # Defining help widget under central widget
 #        size = self.geometry()
 #        height = []
@@ -59,15 +59,15 @@ class MainWindow(QMainWindow):
 #        self.centralwidget.setFixedSize(1140, 1200)
 #        self.centralwidgetscroll.setWidget(self.centralwidget)
 
-    
-        # Defining status bar        
+
+        # Defining status bar
         self.sizelabel = QLabel()
         self.sizelabel.setFrameStyle(QFrame.StyledPanel|QFrame.Sunken)
         status = self.statusBar()
         status.setSizeGripEnabled(False)
         status.addPermanentWidget(self.sizelabel)
         status.showMessage("Ready", 5000)
-        
+
         # Setting help_dock_widget on the bottom of window to show instruction message
         help_dock_widget = QDockWidget(self.centralwidget)
         self.helpbrowser = QTextBrowser()
@@ -75,8 +75,8 @@ class MainWindow(QMainWindow):
         help_dock_widget.setObjectName("help_dock_widget")
         help_dock_widget.setAllowedAreas(Qt.BottomDockWidgetArea)
         self.addDockWidget(Qt.BottomDockWidgetArea, help_dock_widget)
-        
-        
+
+
         # Defining manager widget
         # Setting all_manager_dock_widget
         all_manager_dock_widget = QDockWidget(self.centralwidget)
@@ -105,7 +105,7 @@ class MainWindow(QMainWindow):
         buttonlayout = QHBoxLayout()
         buttonwidget.setLayout(buttonlayout)
         buttonlayout.setContentsMargins(0,0,0,0)
-        
+
         tools = QToolBar()
         #tools.setMaximumWidth(70)
         up_action = self.createaction("",self.getup,"","arrow_up","Move up an element in the tree.")
@@ -119,13 +119,13 @@ class MainWindow(QMainWindow):
         splitter.addWidget(buttonwidget)
         splitter.addWidget(self.model_management)
         splitter.addWidget(self.data_management)
-        
+
 
 
 
         # Call the class Models
         self.models = Models(self.centralwidget)
-        
+
         #Method to disable menus and graphics based on whether a project is open or not
         self.checkProject()
 
@@ -134,13 +134,13 @@ class MainWindow(QMainWindow):
 # Defining menu
     # Defining File
         self.fileMenu = self.menuBar().addMenu("&File")
-        project_new_action = self.createaction("&New Project", self.projectnew, QKeySequence.New, 
+        project_new_action = self.createaction("&New Project", self.projectnew, QKeySequence.New,
                                             "projectnew", "Create a new OpenAMOS project.")
 
-        project_open_action = self.createaction("&Open Project", self.projectopen, QKeySequence.Open, 
+        project_open_action = self.createaction("&Open Project", self.projectopen, QKeySequence.Open,
                                             "projectopen", "Open a new OpenAMOS project.")
 
-        project_save_action = self.createaction("&Save Project", self.projectsave, QKeySequence.Save, 
+        project_save_action = self.createaction("&Save Project", self.projectsave, QKeySequence.Save,
                                               "projectsave", "Save the current OpenAMOS project.")
 
         project_save_as_action = self.createaction("Save Project &As...", self.projectSaveAs, "Ctrl+Shift+S",
@@ -159,33 +159,33 @@ class MainWindow(QMainWindow):
 #                                        project_print_action,None,project_close_action,project_quit_action, ))
         self.addActions(self.fileMenu, (project_new_action,project_open_action,None,project_save_action,project_save_as_action,
                                         None,project_close_action,project_quit_action, ))
-      
+
     # Defining Models
 #         self.models_menu = self.menuBar().addMenu("&Models")
-# 
-# #        models_interactive_ui_action = self.createaction("&Interactive UI", None, None, 
+#
+# #        models_interactive_ui_action = self.createaction("&Interactive UI", None, None,
 # #                                            None, "Chose a model in a visual form.")
-#         component_long_term_choices_action = self.createaction(COMP_LONGTERM, self.models.show_long_term_models, None, 
+#         component_long_term_choices_action = self.createaction(COMP_LONGTERM, self.models.show_long_term_models, None,
 #                                             None, None)
-#         component_fixed_activity_location_choice_generator_action = self.createaction(COMP_FIXEDACTLOCATION, self.models.show_fixed_activity_models, None, 
+#         component_fixed_activity_location_choice_generator_action = self.createaction(COMP_FIXEDACTLOCATION, self.models.show_fixed_activity_models, None,
 #                                             None, None)
-#         component_vehicle_ownership_model_action = self.createaction(COMP_VEHOWN, self.models.show_vehicle_ownership_models, None, 
+#         component_vehicle_ownership_model_action = self.createaction(COMP_VEHOWN, self.models.show_vehicle_ownership_models, None,
 #                                             None, None)
-#         component_fixed_activity_prism_generator_action = self.createaction(COMP_FIXEDACTPRISM, self.models.show_fixed_activity_prism_models, None, 
+#         component_fixed_activity_prism_generator_action = self.createaction(COMP_FIXEDACTPRISM, self.models.show_fixed_activity_prism_models, None,
 #                                             None, None)
-#         component_child_daily_status_and_allocation_model_action = self.createaction(COMP_CHILDSTATUS, self.models.show_child_model, None, 
+#         component_child_daily_status_and_allocation_model_action = self.createaction(COMP_CHILDSTATUS, self.models.show_child_model, None,
 #                                             None, None)
-#         component_adult_daily_status_model_action = self.createaction(COMP_ADULTSTATUS, self.models.show_adult_model, None, 
+#         component_adult_daily_status_model_action = self.createaction(COMP_ADULTSTATUS, self.models.show_adult_model, None,
 #                                             None, None)
-#         component_activity_skeleton_reconciliation_system_action = self.createaction(COMP_ACTSKELRECONCILIATION, self.models.show_skeleton_reconciliation_system, None, 
+#         component_activity_skeleton_reconciliation_system_action = self.createaction(COMP_ACTSKELRECONCILIATION, self.models.show_skeleton_reconciliation_system, None,
 #                                             None, None)
-#         component_activity_travel_pattern_simulator_action = self.createaction(COMP_ACTTRAVSIMULATOR, self.models.show_activity_travel_pattern_simulator, None, 
+#         component_activity_travel_pattern_simulator_action = self.createaction(COMP_ACTTRAVSIMULATOR, self.models.show_activity_travel_pattern_simulator, None,
 #                                             None, None)
-#         component_activity_travel_reconciliation_system_action = self.createaction(COMP_ACTTRAVRECONCILIATION, self.models.show_travel_reconciliation_system, None, 
+#         component_activity_travel_reconciliation_system_action = self.createaction(COMP_ACTTRAVRECONCILIATION, self.models.show_travel_reconciliation_system, None,
 #                                             None, None)
-# #        component_time_use_utility_calculator_action = self.createaction(COMP_TIMEUSEUTILITY, None, None, 
+# #        component_time_use_utility_calculator_action = self.createaction(COMP_TIMEUSEUTILITY, None, None,
 # #                                            None, None)
-# 
+#
 #         modelsComponentSubMenu = self.models_menu.addMenu("&Component")
 #         modelsComponentSubMenu.setIcon(QIcon("./images/component.png"))
 # #        self.addActions(self.models_menu, (models_interactive_ui_action, ))
@@ -197,18 +197,18 @@ class MainWindow(QMainWindow):
 
     # Defining Data
 
-        
+
         self.data_menu = self.menuBar().addMenu("&Data")
 #        data_import_action = self.createaction("Import data", None, None,
 #                                            "import", "Import data.")
         importSubMenu = self.data_menu.addMenu("Import data")
         importSubMenu.setIcon(QIcon("./images/import.png"))
-        import_shapefile = self.createaction("Import spatial data (.shp)", self.importshape, None, 
+        import_shapefile = self.createaction("Import spatial data (.shp)", self.importshape, None,
                                     None, None)
-        import_nhts = self.createaction("Import NHTS (.csv)", self.importnhts, None, 
+        import_nhts = self.createaction("Import NHTS (.csv)", self.importnhts, None,
                                     None, None)
         self.addActions(importSubMenu, (import_shapefile,import_nhts))
-        
+
         data_export_action = self.createaction("Export data", None, None,
                                             "export", "Export data.")
         data_dataconfig_action = self.createaction("Database Configuration", self.databaseconfiguration, None,
@@ -241,7 +241,7 @@ class MainWindow(QMainWindow):
                                                   "schedule", "Show profile of activity travel pattern in persons or households", False, True)
         kml_tirps_action = self.createaction("Travel or Activity Characteristics in KML", self.create_kml, None,
                                                   "earth", "Show travel characteristics", False, True)
-        export_output = self.createaction("Export Output (.xls)", self.exportoutput, None, 
+        export_output = self.createaction("Export Output (.xls)", self.exportoutput, None,
                                     "excel","Produce the basic OpenAmos or NHTS results as MS Excel", False, True)
         self.addActions(self.result_menu, (activity_pattern_action,person_schedule_action,kml_tirps_action,export_output, ))
 
@@ -252,7 +252,7 @@ class MainWindow(QMainWindow):
         help_documentation_action = self.createaction("&Documentation", None, None,
                                             "documentation", "Quick reference for important parameters.")
         self.addActions(self.help_menu, (help_documentation_action,None,help_about_action,  ))
- 
+
 # Defining toolbar
         self.fileToolBar = self.addToolBar("File")
         self.fileToolBar.setObjectName("FileToolBar")
@@ -266,11 +266,11 @@ class MainWindow(QMainWindow):
     def getup(self):
         if self.proconfig != None:
             self.model_management.moveup()
-        
+
     def getdown(self):
         if self.proconfig != None:
             self.model_management.movedown()
-        
+
 # Define Action
     def createaction(self, text, slot=None, shortcut=None, icon=None,
                      tip=None, checkable=False, disabled = None, signal="triggered()"):
@@ -318,7 +318,7 @@ class MainWindow(QMainWindow):
 #            self.models.show_activity_travel_pattern_simulator()
 #        if selitem.text(col) == COMP_ACTTRAVRECONCILIATION:
 #            self.models.show_travel_reconciliation_system()
-        
+
         if selitem.text(col) == COMP_LONGTERM:
             self.models.show_long_term_models()
             self.currentflowindex = 0
@@ -354,7 +354,7 @@ class MainWindow(QMainWindow):
 #             self.models.show_work_status_model()
 
     def refreshflowchart(self):
-        
+
         print "Current Flow Index: %s" %(self.currentflowindex)
         self.models.show_clear_widget()
         if self.currentflowindex == 0:
@@ -389,13 +389,13 @@ class MainWindow(QMainWindow):
 #                self.models = None
 #                self.centralwidget = None
 #                self.centralwidget = QWidget()
-#                self.centralwidget.setObjectName("centralwidget")        
+#                self.centralwidget.setObjectName("centralwidget")
 #                self.centralwidget.setFixedSize(1140, 1200)
 #                self.centralwidgetscroll.setWidget(self.centralwidget)
 #                self.models = Models(self.centralwidget)
                 self.models.show_clear_widget()
 
-        
+
             self.proconfig = ConfigObject(configtree=project_new.configtree)
             self.checkProject()
             self.data_menu.actions()[2].setEnabled(True)
@@ -410,11 +410,11 @@ class MainWindow(QMainWindow):
     def projectopen(self):
         if self.proconfig <> None:
             reply = QMessageBox.warning(self, "Save Existing Project...",
-                                        QString("""Would you like to save the project?"""), 
+                                        QString("""Would you like to save the project?"""),
                                         QMessageBox.Yes| QMessageBox.No)
             if reply == QMessageBox.Yes:
                 self.proconfig.write()
-            
+
         self.project_open = OpenProject()
 #        print self.project_open.file
         if self.project_open.file != '':
@@ -425,13 +425,13 @@ class MainWindow(QMainWindow):
 #            self.models = None
 #            self.centralwidget = None
 #            self.centralwidget = QWidget()
-#            self.centralwidget.setObjectName("centralwidget")        
+#            self.centralwidget.setObjectName("centralwidget")
 #            self.centralwidget.setFixedSize(1140, 1200)
 #            self.centralwidgetscroll.setWidget(self.centralwidget)
 #            self.models = Models(self.centralwidget)
             self.models.show_clear_widget()
 
-            
+
             self.proconfig = ConfigObject(configfileloc=str(self.project_open.file))
             self.checkProject()
             self.data_menu.actions()[2].setEnabled(True)
@@ -442,7 +442,7 @@ class MainWindow(QMainWindow):
             self.result_menu.actions()[3].setEnabled(True)
 
 
-            
+
 
     def projectsave(self):
 #        self.proconfig.write()
@@ -451,20 +451,20 @@ class MainWindow(QMainWindow):
 
 
     def projectSaveAs(self):
-        file = QFileDialog.getSaveFileName(self, QString("Save As..."), 
-                                                             "%s" %self.proconfig.getConfigElement(PROJECT_HOME), 
+        file = QFileDialog.getSaveFileName(self, QString("Save As..."),
+                                                             "%s" %self.proconfig.getConfigElement(PROJECT_HOME),
                                                              "XML File (*.xml)")
-        
+
 #        fileparse = re.split("[/.]", file)
 #        location = ""
 #        for i in range(len(file)-3):
 #            location = location + file[i] + '/'
 #        location =  location + file[len(file)-3]
-#            
+#
 #        filename = fileparse[-2]
         if not file.isEmpty():
             reply = QMessageBox.warning(self, "Save Existing Project As...",
-                                        QString("""Would you like to continue?"""), 
+                                        QString("""Would you like to continue?"""),
                                         QMessageBox.Yes| QMessageBox.No)
             if reply == QMessageBox.Yes:
 #                print "%s"%(filename)
@@ -473,12 +473,12 @@ class MainWindow(QMainWindow):
                 self.proconfig.fileloc = file
                 self.proconfig.saveconfig()
                 self.setWindowTitle("OpenAMOS: Version-1.0 (%s)" %projname)
-                
+
 #                self.project.filename = filename
 #                self.project.save()
 #                self.setWindowTitle("OpenAMOS: Version-1.0 (%s)" %self.project.name)
 
-    
+
     def projectClose(self):
         self.proconfig = None
         self.checkProject()
@@ -490,7 +490,7 @@ class MainWindow(QMainWindow):
         self.result_menu.actions()[2].setDisabled(True)
         self.result_menu.actions()[3].setDisabled(True)
 
-        
+
 
     def projectQuit(self):
         reply = QMessageBox.question(None, 'Quit', "Are you sure to quit?",
@@ -499,7 +499,7 @@ class MainWindow(QMainWindow):
         if reply == QMessageBox.Yes:
             self.proconfig.write()
             self.close()
-            
+
     def checkProject(self):
         actpro = bool(self.proconfig)
         self.model_management.clear()
@@ -513,45 +513,45 @@ class MainWindow(QMainWindow):
         if self.proconfig <> None:
             import_shape = Read_Shape(self.proconfig)
             import_shape.exec_()
-            
+
     def importnhts(self):
         if self.proconfig <> None:
             import_nhts = Import_NHTS(self.proconfig)
             import_nhts.exec_()
-            
+
     def exportoutput(self):
         if self.proconfig <> None:
             export_output = Export_Outputs(self.proconfig)
             export_output.exec_()
-            
+
     def databaseconfiguration(self):
         if self.proconfig <> None:
             project_database = DatabaseConfig(self.proconfig)
             project_database.exec_()
-    
+
     def results_schedules(self):
         if self.proconfig <> None:
             show_plot = MakeResultPlot(self.proconfig) #MakePlot(self.proconfig,"schedule_final_r")
             show_plot.exec_()
-            
+
     def create_kml(self):
         if self.proconfig <> None:
             show_plot = kml_trips(self.proconfig)
             show_plot.exec_()
-            
+
     def results_person(self):
         if self.proconfig <> None:
             show_plot = MakeSchedPlot(self.proconfig)
             show_plot.exec_()
-            
+
     def run_simulation(self):
-        simdiag = SimDialog(self.proconfig)  
-        simdiag.exec_() 
-        
-        self.models.show_clear_widget() 
+        simdiag = SimDialog(self.proconfig)
+        simdiag.exec_()
+
+        self.models.show_clear_widget()
         self.proconfig = ConfigObject(configfileloc=str(self.project_open.file))
         self.checkProject()
-            
+
 #        fileloc = self.proconfig.getConfigElement(PROJECT,LOCATION)
 #        pname = self.proconfig.getConfigElement(PROJECT,NAME)
 #        """This accepts only one argument which is the location of the configuration """\

@@ -63,13 +63,13 @@ class Absreldiff(Matplot):
 #        scenarioDatabase = '%s%s%s' %(self.project.name, 'scenario', self.project.scenario)
 #        projectDBC = createDBC(self.project.db, scenarioDatabase)
 #        projectDBC.dbc.open()
-    
+
         cursor = self.new_obj.cursor
         vars = "activitytype, avg(duration)"
         tablename = "schedule_full_r"
         filter = ""
         group = "activitytype"
-        
+
         try:
             retrieve = self.executeSelectQuery(cursor, vars, tablename, filter, group)
             #cursor.execute("select actcat, count(*) from trips group by actcat")
@@ -81,10 +81,10 @@ class Absreldiff(Matplot):
         except Exception, e:
             print '\tError while fetching the columns from the table'
             print e
-            
+
         return False
-    
-    
+
+
 
 
 def main():

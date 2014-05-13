@@ -18,7 +18,7 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as Naviga
 from matplotlib.figure import Figure
 
 class Matplot(QDialog):
-    
+
     def __init__(self, parent=None):
         QDialog.__init__(self, parent)
         self.setMinimumSize(QSize(900,500))
@@ -37,11 +37,11 @@ class Matplot(QDialog):
         # work.
         #
         self.axes = self.fig.add_subplot(111)
-        
+
         self.addfilter = QWidget(self)
         addfilterlayout = QGridLayout()
         self.addfilter.setLayout(addfilterlayout)
-        
+
         filter = QGroupBox(self)
         addfilter = QGridLayout()
         filter.setLayout(addfilter)
@@ -59,7 +59,7 @@ class Matplot(QDialog):
         addfilter.addWidget(self.selectvar2,0,2)
         addfilter.addWidget(self.choicevar2,1,1)
         addfilterlayout.addWidget(filter,0,0)
-        
+
 #        segment = QGroupBox(self)
 #        addsegment = QGridLayout()
 #        segment.setLayout(addsegment)
@@ -72,41 +72,41 @@ class Matplot(QDialog):
 #        addsegment.addWidget(self.segment3,1,0)
 #        addsegment.addWidget(self.segment4,1,1)
 #        addfilterlayout.addWidget(segment,0,1)
-        
+
         addfilterlayout.setColumnStretch(0,3)
         addfilterlayout.setColumnStretch(1,2)
-        
+
 
         self.vbox = QVBoxLayout()
         self.vbox.setStretch(0,1)
         self.dialogButtonBox = QDialogButtonBox(QDialogButtonBox.Ok)
-        
-        
+
+
         #self.connect(self.dialogButtonBox, SIGNAL("accepted()"), self, SLOT("accept()"))
         #self.connect(self, SIGNAL('triggered()'),self.closeEvent)
         self.connect(self.dialogButtonBox, SIGNAL("accepted()"), self.disconnects)
-        
 
- 
+
+
     def connects(self,configobject):
-        
-        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)        
+
+        protocol = configobject.getConfigElement(DB_CONFIG,DB_PROTOCOL)
         user_name = configobject.getConfigElement(DB_CONFIG,DB_USER)
         password = configobject.getConfigElement(DB_CONFIG,DB_PASS)
         host_name = configobject.getConfigElement(DB_CONFIG,DB_HOST)
         database_name = configobject.getConfigElement(DB_CONFIG,DB_NAME)
-        
+
         self.database_config_object = DataBaseConfiguration(protocol, user_name, password, host_name, database_name)
         self.new_obj = DataBaseConnection(self.database_config_object)
         self.new_obj.new_connection()
 
-        
+
     def disconnects(self):
         self.new_obj.close_connection()
         self.close()
 
-        
-    
+
+
     def isValid(self):
         pass
 
@@ -130,14 +130,14 @@ class Matplot(QDialog):
             else:
                 cursor.execute("""SELECT %s FROM %s ORDER BY %s"""%(vars,tablename,order))
                 temp = cursor.fetchall()
-            
+
 
             return temp
-        
+
         except Exception, e:
             print '\tError while creating the table %s'%self.table_name
             print e
-            return False      
+            return False
 #        else:
 #            QMessageBox.warning(self, "Results", "A table with name - %s does not exist." %(tablename), QMessageBox.Ok)
 #            return False
@@ -154,7 +154,7 @@ class Matplot(QDialog):
     def tableList(self):
         tables = self.new_obj.get_table_list()
         return tables
-    
+
     def checkColumnExists(self, tablename, columnname):
         columns = self.new_obj.get_column_list(tablename)
         try:
@@ -176,13 +176,13 @@ class Matplot(QDialog):
             for i in temp:
                 if self.checkColumnExists(tablename,i):
                     vars.append(i)
-            
+
         self.choicevar1.addItems(vars)
         self.choicevar2.addItems(vars)
-                
-                
+
+
 #    def fill_variable2(self,pattern):
-#        
+#
 #        self.choicevar2.clear()
 #        vars = []
 #        if pattern == "trips":
@@ -192,7 +192,7 @@ class Matplot(QDialog):
 #        else:
 #            vars = ["purpose","strttime","endtime","mode","occupancy"]
 #            vars.remove(str(self.choicevar1.currentText()))
-#        
+#
 #        self.choicevar2.addItems(vars)
 
 
@@ -220,14 +220,14 @@ class LabComboBox(QWidget):
 
     def getCurrentText(self):
         return self.combobox.currentText()
-    
+
     def getCurrentIndex(self):
         return self.combobox.currentIndex()
 
     def setCurrentText(self,txt):
         self.combobox.setCurrentIndex(self.list.index(txt))
-         
-    
+
+
 def main():
     app = QApplication(sys.argv)
     diag = Matplot()

@@ -8,7 +8,7 @@ from openamos.core.errors import SpecificationError
 class LogitChoiceModel(AbstractChoiceModel):
     """
     This is the base class for implementing logit choice models in OpenAMOS.
-    
+
     Input:
     specification - Specification object
     """
@@ -18,12 +18,12 @@ class LogitChoiceModel(AbstractChoiceModel):
                 """Specification object"""
         AbstractChoiceModel.__init__(self, specification)
 
-        
+
     def calc_observed_utilities(self, data):
         """
         The method returns the observed portion of the utility associated with
         the different choices.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -35,7 +35,7 @@ class LogitChoiceModel(AbstractChoiceModel):
         """
         The method returns the observed portion of the utility associated with
         the ONLY the valid choices.
-        
+
         Inputs:
         data - DataArray object
         choiceset - DataArray object
@@ -47,12 +47,12 @@ class LogitChoiceModel(AbstractChoiceModel):
                 valid_values.setcolumn(i, ma.masked, mask)
         return valid_values
 
-    
+
     def calc_exp_choice_utilities(self, data, choiceset):
         """
-        The method returns the exponent of the observed portion of the 
+        The method returns the exponent of the observed portion of the
         utility associated with the different choices.
-        
+
         Inputs:
         data - DataArray object
         choiceset - DataArray object
@@ -60,13 +60,13 @@ class LogitChoiceModel(AbstractChoiceModel):
         values = self.validchoiceutilities(data, choiceset)
         values.data = exp(values.data)
         return self.calculate_exp_expected_values(data)
-    
+
 
     def calc_probabilities(self, data, choiceset):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
-        
+
         Inputs:
         data - DataArray object
         choiceset - DataArray object
@@ -77,19 +77,19 @@ class LogitChoiceModel(AbstractChoiceModel):
         probabilities = (exp_expected_utilities.data.transpose()
                          /exp_utility_sum_max).transpose()
         return probabilities
-        
+
     def calc_chosenalternative(self, data, choiceset=None, seed=1):
         """
         The method returns the selected choice among the available
         alternatives.
-        
+
         Inputs:
         data = DataArray object
         choiceset = DataArray object
         """
         if choiceset is None:
             choiceset = DataArray(array([]), [])
-        probabilities = DataArray(self.calc_probabilities(data, choiceset), 
+        probabilities = DataArray(self.calc_probabilities(data, choiceset),
                                   self.specification.choices)
         prob_model = AbstractProbabilityModel(probabilities, seed)
         return prob_model.selected_choice()
@@ -114,24 +114,24 @@ class TestLogitChoiceModel(unittest.TestCase):
         coefficients = [{'Constant':2, 'Var1':2.11}, {'Constant':1.2}]
         data = array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]])
 
-        self.choiceset1 = DataArray(ma.array([[0, 1], [0, 1], [1, 1], [1, 1]]), 
+        self.choiceset1 = DataArray(ma.array([[0, 1], [0, 1], [1, 1], [1, 1]]),
                                     ['SOV', 'HOV'])
 
         self.data = DataArray(data, ['Constant','Var1'])
         self.specification = Specification(choices, coefficients)
 
-        self.utils_array_act = zeros((self.data.rows, 
+        self.utils_array_act = zeros((self.data.rows,
                                       self.specification.number_choices))
         self.utils_array_act[:,0] = self.data.data[:,0]*2 + self.data.data[:,1]*2.11
         self.utils_array_act[:,1] = self.data.data[:,0]*1.2
         self.exp_utils_array_act = exp(self.utils_array_act)
         self.prob_array_act = (self.exp_utils_array_act.transpose()/
                                self.exp_utils_array_act.cumsum(-1)[:,-1]).transpose()
-        
+
         # for the selected data, and seed = 1, chosen alternatives are
         self.selected_act = array([['sov'], ['hov'], ['sov'], ['sov']])
         self.selected_act1 = array([['hov'], ['hov'], ['sov'], ['sov']])
-        
+
 
     def testmodelresults(self):
         model = LogitChoiceModel(self.specification)
@@ -144,12 +144,12 @@ class TestLogitChoiceModel(unittest.TestCase):
         selected_diff = all(self.selected_act == selected_model)
         self.assertEqual(True, selected_diff)
 
-        
+
     def testmodelresultswithchoicesets(self):
         model = LogitChoiceModel(self.specification)
         probabilities_model = model.calc_probabilities(self.data, self.choiceset1)
 
-        # Calculating actual values with mask included and then compare 
+        # Calculating actual values with mask included and then compare
         # it against outputs from model
         mask = self.choiceset1.data == 0
         self.exp_utils_array_act[mask] = ma.masked

@@ -53,7 +53,7 @@ class Household(Entity):
     tract_id = Field(Integer)
     zone_id = Field(Integer)
 
-    
+
 #TSP class
 class TSP(Entity):
     using_options(tablename='tsp')
@@ -73,7 +73,7 @@ class Link(Entity):
     X_Coordinates = Field(Integer)
     Y_Coordinates = Field(Integer)
     DO_ID_fk = ManyToOne('Destination_Opportunities', field=DO_ID)
-    
+
 
 #destination opportunities class
 class Destination_Opportunities(Entity):
@@ -82,7 +82,7 @@ class Destination_Opportunities(Entity):
     Link_ID_fk = OneToMany('Link', field=Link_ID)
     TSP_ID_fk = OneToMany('TSP', field=TSP_ID)
 
-    
+
 #person class
 class Person(Entity):
     using_options(tablename='person')
@@ -102,16 +102,16 @@ class Person(Entity):
     Household_ID_fk = ManyToOne('Vehicle', field=Vehicle_ID)
     Vehicle_ID_fk = OneToMany('Vehicle', field=Vehicle_ID)
     PT_ID_fk = ManyToOne('Person_Trip', field=PT_ID)
-    
-    
+
+
 #person schedule class
 class Person_Schedule(Entity):
     using_options(tablename='person_schedule')
     PS_ID = Field(Integer, primary_key = True)
     Person_ID_fk = ManyToOne('Person', field=Person_ID)
     Schedule_ID_fk = ManyToOne('Schedule', field=Schedule_ID)
-    
-    
+
+
 #Vehicle class
 class Vehicle(Entity):
     using_options(tablename='vehicle')
@@ -124,9 +124,9 @@ class Vehicle(Entity):
     Capacity = Field(UnicodeText)
     Trip_ID_fk = OneToMany('Trip', field=Trip_ID)
 
-    
+
 #trip class
-class Trip(Entity): 
+class Trip(Entity):
     using_options(tablename='trip')
     Trip_ID = Field(Integer, primary_key = True)
     Start_Time = Field(Integer)
@@ -137,7 +137,7 @@ class Trip(Entity):
     Mode = Field(UnicodeText)
     Fare = Field(Integer)
     Travel_Times = Field(Integer)
-    
+
 
 #person trip class
 class Person_Trip(Entity):

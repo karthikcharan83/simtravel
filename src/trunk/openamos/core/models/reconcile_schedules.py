@@ -14,10 +14,10 @@ class ReconcileSchedules(Model):
         self.activityAttribs = self.specification.activityAttribs
 
     def create_indices(self, data):
-        idCols = data.columns([self.activityAttribs.hidName, 
+        idCols = data.columns([self.activityAttribs.hidName,
                                self.activityAttribs.pidName]).data
         combId = idCols[:,0]*100 + idCols[:,1]
-        
+
         #print idCols[:20,:]
         #print 'comid', combId[:20]
         #print 'comid', combId[-20:]
@@ -31,13 +31,13 @@ class ReconcileSchedules(Model):
 
 
         binsIndices = array(range(comId_reverse_indices.max()+2))
-        
+
         histIndices = histogram(comId_reverse_indices, bins=binsIndices)
         #print histIndices[0][:20]
         #print histIndices[0][-20:]
-        
+
         indicesRowCount = histIndices[0]
-        
+
         indicesRow = indicesRowCount.cumsum()
         #print 'Row Count', indicesRowCount[:20]
         #print 'Row Index Low', indicesRow[:20]
@@ -56,10 +56,10 @@ class ReconcileSchedules(Model):
 
         self.indices[1:,2] = indicesRow[:-1]
         self.indices[:,3] = indicesRow
-        
+
         #print self.indices[:20, :]
         #print self.indices[-20:, :]
-        
+
         #raw_input('New implementation of indics -')
 
 
@@ -86,27 +86,27 @@ class ReconcileSchedules(Model):
         durCol = data._colnames[self.activityAttribs.durationName]
 
         colNames = [self.activityAttribs.hidName,
-		    self.activityAttribs.pidName,
-		    self.activityAttribs.scheduleidName, 
+                    self.activityAttribs.pidName,
+                    self.activityAttribs.scheduleidName,
                     self.activityAttribs.activitytypeName,
                     self.activityAttribs.starttimeName,
                     self.activityAttribs.endtimeName,
                     self.activityAttribs.locationidName,
                     self.activityAttribs.durationName,
-		    self.activityAttribs.dependentPersonName,
-		    self.activityAttribs.tripCountName]
+                    self.activityAttribs.dependentPersonName,
+                    self.activityAttribs.tripCountName]
 
 
 
         row = 0
-        
+
         for perIndex in self.indices:
             schedulesForPerson = data.data[perIndex[2]:perIndex[3],:]
 
             activityList = []
             for sched in schedulesForPerson:
-		hid = sched[hidCol]
-		pid = sched[pidCol]
+                hid = sched[hidCol]
+                pid = sched[pidCol]
 
                 scheduleid = sched[schidCol]
                 activitytype = sched[actTypeCol]
@@ -114,20 +114,20 @@ class ReconcileSchedules(Model):
                 starttime = sched[sttimeCol]
                 endtime = sched[endtimeCol]
                 duration = sched[durCol]
-                
-                actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid, 
+
+                actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
                                              starttime, endtime, duration)
                 activityList.append(actepisode)
 
             personObject = Person(perIndex[0], perIndex[1])
             personObject.add_episodes(activityList)
             personObject.reconcile_activity_schedules(seed)
-	    reconciledSchedules = personObject._collate_results_aslist()
+            reconciledSchedules = personObject._collate_results_aslist()
 
-	    if not personObject._check_for_conflicts():
-                raise Exception, "THE SCHEDULES ARE STILL MESSED UP"    
+            if not personObject._check_for_conflicts():
+                raise Exception, "THE SCHEDULES ARE STILL MESSED UP"
 
-	    actList += reconciledSchedules
+            actList += reconciledSchedules
         return DataArray(actList, colNames)
 
 import unittest
@@ -137,19 +137,19 @@ from openamos.core.data_array import DataArray
 class TestReconcileModel(unittest.TestCase):
     def setUp(self):
         self.data = genfromtxt("/home/kkonduri/simtravel/test/mag_zone/schedule_txt.csv", delimiter=",", dtype=int)
-        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime', 
+        colNames = ['houseid', 'personid', 'scheduleid', 'activitytype', 'locationid', 'starttime',
                     'endtime', 'duration']
         self.actSchedules = DataArray(self.data, colNames)
 
 
-        
+
 
     def test_retrieve_loop_ids(self):
         houseIdsCol = self.actSchedules.columns(['houseid']).data
         houseIdsUnique = unique(houseIdsCol)
         print houseIdsUnique
 
-        
+
         for hid in houseIdsUnique:
             schedulesRowsIndForHh = houseIdsCol == hid
             schedulesForHh = self.actSchedules.rowsof(schedulesRowsIndForHh)
@@ -160,7 +160,7 @@ class TestReconcileModel(unittest.TestCase):
             for pid in pIdsUnique:
                 schedulesRowIndForPer = pIdsCol == pid
                 schedulesForPerson = schedulesForHh.rowsof(schedulesRowIndForPer)
-            
+
                 #print 'Raw schedules for hid:%s and pid:%s' %(hid, pid)
                 #print schedulesForPerson
 
@@ -172,8 +172,8 @@ class TestReconcileModel(unittest.TestCase):
                     starttime = sch[5]
                     endtime = sch[6]
                     duration = sch[7]
-                    
-                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                                  starttime, endtime, duration)
                     activityList.append(actepisode)
                 personObject = Person(hid, pid)
@@ -183,9 +183,8 @@ class TestReconcileModel(unittest.TestCase):
         #pid = unique(self.actSchedules.columns(['houseid', 'personid']).
         #acts = self.actSchedules
 
-        #def 
+        #def
 
 
 if __name__ == "__main__":
     unittest.main()
-        

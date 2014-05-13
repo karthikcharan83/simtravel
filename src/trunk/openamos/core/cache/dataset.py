@@ -8,18 +8,18 @@ from openamos.core.data_array import DataArray
 
 class DB(object):
     def __init__(self, fileLoc, mode='w', fileName=None):
-		
-	if fileName == None:
-	    fileName = "amosdb"
+
+        if fileName == None:
+            fileName = "amosdb"
 
         self.fileh = t.openFile("%s/%s.h5" %(fileLoc, fileName), mode=mode)
 
 
         """
-	if partId is None:
-	    self.fileh = t.openFile("%s/amosdb.h5" %(fileLoc), mode=mode)
-	else:
-	    self.fileh = t.openFile("%s/amosdb_part_%s.h5" %(fileLoc, partId), mode=mode)
+        if partId is None:
+            self.fileh = t.openFile("%s/amosdb.h5" %(fileLoc), mode=mode)
+        else:
+            self.fileh = t.openFile("%s/amosdb_part_%s.h5" %(fileLoc, partId), mode=mode)
 
         """
     def create_inputCache(self):
@@ -67,7 +67,7 @@ class DB(object):
         self.fileh.createTable(output_grp, "schedule_ltrec_r", Schedule_Allocation_R)
         self.fileh.createTable(output_grp, "schedule_allocterm_r", Schedule_Allocation_R)
         #self.fileh.createTable(output_grp, "schedule_joint_allocterm_r", Schedule_Allocation_R)
-	self.fileh.createTable(output_grp, "persons_fixed_activity_vertices_r", Persons_Fixed_Activity_Vertices_R)
+        self.fileh.createTable(output_grp, "persons_fixed_activity_vertices_r", Persons_Fixed_Activity_Vertices_R)
 
         self.fileh.createTable(output_grp, "schedule_cleanfixedactivityschedule_r", Schedule_Allocation_R)
         self.fileh.createTable(output_grp, "schedule_childrenlastprismadj_r", Schedule_Allocation_R)
@@ -211,7 +211,7 @@ class DB(object):
 
     def close(self):
         self.fileh.close()
-        
+
     def returnGroup(self, tableName):
         if tableName[-2:] == "_r":
             return 'output'
@@ -250,22 +250,22 @@ class DB(object):
         return convType
 
     def list_of_outputtables(self):
-	tableList = []
+        tableList = []
 
-	for group in self.fileh.walkGroups():
-	    for table in self.fileh.listNodes(group, classname='Table'):
-		if self.returnGroup(table.name) == 'output':
-		    tableList.append(table.name)
-	
+        for group in self.fileh.walkGroups():
+            for table in self.fileh.listNodes(group, classname='Table'):
+                if self.returnGroup(table.name) == 'output':
+                    tableList.append(table.name)
 
-	return tableList
+
+        return tableList
 
 
     def createSkimsCache(self, tableName, data):
         t = time.time()
         cols = data.varnames
         colIndices = range(data.cols)
-        
+
         tableRef = self.returnTableReference(tableName)
         tableRow = tableRef.row
 
@@ -278,24 +278,24 @@ class DB(object):
             tableRow.append()
         tableRef.flush()
         print '\tTime taken to write to hdf5 format %.4f' %(time.time()-t)
-	
+
 
     def createSkimsTableFromDatabase(self, tableInfo, queryBrowser):
         t = time.time()
 
-	tableName = tableInfo.tableName
+        tableName = tableInfo.tableName
 
-	colsList = []
-	colsList.append(tableInfo.origin_var)
-	colsList.append(tableInfo.destination_var)
-	colsList.append(tableInfo.skims_var)
+        colsList = []
+        colsList.append(tableInfo.origin_var)
+        colsList.append(tableInfo.destination_var)
+        colsList.append(tableInfo.skims_var)
 
         data = queryBrowser.select_all_from_table(tableName, colsList)
         print '\tTotal time taken to retrieve records from the database %.4f' %(time.time()-t)
 
         cols = data.varnames
         colIndices = range(data.cols)
-        
+
         tableRef = self.returnTableReference(tableName)
         tableRow = tableRef.row
 
@@ -313,7 +313,7 @@ class DB(object):
 
     def createLocationsTableFromDatabase(self, tableInfo, queryBrowser):
         t = time.time()
-        
+
         colsList = tableInfo.locations_varsList + [tableInfo.location_id_var]
 
         tableName = tableInfo.tableName
@@ -338,44 +338,44 @@ class DB(object):
 
 
     def returnTable(self, tableName, id_var, colNames):
-	tableRef = self.returnTableReference(tableName)
-	
-	idVarColumn = tableRef.col(id_var)
-	
-	uniqueIds = unique(idVarColumn)
+        tableRef = self.returnTableReference(tableName)
 
-	table = zeros((max(uniqueIds) + 1, len(colNames)))
+        idVarColumn = tableRef.col(id_var)
+
+        uniqueIds = unique(idVarColumn)
+
+        table = zeros((max(uniqueIds) + 1, len(colNames)))
 
         for i in range(len(colNames)):
-	    table[uniqueIds, i] = tableRef.col(colNames[i])
-	
-	#print table
-	return DataArray(table, colNames), uniqueIds
+            table[uniqueIds, i] = tableRef.col(colNames[i])
+
+        #print table
+        return DataArray(table, colNames), uniqueIds
 
 
 
     def returnTableAsMatrix(self, tableName, originColName, destinationColName, skimColName, fillValue=9999):
         tableRef = self.returnTableReference(tableName)
-        
-	#print 'OLDER IMPLEMENTATION'
+
+        #print 'OLDER IMPLEMENTATION'
         origin = tableRef.col(originColName)
         destination = tableRef.col(destinationColName)
         skims = tableRef.col(skimColName)
 
-	skimsValues = tableRef[0:]
+        skimsValues = tableRef[0:]
 
         # Initialize matrix
         skimsMatrix = ones((max(origin)+1, max(destination)+1)) * fillValue
 
         # Populate matrix
         skimsMatrix[origin, destination] = skims
-	#skimsMatrix = masked_equal(skimsMatrix, 9999)
+        #skimsMatrix = masked_equal(skimsMatrix, 9999)
         print 'Skims Values for O,D pair (1226, 896) and (1538, 1562)- ', skimsMatrix[1226, 896], skimsMatrix[1538, 1562]
-	#raw_input()
+        #raw_input()
         return masked_equal(skimsMatrix, 9999), unique(origin)
 
 
-    
+
 if __name__ == '__main__':
     db = DB('w')
     db.create()

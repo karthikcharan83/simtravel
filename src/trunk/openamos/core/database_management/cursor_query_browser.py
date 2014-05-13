@@ -1,8 +1,8 @@
 #main class. this class will be used to define the database connection.
 #it will create/drop database, schema and tables
- 
 
-#include all the import 
+
+#include all the import
 import sys
 import os
 import exceptions
@@ -14,18 +14,18 @@ import re
 from cursor_database_connection import DataBaseConnection
 from psycopg2 import extensions
 from sqlalchemy.types import Integer, SmallInteger, \
-			     Numeric, Float, \
-			     VARCHAR, String, CLOB, Text,\
-			     Boolean, DateTime
+                             Numeric, Float, \
+                             VARCHAR, String, CLOB, Text,\
+                             Boolean, DateTime
 from numpy import array, ma, savetxt
 from database_configuration import DataBaseConfiguration
 from openamos.core.data_array import DataArray
 
 class QueryBrowser(object):
-    #initialize the class 
+    #initialize the class
 
     def __init__(self,dbconfig):
-        
+
         if not isinstance(dbconfig, DataBaseConfiguration):
             raise DatabaseConfigurationError, """The dbconfig input is not a valid """\
                 """DataBaseConfiguration object."""
@@ -51,20 +51,20 @@ class QueryBrowser(object):
         Output:
         Returns all the rows in the table
         """
-	colsStr = ""
-	if cols == None:
+        colsStr = ""
+        if cols == None:
             colsStr = "*"
-	else:
-	    for i in cols:
-		colsStr += "%s," %(i)
-	    colsStr = colsStr[:-1]
+        else:
+            for i in cols:
+                colsStr += "%s," %(i)
+            colsStr = colsStr[:-1]
 
 
         #check if table exists
         tab_flag = self.dbcon_obj.check_if_table_exists(table_name)
         if tab_flag:
             #print 'Table %s exists.'%table_name
-            try:    
+            try:
                 self.dbcon_obj.cursor.execute("SELECT %s FROM %s" %(colsStr, table_name))
                 result = self.dbcon_obj.cursor.fetchall()
                 if cols is None:
@@ -81,8 +81,8 @@ class QueryBrowser(object):
                 print e
         else:
             print '\tTable %s does not exist.'%table_name
-    
-  
+
+
     #select rows based on a selection criteria
     def fetch_selected_rows(self, table_name, column_name, value):
         """
@@ -106,12 +106,12 @@ class QueryBrowser(object):
                 fin_flag = False
         else:
             print 'Table %s does not exist.'%table_name
-            
+
         if fin_flag:
             try:
                 self.dbcon_obj.cursor.execute("SELECT * FROM %s where %s = '%s'"%(table_name, column_name, value))
                 data = self.dbcon_obj.cursor.fetchall()
-    
+
                 row_list = []
                 counter = 0
                 for each in data:
@@ -119,7 +119,7 @@ class QueryBrowser(object):
                     row_list.append(each)
 
                 if counter == 0:
-                    print 'No rows selected.\n'           
+                    print 'No rows selected.\n'
                 print 'Select query successful.\n'
                 return self.dbcon_obj.cursor, row_list
             except Exception, e:
@@ -127,31 +127,31 @@ class QueryBrowser(object):
                 print e
         else:
             print 'Column %s does not belong to the table %s'%(column_name, table_name)
-            return None    
+            return None
 
 
-    def select_join(self, db_dict, column_names, table_names, max_dict=None, 
-                    spatialConst_list=None, analysisInterval=None, 
-		    analysisIntervalFilter=None, analysisIntervalCondition=None,
+    def select_join(self, db_dict, column_names, table_names, max_dict=None,
+                    spatialConst_list=None, analysisInterval=None,
+                    analysisIntervalFilter=None, analysisIntervalCondition=None,
                     history_info=None,
-		    aggregate_variable_dict={},
-		    delete_dict={}):
+                    aggregate_variable_dict={},
+                    delete_dict={}):
         """
         This method is used to select the join of tables and display them.
-        
+
         Input:
         Database configuration object, table names, columns and values.
-        
+
         Output:
         Displays the rows based on the join and the selection criterion.
         """
-        #db_dict = {'households': ['urb', 'numchild', 'inclt35k', 'ownhome', 'one', 'drvrcnt', 'houseid'], 
-        #           'vehicles_r': ['vehtype', 'vehid'], 
+        #db_dict = {'households': ['urb', 'numchild', 'inclt35k', 'ownhome', 'one', 'drvrcnt', 'houseid'],
+        #           'vehicles_r': ['vehtype', 'vehid'],
         #           'households_r': ['numvehs']}
         #columns_names = ['houseid']
         #table_names = ['households', 'households_r', 'vehicles_r']
         #max_dict = {'vehicles_r':['vehid']}
-        
+
         # Prism Query or or just a Travel Time Query with Vertices
         # ADD APPROPRIATE JOIN/?INNER JOINS
 
@@ -162,7 +162,7 @@ class QueryBrowser(object):
 
         #print
         #print 'db dict', db_dict
-	#print
+        #print
         #print 'max_dict', max_dict
 
         #initialize the variables
@@ -173,41 +173,41 @@ class QueryBrowser(object):
         tabs_list = []
         #col_name = column_name
         final_col_list = db_dict.values()
-        table_list = db_dict.keys() 
+        table_list = db_dict.keys()
 
-	    
 
-	#print 'table list - ', table_list
-	#raw_input()
+
+        #print 'table list - ', table_list
+        #raw_input()
 
         table_flag = None
         all_tables = table_list + table_names
 
-	all_tables = list(set(all_tables))
+        all_tables = list(set(all_tables))
 
-	#print 'table_list', table_list
-	#print 'column_names', column_names
-	#print 'MAX DICT', max_dict
+        #print 'table_list', table_list
+        #print 'column_names', column_names
+        #print 'MAX DICT', max_dict
 
         #check if the tables exist in the database.
         for each_tab in all_tables:
-	    #print 'Checking for table name - ', each_tab
-	    if column_names[each_tab] == ['']:
-		#print 'before', db_dict, column_names, table_names
-		db_dict.pop(each_tab)
-		column_names.pop(each_tab)
-		table_list.remove(each_tab)
-		table_names.remove(each_tab)
-		#print 'after', db_dict, column_names, table_names
-		continue
-	    #print "Checking if table - ", each_tab, " exists" 
+            #print 'Checking for table name - ', each_tab
+            if column_names[each_tab] == ['']:
+                #print 'before', db_dict, column_names, table_names
+                db_dict.pop(each_tab)
+                column_names.pop(each_tab)
+                table_list.remove(each_tab)
+                table_names.remove(each_tab)
+                #print 'after', db_dict, column_names, table_names
+                continue
+            #print "Checking if table - ", each_tab, " exists"
             table_flag = self.dbcon_obj.check_if_table_exists(each_tab)
             if table_flag:
                 pass
             else:
                 print 'Table %s does not exist in the database. Exiting the funtion.'%each_tab
                 return 0
-        
+
         #similarly check if the table in the list exists
         num_tab = len(list(set(table_list) & set(table_names)))
         if num_tab <= len(table_list):
@@ -216,22 +216,22 @@ class QueryBrowser(object):
         else:
             #print 'Tables do not exists'
             return None
-        
+
         #check for the columns passed in the dictionary
-	tables = db_dict.keys()
-	tables.sort()
+        tables = db_dict.keys()
+        tables.sort()
         for i in tables:
             clist = self.dbcon_obj.get_column_list(i.lower())
             list1 = db_dict[i]
             chk_list = len(list(set(list1) & set(clist)))
 
             if chk_list == len(list1):
-	        cols = db_dict[i]
-	        cols.sort()
+                cols = db_dict[i]
+                cols.sort()
                 for j in cols:
                     #print '\tColumn - ', j
                     new_str = i.lower() + '.' + j.lower()
-                    final_list.append(new_str)                    
+                    final_list.append(new_str)
                 cols_list = cols_list + cols
                 #print cols_list, 'initial list without spatial const'
             else:
@@ -239,17 +239,17 @@ class QueryBrowser(object):
                 print 'Column List in the Table - ', clist
                 print (set(list1) & set(clist))
                 print 'Actual List of Columns requested from table - ', list1
-                
+
                 return None
         #print 'final_list is %s'%final_list
-        
 
-                
+
+
         #print 'FINAL LIST', final_list
         #print 'TABLE NAMES', table_names
-	#print 'db dict', db_dict
+        #print 'db dict', db_dict
         #print 'TABLE LIST', table_list
-	
+
         # Generating the left join statements
         mainTable = table_names[0]
         #print 'mainTable ----> ', mainTable
@@ -259,18 +259,18 @@ class QueryBrowser(object):
             primCols += column_names[i]
         primCols = list(set(primCols))
 
-	#print primCols, 'PRIMARY COLS'
+        #print primCols, 'PRIMARY COLS'
 
         joinStrList = []
         table_list.remove(mainTable)
         for table in table_list:
             joinCondition = ''
             for col in column_names[table]:
-                joinCondition = (joinCondition 
-                                 + ' %s.%s=%s.%s ' %(mainTable, col, 
-                                                     table, col) 
+                joinCondition = (joinCondition
+                                 + ' %s.%s=%s.%s ' %(mainTable, col,
+                                                     table, col)
                                  + 'and')
-                
+
             joinCondition = joinCondition[:-3]
             joinStr = ' left join %s on (%s)' %(table, joinCondition)
             joinStrList.append(joinStr)
@@ -278,7 +278,7 @@ class QueryBrowser(object):
         #print 'JOIN STRING LIST', joinStrList
 
         #check the max flag
-        
+
         if max_dict is not None:
             max_flag = 1
             max_table = max_dict.keys()
@@ -290,28 +290,28 @@ class QueryBrowser(object):
             max_flag = 0
 
         # Index of the table containing the max dict var
-        # as it stands only querying for one count variable is 
+        # as it stands only querying for one count variable is
         # provided
         #print max_dict
         if max_dict is not None:
-	    for maxTable in max_dict:
-		print '---max', maxTable, mainTable, 'main---'
+            for maxTable in max_dict:
+                print '---max', maxTable, mainTable, 'main---'
                 print 'table list here ------->', table_list
                 maxColumn = max_dict[maxTable][0]
-		try:
+                try:
                     if maxTable <> mainTable:
                         index = table_list.index(maxTable)
                         table_list.pop(index)
                     else:
                         index = 0
-		except Exception, e:
-		    print e
-		    continue	
-            	#print 'INDEX--->', index
+                except Exception, e:
+                    print e
+                    continue
+                #print 'INDEX--->', index
 
 
-        
-            	#remove the count column from the col list
+
+                #remove the count column from the col list
                 if maxTable <> mainTable:
                     countVarStr = '%s.%s' %(maxTable, maxColumn)
                     final_list.remove(countVarStr)
@@ -320,53 +320,53 @@ class QueryBrowser(object):
                 final_list.append('temp_%s.max_%s'%(maxTable, maxColumn))
                 cols_list.append('max_%s'%maxColumn)
 
-		final_list.append('%s.%s' %(maxTable, maxColumn))
-		cols_list.append('%s' %(maxColumn))
+                final_list.append('%s.%s' %(maxTable, maxColumn))
+                cols_list.append('%s' %(maxColumn))
 
-            	#print 'NEW FINAL LIST -->', final_list
+                #print 'NEW FINAL LIST -->', final_list
 
-            	# left join for the count variable
-            	joinStr = ''
+                # left join for the count variable
+                joinStr = ''
 
 
-            	#grouping string
-            	grpStr = ''
-            	joinCondition=''
+                #grouping string
+                grpStr = ''
+                joinCondition=''
 
-            	#print 'column_names of max TABLE ----->', column_names
-            	for i in column_names[maxTable]:
-            	    #print 'createing join string for column name - ', i
-            	    grpStr = grpStr + '%s,' %(i)
-            	    joinCondition = (joinCondition 
-            	                     + ' temp_%s.%s=%s.%s ' %(maxTable, i, 
-            	                                           mainTable, i) 
-            	                     + 'and')
-            	grpStr = grpStr[:-1]
-            	joinCondition = joinCondition[:-3]
-            
-	        #combine left join along with the count variable/max condition
+                #print 'column_names of max TABLE ----->', column_names
+                for i in column_names[maxTable]:
+                    #print 'createing join string for column name - ', i
+                    grpStr = grpStr + '%s,' %(i)
+                    joinCondition = (joinCondition
+                                     + ' temp_%s.%s=%s.%s ' %(maxTable, i,
+                                                           mainTable, i)
+                                     + 'and')
+                grpStr = grpStr[:-1]
+                joinCondition = joinCondition[:-3]
+
+                #combine left join along with the count variable/max condition
                 if maxTable <> mainTable:
                     mJoinStr = joinStrList.pop(index)
-                    mJoinStrIncMaxConditionVar = (mJoinStr[:-1] + 
-                                                  'and %s.%s=temp_%s.max_%s)' 
+                    mJoinStrIncMaxConditionVar = (mJoinStr[:-1] +
+                                                  'and %s.%s=temp_%s.max_%s)'
                                                   %(maxTable, maxColumn, maxTable, maxColumn))
                 else:
                     mJoinStrIncMaxConditionVar = ''
-            
-        	joinStrList.append(""" left join (select %s, max(%s) as max_%s from """
-        	                   """%s group by %s) as temp_%s on (%s) """ %(grpStr, maxColumn, 
-        		                                         	       maxColumn, maxTable, grpStr,
-        	                                                               maxTable, joinCondition)
-        	                       + mJoinStrIncMaxConditionVar)
+
+                joinStrList.append(""" left join (select %s, max(%s) as max_%s from """
+                                   """%s group by %s) as temp_%s on (%s) """ %(grpStr, maxColumn,
+                                                                               maxColumn, maxTable, grpStr,
+                                                                               maxTable, joinCondition)
+                                       + mJoinStrIncMaxConditionVar)
             #print 'LEFT JOIN MAX COL LIST--->', joinStrList
-	"""        
+        """
         # separate all the columns from the lists
         new_keys = db_dict.keys()
         for i in new_keys:
-	    cols = db_dict[i]
-	    cols.sort()
+            cols = db_dict[i]
+            cols.sort()
             cols_list = cols_list + cols
-        """    
+        """
 
 
 
@@ -379,29 +379,29 @@ class QueryBrowser(object):
             """
 
             histTempTableName = "history_temp"
-            
-	    summationStr = ""
-	    selectAggStr = ""
-	    for histVar in histVarAggConditions:
-		conditions = histVarAggConditions[histVar]
-		conditionsStr = ""
-	
-		for j in conditions:
-		    conditionsStr += " %s and" %(j)
-		conditionsStr = conditionsStr[:-3]
+
+            summationStr = ""
+            selectAggStr = ""
+            for histVar in histVarAggConditions:
+                conditions = histVarAggConditions[histVar]
+                conditionsStr = ""
+
+                for j in conditions:
+                    conditionsStr += " %s and" %(j)
+                conditionsStr = conditionsStr[:-3]
 
                 selectVarStr = "sum(%s) as %s" %(histAggVar, histVar)
 
-		summationStr += " sum(case when (%s) then %s end) as %s, " %(conditionsStr, histAggVar, histVar)
+                summationStr += " sum(case when (%s) then %s end) as %s, " %(conditionsStr, histAggVar, histVar)
 
-		final_list.append("%s.%s" %(histTempTableName, histVar))
-		cols_list.append(histVar)
+                final_list.append("%s.%s" %(histTempTableName, histVar))
+                cols_list.append(histVar)
 
-	    summationStr = summationStr[:-2]
+            summationStr = summationStr[:-2]
             keyCols = column_names[histTable]
-                
 
-	    keyCols.reverse()
+
+            keyCols.reverse()
 
             grpStr = ""
             for i in keyCols:
@@ -410,17 +410,17 @@ class QueryBrowser(object):
 
 
 
-	    selectAggStr = ("(select %s, %s from %s where endtime <= %s group by %s) as %s" 
-			    %(grpStr, summationStr, histTable, analysisInterval, grpStr, histTempTableName))
+            selectAggStr = ("(select %s, %s from %s where endtime <= %s group by %s) as %s"
+                            %(grpStr, summationStr, histTable, analysisInterval, grpStr, histTempTableName))
 
 
             joinCondition = ""
             for i in keyCols:
-                joinCondition += " %s.%s = %s.%s and" %(mainTable, i, 
-                                                   	histTempTableName, i)
+                joinCondition += " %s.%s = %s.%s and" %(mainTable, i,
+                                                        histTempTableName, i)
             joinCondition = joinCondition[:-3]
 
-            leftJoinStr = (" left join %s on (%s)" 
+            leftJoinStr = (" left join %s on (%s)"
                            %(selectAggStr, joinCondition))
 
             joinStrList.append(leftJoinStr)
@@ -428,7 +428,7 @@ class QueryBrowser(object):
 
 
 
-	    """
+            """
 
 
 
@@ -440,7 +440,7 @@ class QueryBrowser(object):
                 conditionsStr = conditionsStr[:-3]
 
                 selectVarStr = "sum(%s) as %s" %(histAggVar, histVar)
-                
+
                 histTempTableName = "history_%s" %(histVar)
 
 
@@ -448,7 +448,7 @@ class QueryBrowser(object):
                 cols_list.append(histVar)
 
                 keyCols = column_names[histTable]
-                
+
                 grpStr = ""
                 for i in keyCols:
                     grpStr += "%s," %(i)
@@ -464,15 +464,15 @@ class QueryBrowser(object):
 
                 joinCondition = ""
                 for i in keyCols:
-                    joinCondition += " %s.%s = %s.%s and" %(mainTable, i, 
+                    joinCondition += " %s.%s = %s.%s and" %(mainTable, i,
                                                        histTempTableName, i)
                 joinCondition = joinCondition[:-3]
 
-                leftJoinStr = (" left join %s on (%s)" 
+                leftJoinStr = (" left join %s on (%s)"
                                %(selectAggStr, joinCondition))
 
                 joinStrList.append(leftJoinStr)
-                
+
 
 
 
@@ -488,8 +488,8 @@ class QueryBrowser(object):
                     #stTimeField = 'st_'+ i.startConstraint.timeField
                     stVEndTimeCol = 'st.%s' %i.startConstraint.timeField
                     stVStTimeCol = 'st.%s' %(i.endConstraint.timeField)
-                    #TODO: Make these dynamic entries or properties of the 
-                    # prism constraints 
+                    #TODO: Make these dynamic entries or properties of the
+                    # prism constraints
                     #stActType = 'st.%s' %('activitytype')
                     #stScheduleid = 'st.%s' %('scheduleid')
 
@@ -497,7 +497,7 @@ class QueryBrowser(object):
                     enTable = i.endConstraint.table
                     #enLocationField = 'en_' + i.endConstraint.locationField
                     enLocationCol = 'enl.%s' %i.endConstraint.locationField
-                    #enTimeField = 'en_' + i.endConstraint.timeField                    
+                    #enTimeField = 'en_' + i.endConstraint.timeField
                     enVStTimeCol = 'en.%s' %i.endConstraint.timeField
                     enVEndTimeCol = 'en.%s' %i.startConstraint.timeField
 
@@ -507,15 +507,15 @@ class QueryBrowser(object):
                     timeCols = [stVStTimeCol, enVEndTimeCol]
 
                     table_list.append(stTable)
-                    
+
 
                     # left join for end location
-                    
+
                     # time cols are part of sptime
                     timeColsNewNames = []
                     for j in timeCols:
                         timeColsNewNames.append(j.replace('.', '_'))
-                        
+
                     timeColsStr = ''
                     for j in range(len(timeCols)):
                         # minimum of the time cols gives the first prism
@@ -535,7 +535,7 @@ class QueryBrowser(object):
                     for j in column_names[stTable]:
                         spInnerJoinCondition += ' %s.%s = %s.%s and' %('st', j, 'en', j)
                     spInnerJoinCondition = spInnerJoinCondition[:-3]
-                        
+
                     spJoinCondition = ''
                     for j in column_names[stTable]:
                         spJoinCondition += ' %s.%s = %s.%s and' %('sptime', j, mainTable, j)
@@ -543,7 +543,7 @@ class QueryBrowser(object):
 
                     # Left join condition for prism start location
                     stLocJoinCondition = ''
-                    stLocCondCols = column_names[stTable] 
+                    stLocCondCols = column_names[stTable]
                     for j in stLocCondCols:
                         stLocJoinCondition += ' %s.%s = %s.%s and ' %('stl', j, mainTable, j)
 
@@ -566,8 +566,8 @@ class QueryBrowser(object):
                                                           i.endConstraint.timeField))
                     cols_list.append('st_%s' %i.endConstraint.timeField)
 
-                    #TODO: Make these dynamic entries or properties of the 
-                    # prism constraints 
+                    #TODO: Make these dynamic entries or properties of the
+                    # prism constraints
                     final_list.append('stl.%s as st_%s' %('activitytype', 'activitytype'))
                     cols_list.append('st_%s' %'activitytype')
 
@@ -588,16 +588,16 @@ class QueryBrowser(object):
 
                     # Left join condition for prism end location
                     enLocJoinCondition = ''
-                    enLocCondCols = column_names[stTable] 
+                    enLocCondCols = column_names[stTable]
                     for j in enLocCondCols:
                         enLocJoinCondition += ' %s.%s = %s.%s and' %('enl', j, mainTable, j)
                     enLocJoinCondition += ' sptime.en_%s = %s.%s' %(i.startConstraint.timeField,
                                                                'enl', i.startConstraint.timeField)
-                    final_list.append('enl.%s as en_%s' %(i.endConstraint.locationField, 
+                    final_list.append('enl.%s as en_%s' %(i.endConstraint.locationField,
                                                        i.endConstraint.locationField))
                     cols_list.append('en_%s' %i.endConstraint.locationField)
 
-                    final_list.append('enl.%s as en_%s' %(i.endConstraint.timeField, 
+                    final_list.append('enl.%s as en_%s' %(i.endConstraint.timeField,
                                                        i.endConstraint.timeField))
                     cols_list.append('en_%s' %i.endConstraint.timeField)
 
@@ -606,8 +606,8 @@ class QueryBrowser(object):
                     cols_list.append('en_%s' %i.startConstraint.timeField)
                     #enLocJoinCondition = enLocJoinCondition[:-3]
 
-                    #TODO: Make these dynamic entries or properties of the 
-                    # prism constraints 
+                    #TODO: Make these dynamic entries or properties of the
+                    # prism constraints
                     final_list.append('enl.%s as en_%s' %('activitytype', 'activitytype'))
                     cols_list.append('en_%s' %'activitytype')
 
@@ -623,28 +623,28 @@ class QueryBrowser(object):
                     final_list.append('enl.%s as en_%s' %('duration', 'duration'))
                     cols_list.append('en_%s' %'duration')
 
-                    
+
                     # TSP consistency check
                     # nextepisode_starttime > lastepisode_endtime
                     #consistencyStr = '%s < %s' %(stTimeCol, endTimeCol)
-                    
+
                     #Old Implementation of the condition for mergining
-                    #analysisPeriodStr = ('%s=%s and %s>%s' 
+                    #analysisPeriodStr = ('%s=%s and %s>%s'
                     #                     %(stVEndTimeCol, analysisInterval,
                     #                       enVStTimeCol, analysisInterval))
 
-                    analysisPeriodStr = ('%s=%s and %s>%s' 
+                    analysisPeriodStr = ('%s=%s and %s>%s'
                                          %(stVEndTimeCol, analysisInterval,
                                            enVEndTimeCol, stVEndTimeCol))
-        
+
                     spatialJoinStr = (""" join (select %s, %s """\
                                           """from %s as %s """\
                                           """inner join %s as %s """\
                                           """on ( %s and %s) group by"""\
                                           """ %s) """\
                                           """as sptime on (%s)"""
-                                      % (spGrpNewNameStr, timeColsStr, 
-                                         stTable, 'st', 
+                                      % (spGrpNewNameStr, timeColsStr,
+                                         stTable, 'st',
                                          enTable, 'en',
                                          spInnerJoinCondition, analysisPeriodStr,
                                          spGrpStr,
@@ -654,24 +654,24 @@ class QueryBrowser(object):
                     # left join for start location
 
                     stLocJoinStr = (""" left join %s %s on """\
-                                        """(%s) """ 
+                                        """(%s) """
                                     %(stTable, 'stl', stLocJoinCondition))
 
 
                     enLocJoinStr = (""" left join %s %s on """\
-                                        """(%s) """ 
+                                        """(%s) """
                                     %(enTable, 'enl', enLocJoinCondition))
 
-        
+
                     joinStrList.insert(0, spatialJoinStr)
                     joinStrList.insert(1, stLocJoinStr)
                     joinStrList.insert(2, enLocJoinStr)
-                    
-                    joinStrList.append(' where enl.%s > stl.%s ' %(i.endConstraint.timeField, 
+
+                    joinStrList.append(' where enl.%s > stl.%s ' %(i.endConstraint.timeField,
                                                                    i.endConstraint.timeField))
-                    
+
                     #cols_list += timeColsNewNames
-                    
+
 
                     #for i in timeColsNewNames:
                     #    final_list.append('sptime.%s' %(i))
@@ -679,101 +679,101 @@ class QueryBrowser(object):
                     # there cannot be two TSP's in the same component
                     break
 
-	if analysisIntervalFilter is not None:
-	    final_list.append('%s.%s as %s_%s' %(analysisIntervalFilter[0], analysisIntervalFilter[1],
-						analysisIntervalFilter[0], analysisIntervalFilter[1]))
-	    cols_list.append('%s_%s' %(analysisIntervalFilter[0], analysisIntervalFilter[1]))
-	
-	    if len(spatialConst_list) < 1:
-		joinStrList.append(' where %s.%s %s %s' %(analysisIntervalFilter[0], 
-							 analysisIntervalFilter[1],
-							 analysisIntervalCondition,
-							 analysisInterval))
-                                         
-	# Creating the select command with aggregates for OUTPUT tables
-	if len(aggregate_variable_dict) > 0:
+        if analysisIntervalFilter is not None:
+            final_list.append('%s.%s as %s_%s' %(analysisIntervalFilter[0], analysisIntervalFilter[1],
+                                                analysisIntervalFilter[0], analysisIntervalFilter[1]))
+            cols_list.append('%s_%s' %(analysisIntervalFilter[0], analysisIntervalFilter[1]))
 
-	
-	    aggStr = " group by "
-	    for tab in aggregate_variable_dict:
-		cols = aggregate_variable_dict[tab]
-		for col in cols:	
-	  	    aggStr += "%s.%s," %(tab, col)
-		
-		    #final_list.append("%s.%s as %s_%s" %(tab, col, tab, col))		
-		    #cols_list.append("%s_%s" %(tab, col))
+            if len(spatialConst_list) < 1:
+                joinStrList.append(' where %s.%s %s %s' %(analysisIntervalFilter[0],
+                                                         analysisIntervalFilter[1],
+                                                         analysisIntervalCondition,
+                                                         analysisInterval))
 
-	    final_list.append('count(*) as frequency')
-	    cols_list.append('frequency')
-	    aggStr = aggStr[:-1]	
-	else:
-	    aggStr = ""
+        # Creating the select command with aggregates for OUTPUT tables
+        if len(aggregate_variable_dict) > 0:
+
+
+            aggStr = " group by "
+            for tab in aggregate_variable_dict:
+                cols = aggregate_variable_dict[tab]
+                for col in cols:
+                    aggStr += "%s.%s," %(tab, col)
+
+                    #final_list.append("%s.%s as %s_%s" %(tab, col, tab, col))
+                    #cols_list.append("%s_%s" %(tab, col))
+
+            final_list.append('count(*) as frequency')
+            cols_list.append('frequency')
+            aggStr = aggStr[:-1]
+        else:
+            aggStr = ""
 
         # Generating the col list
         colStr = ''
         for i in final_list:
             colStr = colStr + '%s,' %(i)
         colStr = colStr[:-1]
-        
+
         # Build the SQL string
         allJoinStr = ''
         for i in joinStrList:
             allJoinStr = allJoinStr + '%s' %i
-            
+
 
         sql_string = 'select %s from %s %s %s' %(colStr, mainTable, allJoinStr, aggStr)
-	
-	#sql_string += ' and (persons.houseid = 35802 or persons.houseid = 90971  or persons.houseid = 119866)'
+
+        #sql_string += ' and (persons.houseid = 35802 or persons.houseid = 90971  or persons.houseid = 119866)'
         print 'SQL string for query - ', sql_string
         #print cols_list
-	#raw_input()
-        
+        #raw_input()
 
-	 
-	
+
+
+
 
         try:
-	    ti = time.time()
+            ti = time.time()
             self.dbcon_obj.cursor.execute(sql_string)
             result = self.dbcon_obj.cursor.fetchall()
-	    #print '\t Retrieved from the database in %.4f' %(time.time()-ti)
+            #print '\t Retrieved from the database in %.4f' %(time.time()-ti)
             data = self.createResultArray(result, cols_list)
-	    print '\tRetrieved from the database and processed to remove "None" values in %.4f' %(time.time()-ti)	   
+            print '\tRetrieved from the database and processed to remove "None" values in %.4f' %(time.time()-ti)
             #print cols_list
             #print primCols
             # Sort with respect to primary columns
             data.sort(primCols)
-	    
-	    #print primCols
-	    #raw_input()
 
-	except AttributeError, e:
-	    #print '\t\tQuery returned None since no records were found. Hence, nothing to sort'
-	    pass
+            #print primCols
+            #raw_input()
+
+        except AttributeError, e:
+            #print '\t\tQuery returned None since no records were found. Hence, nothing to sort'
+            pass
         except Exception, e:
             print e
             print 'Error retrieving the information. Query failed.'
-        
 
 
 
-	if len(delete_dict) > 0:
-	    table = delete_dict.keys()[0]
-	    var = delete_dict[table]
-		
-	    delete_sql_string = ('delete from %s where %s in (select %s from (%s) as foo)' 
-				 %(table, var, var, sql_string))
-	    print 'Delete string - ', delete_sql_string
 
-	    #print 'delete records after select'
+        if len(delete_dict) > 0:
+            table = delete_dict.keys()[0]
+            var = delete_dict[table]
 
-	    try:
-		ti = time.time()
-		self.dbcon_obj.cursor.execute(delete_sql_string)
+            delete_sql_string = ('delete from %s where %s in (select %s from (%s) as foo)'
+                                 %(table, var, var, sql_string))
+            print 'Delete string - ', delete_sql_string
+
+            #print 'delete records after select'
+
+            try:
+                ti = time.time()
+                self.dbcon_obj.cursor.execute(delete_sql_string)
                 self.dbcon_obj.connection.commit()
-		print '\tTime taken to delete data - %.4f'  %(time.time()-ti)
-	    except Exception, e:
-		print 'Error deleting records. Query failed - ', e
+                print '\tTime taken to delete data - %.4f'  %(time.time()-ti)
+            except Exception, e:
+                print 'Error deleting records. Query failed - ', e
 
         return data
 
@@ -797,24 +797,24 @@ class QueryBrowser(object):
         if mask.any():
             data[mask] = fillValue
             data = ma.array(data, dtype=float)
-        #Sorting the array by primary cols identifying the agent as 
+        #Sorting the array by primary cols identifying the agent as
         # postgres seems to return queries without any order
-            
-        
+
+
         # Convert it back to a regular array to enable all the other processing
         print '\tSize of the data set that was retrieved - ', data.shape
         print '\tRecords were processed after query in %.4f' %(time.time()-t)
 
-	if data.shape[0] == 0:
-	    return None
+        if data.shape[0] == 0:
+            return None
 
         return DataArray(data, cols_list)
-	
+
 
     ########## methods for select query end ##########
-    
-    
-    ########## methods for delete query  ##########    
+
+
+    ########## methods for delete query  ##########
     #delete rows based on a deletion criteria
     def delete_selected_rows(self, table_name, column_name, value):
         """
@@ -838,7 +838,7 @@ class QueryBrowser(object):
                 fin_flag = False
         else:
             print 'Table %s does not exist.'%table_name
-            
+
         if fin_flag:
             try:
                 self.dbcon_obj.cursor.execute("delete FROM %s where %s = '%s'"%(table_name, column_name, value))
@@ -848,7 +848,7 @@ class QueryBrowser(object):
                 print e
                 print 'Error deleting the information. Query failed.'
         else:
-             'Column %s does not belong to the table %s. Could not delete rows.'%(column_name, table_name)
+            'Column %s does not belong to the table %s. Could not delete rows.'%(column_name, table_name)
 
 
     #delete all rows i.e. empty table
@@ -878,7 +878,7 @@ class QueryBrowser(object):
         #after deleting all the data reset the sequences
         seqlist, ser_column = self.find_sequence(table_name)
         self.reset_sequence(seqlist)
-            
+
     ########## methods for delete query end ##########
 
 
@@ -895,7 +895,7 @@ class QueryBrowser(object):
         Output:
         Inserts all the rows from data array in the table
         """
-        
+
         table_name = table_name.lower()
 
         # Delete index before inserting
@@ -909,7 +909,7 @@ class QueryBrowser(object):
         if tab_flag:
             #print 'Table %s exists.'%table_name
             try:
-                
+
                 ti = time.time()
                 #arr_str = [tuple(each) for each in arr]
                 #arr_str = str(arr_str)[1:-1]
@@ -919,7 +919,7 @@ class QueryBrowser(object):
                     cols_listStr += "%s," %i
                 cols_listStr = cols_listStr[0:-1]
                 cols_listStr = "(%s)" %cols_listStr
-                
+
                 #Divide the data into chunks
                 last = 0
                 lastRow = len(arr)
@@ -928,18 +928,18 @@ class QueryBrowser(object):
                     last = (i+1)*chunkSize
                     arrSub = arr[i*chunkSize:last]
                     self.insert_nrows(table_name, cols_listStr, arrSub)
-                
+
                 #Insert last ODD chunk
                 arrSub = arr[nChunks*chunkSize:]
                 self.insert_nrows(table_name, cols_listStr, arrSub)
-                    
+
                 #result = self.dbcon_obj.cursor.execute(insert_stmt)
                 self.dbcon_obj.connection.commit()
                 #print '\t\tTime after insert query %.4f' %(time.time()-ti)
             except Exception, e:
                 print e
         else:
-           print 'Table %s does not exist.'##%table_name 
+            print 'Table %s does not exist.'##%table_name
         self.create_index(table_name, keyCols)
 
     def copy_into_table(self, arr, cols_list, table_name, keyCols, loc, partId=None, createIndex=True, deleteIndex=True, delimiter=','):
@@ -954,22 +954,22 @@ class QueryBrowser(object):
         Inserts all the rows from data array in the table
         """
 
-	#print 'Table Name - %s, creating index - %s and deleting index - %s'  %(table_name , createIndex, deleteIndex)
-        
-	if partId == None:
-	    partId = ""
+        #print 'Table Name - %s, creating index - %s and deleting index - %s'  %(table_name , createIndex, deleteIndex)
+
+        if partId == None:
+            partId = ""
 
         table_name = table_name.lower()
 
-	t_d = time.time()
-	if deleteIndex:
+        t_d = time.time()
+        if deleteIndex:
             # Delete index before inserting
 
             index_cols = self.delete_index(table_name)
-	print '\t\tDeleting index took - %.2f' %(time.time()-t_d)
+        print '\t\tDeleting index took - %.2f' %(time.time()-t_d)
 
         self.file_write(arr, loc, partId)
-        
+
         #check if table exists
         tab_flag = self.dbcon_obj.check_if_table_exists(table_name)
         tab_flag = True
@@ -984,9 +984,9 @@ class QueryBrowser(object):
             try:
                 ti = time.time()
                 insert_stmt = ("""copy %s %s from '%s/tempData_%s.csv' """
-                               """ delimiters '%s'""" %(table_name, cols_listStr, loc, 
-						       partId, delimiter))
-                                                                       
+                               """ delimiters '%s'""" %(table_name, cols_listStr, loc,
+                                                       partId, delimiter))
+
                 print '\t\t', insert_stmt
                 result = self.dbcon_obj.cursor.execute(insert_stmt)
                 self.dbcon_obj.connection.commit()
@@ -995,13 +995,13 @@ class QueryBrowser(object):
             except Exception, e:
                 print e
         else:
-           print 'Table %s does not exist.'##%table_name 
-	t_c = time.time()
-	if createIndex:
-	    
+            print 'Table %s does not exist.'##%table_name
+        t_c = time.time()
+        if createIndex:
+
             self.create_index(table_name, keyCols)
-      	print '\t\tCreating index took - %.2f' %(time.time()-t_c)
-        
+        print '\t\tCreating index took - %.2f' %(time.time()-t_c)
+
     def insert_nrows(self, table_name, cols_listStr, arr):
         arr_str = [tuple(each) for each in arr]
         arr_str = str(arr_str)[1:-1]
@@ -1022,10 +1022,10 @@ class QueryBrowser(object):
     def create_index(self, table_name, col_list, index_name=None):
         """
         This method creates an index on the table
-        
+
         Input:
         Database configuration object, table name and column list
-        
+
         Output:
         Index created on the table with the specified columns
         """
@@ -1057,7 +1057,7 @@ class QueryBrowser(object):
                 else:
                     columns = columns + i
             index_stmt = 'create index %s on %s (%s)'%(index_name, table_name, columns)
-	    #print 'Index Statement - %s' %(index_stmt)
+            #print 'Index Statement - %s' %(index_stmt)
             try:
                 self.dbcon_obj.cursor.execute(index_stmt)
                 self.dbcon_obj.connection.commit()
@@ -1071,10 +1071,10 @@ class QueryBrowser(object):
     def delete_index(self, table_name, index_name=None):
         """
         This method deletes an index on the table
-        
+
         Input:
         Database configuration object and table name
-        
+
         Output:
         Index on the table is deleted
         """
@@ -1096,15 +1096,15 @@ class QueryBrowser(object):
                     self.dbcon_obj.connection.rollback()
             else:
                 print '\t\tIndex does not exists so cannot be deleted.'
-                
+
     #get the index columns
     def get_index_columns(self, table_name):
         """
         This method is used to fetch the columns that form the index for the table
-        
+
         Input:
         Database configuration object and table_name
-        
+
         Output:
         List of columns that form the index
         """
@@ -1119,7 +1119,7 @@ class QueryBrowser(object):
                 self.dbcon_obj.cursor.execute(sql_string)
                 columns = self.dbcon_obj.cursor.fetchall()
                 cols = [cl[0] for cl in columns]
-                
+
                 for each in cols:
                     if pkey not in each:
                         index = each
@@ -1135,25 +1135,25 @@ class QueryBrowser(object):
                 print e
         else:
             print 'Table %s does not exist. Cannot get the column list'%table_name
-            
+
     ########## methods for creating and deleting index##########
 
     ########### file function #################
     def file_write(self, data_arr, loc, partId, fileName=None):
         """
         This method write the resultset to a file.
-        
+
         Input:
         Data array or resultset and the column list
-        
+
         Output:
         File created with all data written in it.
         """
-	"""
+        """
         #open the file
         ti = time.time()
         myfile = open('%s/tempData_%s.csv' %(loc, partId), 'w')
-        
+
         #loop through the array and write to file
         for each in data_arr:
             each = list(each)
@@ -1161,25 +1161,25 @@ class QueryBrowser(object):
             myfile.write('\n')
         myfile.close()
         print '\t\tTime to write to file - %.4f' %(time.time()-ti)
-	"""
-	fmt = ''
-	for col in range(len(data_arr[0])):
-	    colType = data_arr[0][col].dtype
-	    if str(colType)[0] == 'f':
-		#print 'atleast one float store as float'
-		fmt += '%.4f,'
-	    else:
-		fmt += '%u,'
-	fmt = fmt[:-1]
-	print '\t\tThis is the final format-', fmt
+        """
+        fmt = ''
+        for col in range(len(data_arr[0])):
+            colType = data_arr[0][col].dtype
+            if str(colType)[0] == 'f':
+                #print 'atleast one float store as float'
+                fmt += '%.4f,'
+            else:
+                fmt += '%u,'
+        fmt = fmt[:-1]
+        print '\t\tThis is the final format-', fmt
         ti = time.time()
-	if fileName is None:
-	    savetxt('%s/tempData_%s.csv'%(loc, partId), data_arr, delimiter=',', fmt=fmt)
-	else:
-	    savetxt('%s/%s_%s.csv'%(loc, fileName, partId), data_arr, delimiter=',', fmt=fmt)		
+        if fileName is None:
+            savetxt('%s/tempData_%s.csv'%(loc, partId), data_arr, delimiter=',', fmt=fmt)
+        else:
+            savetxt('%s/%s_%s.csv'%(loc, fileName, partId), data_arr, delimiter=',', fmt=fmt)
         print '\t\tTime to write to file new implementation - %.4f' %(time.time()-ti)
     ########### file function ends ############
-    
+
     ###########################################
     #new code for copy file
     #file to get datatype
@@ -1193,7 +1193,7 @@ class QueryBrowser(object):
         write_file_str = ""
         write_file_str = self.get_column_data_type(temp_cols)
         print write_file_str
-        
+
         print 'write file start ----------->', time.time()
         try:
             file_fp = open('/home/namrata/Documents/DBclasses/dbapi/temp1.csv', 'w')
@@ -1201,7 +1201,7 @@ class QueryBrowser(object):
             data_arr_len = len(temp_arr.data)
             myfile.write(str(temp_cols)[1:-1])
             myfile.write('\n')
-        
+
             for each in temp_arr.data:
                 each = list(each)
                 each = str(each)[1:-1]
@@ -1212,14 +1212,14 @@ class QueryBrowser(object):
                 #print write_str
                 #file_fp.write('%s,%s,%s,%s\n'%(int(float(parts[0])), long(float(parts[1])), float(parts[2]), int(float(parts[3]))))
                 file_fp.write(eval(write_file_str))
-                file_fp.write('\n')                    
+                file_fp.write('\n')
         except Exception, e:
             print e
         file_fp.close()
         print 'write file end ----------->', time.time()
-        
+
         print '\ninsert data'
-        
+
         try:
             insert_stmt = "copy abc from '/home/namrata/Documents/DBclasses/dbapi/temp1.csv' with delimiter as ',' csv header"
             #print insert_stmt
@@ -1230,8 +1230,8 @@ class QueryBrowser(object):
         except Exception, e:
             print e
         print '\n'
-        
-    
+
+
     def get_column_data_type(self, temp_arr):
         """
         Input:
@@ -1242,7 +1242,7 @@ class QueryBrowser(object):
         try:
             self.dbcon_obj.cursor.execute(data_type_stmt)
             result = self.dbcon_obj.cursor.fetchall()
-            
+
             columns = [cl[0] for cl in result]
             data_type = [dt[1] for dt in result]
             print columns
@@ -1256,8 +1256,8 @@ class QueryBrowser(object):
         print 'data_type_arr is ------>', data_type_arr
         final_data_types = self.define_mapping(data_type_arr)
         print 'final data types are ------->', final_data_types
-        
-        #create string for file 
+
+        #create string for file
         file_str = ""
         type_iden_str = " '"
         #create string for the type identifier
@@ -1265,8 +1265,8 @@ class QueryBrowser(object):
             type_iden_str = type_iden_str + "%s\t"
         type_iden_str = type_iden_str[1:-1]
         type_iden_str = type_iden_str + "'%"
-        
-        #create string for 
+
+        #create string for
         data_type_str = "("
         count = 0
         for each in final_data_types:
@@ -1275,14 +1275,14 @@ class QueryBrowser(object):
             else:
                 data_type_str = data_type_str + each + "(float(parts["+ str(count) + "])), "
                 count = count + 1
-        
+
         final_str = type_iden_str + data_type_str
         return final_str
-    
-    
+
+
     def define_mapping(self, data_type_list):
         new_data_types = []
-        
+
         for each in data_type_list:
             if each == 'integer':
                 new_data_types.append('int')
@@ -1300,11 +1300,11 @@ class QueryBrowser(object):
     def find_sequence(self, table_name=None):
         """
         This method is used to find the sequences in the database
-            
+
         Input:
         Database configuration object and table name.
         If no table name is provided then find sequences for all tables
-            
+
         Output:
         Reset sequence to 1
         """
@@ -1325,7 +1325,7 @@ class QueryBrowser(object):
         else:
             #find sequences for the specified table and save in a list
             sql_query = ("SELECT column_name, column_default FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '%s'" %table_name
-			 + " and column_default LIKE 'nextval%'")
+                         + " and column_default LIKE 'nextval%'")
                          #AND column_default LIKE 'nextval%'"
             try:
                 self.dbcon_obj.cursor.execute(sql_query)
@@ -1341,10 +1341,10 @@ class QueryBrowser(object):
         for each in col_default:
             off_set = str(each[1]).find("'")
             if off_set is not -1:
-                 seq_list.append(each[1])
-                 serial_column.append(each[0])
-                 
-        #find the indexes for the sequence, extract the substring from the tuple 
+                seq_list.append(each[1])
+                serial_column.append(each[0])
+
+        #find the indexes for the sequence, extract the substring from the tuple
         #and save in a new list
         for each in seq_list:
             each = str(each)
@@ -1355,15 +1355,15 @@ class QueryBrowser(object):
             sequence.append(seq)
         #return the list with all the sequences
         return sequence, serial_column
-                         
+
 
     def reset_sequence(self, sequence_list):
-	"""
+        """
         This method is used to reset the sequence
-        
+
         Input:
         Database configuration object and sequence list
-        
+
         Output:
         Sequence is reset to 1
         """
@@ -1371,7 +1371,7 @@ class QueryBrowser(object):
         if not sequence_list:
             #print 'No sequences present'
             return False
-            
+
         for each in sequence_list:
             sql_string = "alter sequence %s restart with 1"%each
             #print sql_string
@@ -1383,12 +1383,12 @@ class QueryBrowser(object):
                 print 'Query execution failed. Failed to reset sequences'
                 print e
                 return False
-                
+
     """
     def copy_table(self, cols_list, table_name, partId = None, delimiter=','):
         tab_flag = True
         if partId == None:
-	        partId = ""
+                partId = ""
         cols_listStr = ""
         for i in cols_list:
             cols_listStr += "%s,"%i
@@ -1398,9 +1398,9 @@ class QueryBrowser(object):
             #print 'Table %s exists.'%table_name
             try:
                 insert_stmt = (""copy %s %s from '%s' ""
-                               "" with delimiter as '%s' csv header"" %(table_name, cols_listStr, loc, 
-						       delimiter))
-                                                                       
+                               "" with delimiter as '%s' csv header"" %(table_name, cols_listStr, loc,
+                                                       delimiter))
+
                 #print '\t\t', insert_stmt
                 #print table_name, cols_listStr, loc, partId, delimiter
                 result = self.dbcon_obj.cursor.execute(insert_stmt)
@@ -1410,15 +1410,15 @@ class QueryBrowser(object):
             except Exception, e:
                 print e
         else:
-           print 'Table %s does not exist.'##%table_name 
+           print 'Table %s does not exist.'##%table_name
     """
     def cluster_index(self, table_name, index_name):
         """
         This method is used to create a clustered index
-        
+
         Input:
         Table name and index name
-        
+
         Output:
         The index created is clustered
         """
@@ -1434,9 +1434,9 @@ class QueryBrowser(object):
             print e
             self.dbcon_obj.connection.rollback()
         return False
-            
-                         
-                         
+
+
+
 #unit test to test the code
 import unittest
 
@@ -1444,13 +1444,13 @@ import unittest
 class TestMainClass(unittest.TestCase):
     #only initialize objects here
     def setUp(self):
-        self.protocol = 'postgres'		
+        self.protocol = 'postgres'
         self.user_name = 'postgres'
         self.password = '1234'
         self.host_name = 'localhost'
         self.database_name = 'mag_zone_upto_afterschoolacts_5percent'
 
-    
+
     def testMainClass(self):
         abc = DataBaseConfiguration(self.protocol, self.user_name, self.password, self.host_name, self.database_name)
         newobject = QueryBrowser(abc)
@@ -1466,29 +1466,29 @@ class TestMainClass(unittest.TestCase):
         #abc = newobject.fetch_selected_rows(table_name, column_name, value)
         #print abc
         #newobject.fetch_selected_rows(table_name, column_name, value)
-        
+
         #newobject.delete_selected_rows(table_name, column_name, value)
 
         #newobject.delete_all(table_name)
-        
+
         col_list = ['grad', 'role_id']
         #newobject.create_index(table_name, col_list)
-        
+
         #newobject.delete_index(table_name)
 
         #data_arr = [('aa','aa','1'),('bb','bb','1')]
         #newobject.insert_into_table(data_arr, table_name)
-        
-        DB_DICT = {'households': ['htaz', 'numchild', 'inclt35k', 'hhsize'], 
-                 'persons': ['male', 'schstatus', 'one', 'houseid', 'personid'], 
+
+        DB_DICT = {'households': ['htaz', 'numchild', 'inclt35k', 'hhsize'],
+                 'persons': ['male', 'schstatus', 'one', 'houseid', 'personid'],
                  'schedule_r': ['scheduleid', 'activitytype']}
-        COLUMN_NAMES = {'households': ['houseid'], 
+        COLUMN_NAMES = {'households': ['houseid'],
                       'schedule_r': ['personid', 'houseid']}
         TABLE_NAMES = ['persons', 'households', 'schedule_r', 'abcd']
         MAX_DICT = {'schedule_r': ['scheduleid']}
 
         #print DB_DICT, COLUMN_NAMES, TABLE_NAMES, MAX_DICT
-        
+
         #newobject.select_join(DB_DICT, COLUMN_NAMES, TABLE_NAMES, MAX_DICT)
         print '\n-----------------> select all from table'
         res, temp, columns = newobject.select_all_from_table(table_name)
@@ -1514,7 +1514,7 @@ class TestMainClass(unittest.TestCase):
             #newobject.create_index(table_name, cols_list)
             t2 = time.time()
             print 'Time ---> %s'%(t2-t1)
-            
+
         #newobject.create_index(table_name, cols_list, index_name)
         res = newobject.cluster_index(table_name, index_name)
         print 'cluster index result --> %s'%res

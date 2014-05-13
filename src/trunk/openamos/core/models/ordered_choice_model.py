@@ -12,7 +12,7 @@ class OrderedModel(AbstractChoiceModel):
     """
     This is the base class for implementing ordered choice models in OpenAMOS.
     Both ordered probit and logit models are supported.
-    
+
     Inputs:
     specification -  OLSpecification object
     """
@@ -22,7 +22,7 @@ class OrderedModel(AbstractChoiceModel):
                 """OLSpecification object"""
 
         AbstractChoiceModel.__init__(self, ol_specification)
-        
+
         self.thresholds = ol_specification.thresholds
         self.distribution = ol_specification.distribution
 
@@ -30,7 +30,7 @@ class OrderedModel(AbstractChoiceModel):
         """
         The method returns the observed portion of the utility associated with
         the different choices.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -38,9 +38,9 @@ class OrderedModel(AbstractChoiceModel):
 
     def calc_probabilities(self, data):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
-        
+
         Inputs:
         data - DataArray object
         """
@@ -55,7 +55,7 @@ class OrderedModel(AbstractChoiceModel):
                 upper_bin = genlogistic.cdf(value, shape_param)
             else:
                 upper_bin = norm.cdf(value)
-            
+
             probabilities[:,i] = upper_bin - lower_bin
             lower_bin = upper_bin
 
@@ -66,21 +66,21 @@ class OrderedModel(AbstractChoiceModel):
         """
         The method returns the selected choice among the available
         alternatives.
-        
+
         Inputs:
         data = DataArray object
         """
         #ti = time.time()
-        probabilities = DataArray(self.calc_probabilities(data), 
+        probabilities = DataArray(self.calc_probabilities(data),
                                   self.specification.choices)
         #print "\t\t\tprobabilities calculated in %.4f" %(time.time()-ti)
         prob_model = AbstractProbabilityModel(probabilities, seed)
         #ti = time.time()
         choice = prob_model.selected_choice()
         #print "\t\t\tsimulated completed in %.4f" %(time.time()-ti)
-        
+
         return choice
-        
+
 
 
 import unittest
@@ -94,12 +94,12 @@ class TestBadInputOrderedProbitModel(unittest.TestCase):
         thresholds = [1.2, 2.1]
         data = array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]])
         self.data = DataArray(data, ['CONSTANT', 'VAR1'])
-        
+
         self.specification = OLSpecification(choices, coefficients, thresholds)
         self.specification1 = [choices, coefficients, thresholds]
 
     def testolspecification(self):
-        self.assertRaises(SpecificationError, OrderedModel, 
+        self.assertRaises(SpecificationError, OrderedModel,
                           self.specification1)
 
 class TestOrderedProbitModel(unittest.TestCase):
@@ -107,27 +107,27 @@ class TestOrderedProbitModel(unittest.TestCase):
         choices = ['Veh1', 'Veh2', 'Veh3']
         self.coefficients = [{'Constant':2, 'Var1':2.11}]
         self.thresholds = [1.2, 2.1]
-        self.data = DataArray(array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]]), 
+        self.data = DataArray(array([[1, 1.1], [1, -0.25], [1, 3.13], [1, -0.11]]),
                          ['CONSTANT', 'VAR1'])
-        
+
         specification = OLSpecification(choices, self.coefficients, self.thresholds)
         self.model = OrderedModel(specification)
 
-        specification1 = OLSpecification(choices, self.coefficients, self.thresholds, 
+        specification1 = OLSpecification(choices, self.coefficients, self.thresholds,
                                          distribution='probit')
         self.model1 = OrderedModel(specification1)
-        
 
-        
+
+
 
     def testprobabilitieslogit(self):
         prob = zeros((4,3))
         obs_utility = self.data.calculate_equation(self.coefficients[0])
         [shape_param] = [1,]*genlogistic.numargs
         prob[:,0] = genlogistic.cdf(self.thresholds[0] - obs_utility, shape_param)
-        prob[:,1] = (genlogistic.cdf(self.thresholds[1] - obs_utility, shape_param) - 
+        prob[:,1] = (genlogistic.cdf(self.thresholds[1] - obs_utility, shape_param) -
                      genlogistic.cdf(self.thresholds[0] - obs_utility, shape_param))
-        prob[:,2] = 1 - genlogistic.cdf(self.thresholds[1] - 
+        prob[:,2] = 1 - genlogistic.cdf(self.thresholds[1] -
                                         obs_utility, shape_param)
 
         prob_model = self.model.calc_probabilities(self.data)
@@ -144,7 +144,7 @@ class TestOrderedProbitModel(unittest.TestCase):
         prob = zeros((4,3))
         obs_utility = self.data.calculate_equation(self.coefficients[0])
         prob[:,0] = norm.cdf(self.thresholds[0] - obs_utility)
-        prob[:,1] = (norm.cdf(self.thresholds[1] - obs_utility) - 
+        prob[:,1] = (norm.cdf(self.thresholds[1] - obs_utility) -
                      norm.cdf(self.thresholds[0] - obs_utility))
         prob[:,2] = 1 - norm.cdf(self.thresholds[1] - obs_utility)
 
@@ -157,9 +157,6 @@ class TestOrderedProbitModel(unittest.TestCase):
         choice_model = self.model1.calc_chosenalternative(self.data)
         choice_diff = all(choice_act == choice_model)
         self.assertEqual(True, choice_diff)
-        
+
 if __name__ == '__main__':
     unittest.main()
-
-    
-

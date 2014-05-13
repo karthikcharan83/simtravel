@@ -5,11 +5,11 @@ from openamos.core.models.model_components import Specification
 class NestedChoiceSpecification(Specification):
     """
     This is the base class for specifying branches in a nested logit model.
-    
+
     Inputs:
     choices - list of only one choice is expected
     coefficients - list of a single dictionary for the above choice
-    logsumparameter - numeric value 
+    logsumparameter - numeric value
     """
     def __init__(self, choices, coefficients, logsumparameter=None):
         Specification.__init__(self, choices, coefficients)
@@ -23,17 +23,17 @@ class NestedChoiceSpecification(Specification):
                     """out of range; valid range [0-1]"""
         self.logsumparameter = logsumparameter
 
-        
+
 class NestedSpecification(object):
     """
     This is the base class for specifying the attrubutes of a nested logit choice
     model.
-    
+
     Inputs:
-    specification_dict - dictionary of NestedChoiceSpecification objects (defines 
+    specification_dict - dictionary of NestedChoiceSpecification objects (defines
     the structure of the choice tree)
     """
-    
+
     def __init__(self, specification_dict):
         self.specification = specification_dict
         self.check()
@@ -45,8 +45,8 @@ class NestedSpecification(object):
 
     def get_choices_coefficients(self):
         """
-        The method returns a list of choices (including branches, trunks etc.) 
-        and the corresponding list of coefficients for calculating 
+        The method returns a list of choices (including branches, trunks etc.)
+        and the corresponding list of coefficients for calculating
         the respective utilities.
         """
         choices = []
@@ -59,7 +59,7 @@ class NestedSpecification(object):
 
     def get_actual_choices(self):
         """
-        The method returns a list of choices within the tree. 
+        The method returns a list of choices within the tree.
         """
         actual_choices = []
         for i in self.choices:
@@ -70,7 +70,7 @@ class NestedSpecification(object):
 
     def check(self):
         """
-        The method checks the inputs and raises appropriate prompts as 
+        The method checks the inputs and raises appropriate prompts as
         necessary.
         """
         self.values = []
@@ -78,7 +78,7 @@ class NestedSpecification(object):
         if not isinstance(self.specification, dict):
             raise SpecificationError, """not a valid input - dictionary """\
                 """of choice tree expected"""
-        
+
         keys = self.specification.keys()
         for i in keys:
             for j in self.specification[i]:
@@ -87,7 +87,7 @@ class NestedSpecification(object):
                         """in the choice tree specification are not a valid """\
                         """NestedChoiceSpecification object"""
                 self.values.append(j)
-                
+
         if not ('root' in keys or 'ROOT' in keys):
             return SpecificationError, """not a valid input - the "root" key is """\
                 """missing from the keys"""
@@ -107,7 +107,7 @@ class NestedSpecification(object):
                 raise SpecificationError, """not a valid input - keys in the """\
                     """dictionary of choice are not a valid """\
                     """NestedChoiceSpecification object"""
-        
+
             if i.logsumparameter is None:
                 raise SpecificationError, """not a valid input - the parents in the """\
                     """choice tree do not have a valid logsum parameter"""
@@ -118,7 +118,7 @@ class NestedSpecification(object):
                     """choice tree do not have a valid logsum parameter - """\
                     """int or float expected"""
 
-        self.keys = self.specification.keys() 
+        self.keys = self.specification.keys()
 
         depth_dict = self.depth()
         for i in depth_dict.keys():
@@ -129,7 +129,7 @@ class NestedSpecification(object):
 
     def check_logsum_ofparent(self, child):
         """
-        The method checks to make sure that the logsum parameters in the 
+        The method checks to make sure that the logsum parameters in the
         choice tree follow the required hierarchy.
         """
         parent = self.parent(child)
@@ -144,9 +144,9 @@ class NestedSpecification(object):
 
     def parent(self, value):
         """
-        The method returns the NestedChoiceSpecification parent 
+        The method returns the NestedChoiceSpecification parent
         corresponding to the NestedChoiceSpecification child.
-        
+
         Inputs:
         value - NestedChoiceSpecification object
         """
@@ -159,7 +159,7 @@ class NestedSpecification(object):
         """
         The method returns the NestedChoiceSpecification parent
         corresponding to the child's name.
-        
+
         Inputs:
         value - string corresponding to the child
         """
@@ -172,11 +172,11 @@ class NestedSpecification(object):
 
     def child_names(self, key):
         """
-        The method returns a list of all the children's names that are present in 
+        The method returns a list of all the children's names that are present in
         the corresponding NestedChoiceSpecification parent.
-        
+
         Inputs:
-        key - NestedChoiceSpecification object for the parent 
+        key - NestedChoiceSpecification object for the parent
         """
         names = []
         try:
@@ -186,22 +186,22 @@ class NestedSpecification(object):
             # not raised just warning printed
             raise  SpecificationError, """%s key was not found in the """\
                 """specification dictionary""" %key
-            
+
         return names
-        
+
     def all_child_names(self, values):
         """
-        The method returns a list of all children's names that are present in the 
-        corresponding parent's (given by the name of parent). 
-        
+        The method returns a list of all children's names that are present in the
+        corresponding parent's (given by the name of parent).
+
         Also, it returns a list of all subchildren.
-        
+
         Input:
         values - list of strings corresponding to the parents for which child
-        names are sought 
+        names are sought
         """
-        
-        #differs from child_names in that this one returns in response to 
+
+        #differs from child_names in that this one returns in response to
         # columna name as opposed to a spec object key
         #also this returns all the sub children
 
@@ -229,19 +229,19 @@ class NestedSpecification(object):
         all_choices = set(self.all_child_names(values))
         all_actual_choices = all_choices.intersection(self.actual_choices)
         return all_actual_choices
-        
-            
+
+
 
     def all_parent_names(self, value):
         """
         The method returns the list of all parent names corresponding to the
         child's name given by value.
-        
+
         Inputs:
         value - string (name of the child)
         """
         all_names = []
-        
+
         while value:
             key = self.parent_key(value)
             if key is not None:
@@ -251,11 +251,11 @@ class NestedSpecification(object):
                 else:
                     value = None
         return all_names
-            
+
     def depth(self):
         """
         The method returns the list of the choice tree.
-        
+
         Inputs:
         None
         """
@@ -293,14 +293,14 @@ class NestedSpecification(object):
         if len(keys_atdepth) == 1:
             self.current_depth = self.current_depth - 1
         return self.current_key
-        
+
     def return_keys(self, depth_dict, value):
         keys = []
         for i in depth_dict.keys():
             if depth_dict[i] == value:
                 keys.append(i)
         return keys
-            
+
     def num_choices(self):
         return len(self.choices)
 
@@ -317,17 +317,17 @@ class TestBadNestedBranchSpecification(unittest.TestCase):
 
 
     def testtwochoices(self):
-        self.assertRaises(SpecificationError, NestedChoiceSpecification, 
+        self.assertRaises(SpecificationError, NestedChoiceSpecification,
                           self.choices1_bad, self.coefficients1_bad)
 
     def testgrtonelogsum(self):
-        self.assertRaises(SpecificationError, NestedChoiceSpecification, 
+        self.assertRaises(SpecificationError, NestedChoiceSpecification,
                           self.choices, self.coefficients, 1.5)
 
     def testlesszerologsum(self):
-        self.assertRaises(SpecificationError, NestedChoiceSpecification, 
-                          self.choices, self.coefficients, -.1)        
-        
+        self.assertRaises(SpecificationError, NestedChoiceSpecification,
+                          self.choices, self.coefficients, -.1)
+
 
 class TestBadNestedSpecification(unittest.TestCase):
     def setUp(self):
@@ -367,9 +367,9 @@ class TestBadNestedSpecification(unittest.TestCase):
                                         spec3: [spec31, spec32]}
 
     def testnospecobjectvaluetinspecdict(self):
-        self.assertRaises(SpecificationError, NestedSpecification, 
+        self.assertRaises(SpecificationError, NestedSpecification,
                           self.specification_dict_bad2)
-        
+
     def testnorootkeyinspecdict(self):
         self.assertRaises(SpecificationError, NestedSpecification,
                           self.specification_dict_bad3)
@@ -379,7 +379,7 @@ class TestBadNestedSpecification(unittest.TestCase):
                           self.specification_dict_bad4)
 
     def testnologsum(self):
-        self.assertRaises(SpecificationError, NestedSpecification, 
+        self.assertRaises(SpecificationError, NestedSpecification,
                           self.specification_dict_bad5)
 
 
@@ -389,7 +389,7 @@ class TestNestedSpecification(unittest.TestCase):
         choices1 = ['sov']
         coefficients1 = [{'Constant':2, 'Var1':2.11}]
         spec1 = NestedChoiceSpecification(choices1, coefficients1, 0.7)
-        
+
         choices2 = ['hov']
         coefficients2 = [{'Constant':1.2}]
         spec2 = NestedChoiceSpecification(choices2, coefficients2)
@@ -432,7 +432,7 @@ class TestNestedSpecification(unittest.TestCase):
 
         specification_dict = {'root':[spec1, spec2, spec3],
                               spec3: [spec31, spec32]}
-        
+
         specification_dict1 = {'root':[spec1, spec2, spec3],
                                spec1: [spec11],
                                spec3: [spec31, spec32],
@@ -476,8 +476,8 @@ class TestNestedSpecification(unittest.TestCase):
 
 
     def testchoicescoeffs(self):
-        choices_act = ['sov', 'sov1', 'sov11', 'hov', 'transit', 
-                       'light rail', 'light rail1', 'light rail2', 
+        choices_act = ['sov', 'sov1', 'sov11', 'hov', 'transit',
+                       'light rail', 'light rail1', 'light rail2',
                        'bus', 'bus1', 'bus2']
         choices_act.sort()
         choices_model = self.nested_spec1.choices
@@ -520,12 +520,12 @@ class TestNestedSpecification(unittest.TestCase):
         self.assertEqual(parent1_act, parent1_model)
         self.assertEqual(parent2_act, parent2_model)
 
-        
+
     def testchildnames(self):
         parent1_act = self.parentkeys1[0]
         child_names1_act = ['sov', 'hov', 'transit']
         child_names1_act.sort()
-        
+
         parent2_act = self.parentkeys1[1]
         child_names2_act = ['light rail', 'bus']
         child_names2_act.sort()
@@ -541,20 +541,20 @@ class TestNestedSpecification(unittest.TestCase):
 
     def testallchildnames(self):
         parent2_act = 'transit'
-        child_names2_act = ['light rail', 'light rail1', 'light rail2', 
+        child_names2_act = ['light rail', 'light rail1', 'light rail2',
                             'bus', 'bus1', 'bus2']
         child_names2_act.sort()
 
         child_names2_model = self.nested_spec1.all_child_names([parent2_act])
         child_names2_model.sort()
 
-        self.assertEquals(child_names2_act, child_names2_model)        
-        
+        self.assertEquals(child_names2_act, child_names2_model)
+
 
     def testallparentnames(self):
         child1_act = 'light rail2'
         all_parents1_act = ['light rail', 'transit']
-        
+
         child2_act = 'sov11'
         all_parents2_act = ['sov', 'sov1']
 
@@ -569,13 +569,13 @@ class TestNestedSpecification(unittest.TestCase):
 
 
     def testnumchoices(self):
-        choices_act = ['sov', 'sov1', 'sov11', 'hov', 'transit', 
-                       'light rail', 'light rail1', 'light rail2', 
-                       'bus', 'bus1', 'bus2']        
+        choices_act = ['sov', 'sov1', 'sov11', 'hov', 'transit',
+                       'light rail', 'light rail1', 'light rail2',
+                       'bus', 'bus1', 'bus2']
         numchoices_act = len(choices_act)
-        
+
         numchoices_model = self.nested_spec1.num_choices()
-        
+
         self.assertEquals(numchoices_act, numchoices_model)
 
     def testreturnkeys(self):
@@ -586,16 +586,13 @@ class TestNestedSpecification(unittest.TestCase):
         keys_de_3_model.sort()
 
         self.assertEquals(self.keys_de_3_act, keys_de_3_model)
-        
-        
-        
+
+
+
 #TODO - rename get_choices_coefficients --> get_parentnodes_coefficients
 #TODO - all values to lower case where string is being passed
-#TODO - also check for absence of keys/values should exception be 
+#TODO - also check for absence of keys/values should exception be
 # raised or a no value return ??
-        
+
 if __name__ == '__main__':
     unittest.main()
-
-
-

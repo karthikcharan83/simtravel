@@ -21,73 +21,73 @@ class Immigration(Model):
         Model.__init__(self, specification)
         self.specification = specification
 
-	self.idSpec = self.specification.idSpec	
-	self.hhldAttribs = self.specification.hhldAttribs
-	self.personAttribs = self.specification.personAttribs
-	self.popgenConfig = self.specification.popgenConfig
-	self.hhldIdSeries = self.specification.hhldIdSeries
+        self.idSpec = self.specification.idSpec
+        self.hhldAttribs = self.specification.hhldAttribs
+        self.personAttribs = self.specification.personAttribs
+        self.popgenConfig = self.specification.popgenConfig
+        self.hhldIdSeries = self.specification.hhldIdSeries
 
-	self.hhldColNames = [self.idSpec.hidName, 
+        self.hhldColNames = [self.idSpec.hidName,
 
-			     self.hhldAttribs.bldgszName,
-			     self.hhldAttribs.hhtName,
-			     self.hhldAttribs.hincName,
-			     self.hhldAttribs.nocName,
-			     self.hhldAttribs.personsName,
-			     self.hhldAttribs.unittypeName,
-			     self.hhldAttribs.vehiclName,
-			     self.hhldAttribs.wifName,
-			     self.hhldAttribs.yrMovedName]
-	self.personColNames = [self.idSpec.hidName,
+                             self.hhldAttribs.bldgszName,
+                             self.hhldAttribs.hhtName,
+                             self.hhldAttribs.hincName,
+                             self.hhldAttribs.nocName,
+                             self.hhldAttribs.personsName,
+                             self.hhldAttribs.unittypeName,
+                             self.hhldAttribs.vehiclName,
+                             self.hhldAttribs.wifName,
+                             self.hhldAttribs.yrMovedName]
+        self.personColNames = [self.idSpec.hidName,
                              self.idSpec.pidName,
 
-			     self.personAttribs.ageName,
-			     self.personAttribs.clwkrName,
-			     self.personAttribs.educName,
-			     self.personAttribs.enrollName,
-			     self.personAttribs.esrName,
-			     self.personAttribs.indnaicsName,
-			     self.personAttribs.occcen5Name,
-			     self.personAttribs.race1Name,
-			     self.personAttribs.relateName,
-			     self.personAttribs.sexName,
-			     self.personAttribs.marstatName,
-			     self.personAttribs.hoursName,
-			     self.personAttribs.gradeName,
-			     self.personAttribs.hispanName]
+                             self.personAttribs.ageName,
+                             self.personAttribs.clwkrName,
+                             self.personAttribs.educName,
+                             self.personAttribs.enrollName,
+                             self.personAttribs.esrName,
+                             self.personAttribs.indnaicsName,
+                             self.personAttribs.occcen5Name,
+                             self.personAttribs.race1Name,
+                             self.personAttribs.relateName,
+                             self.personAttribs.sexName,
+                             self.personAttribs.marstatName,
+                             self.personAttribs.hoursName,
+                             self.personAttribs.gradeName,
+                             self.personAttribs.hispanName]
 
 
 
     def create_col_numbers(self, colnamesDict):
         #print colnamesDict
-	self.hidCol = colnamesDict[self.idSpec.hidName]
-	self.pidCol = colnamesDict[self.idSpec.pidName]
+        self.hidCol = colnamesDict[self.idSpec.hidName]
+        self.pidCol = colnamesDict[self.idSpec.pidName]
 
-	self.bldgszCol = colnamesDict[self.hhldAttribs.bldgszName]
-	self.hhtCol = colnamesDict[self.hhldAttribs.hhtName]
-	self.hincCol = colnamesDict[self.hhldAttribs.hincName]
-	self.nocCol = colnamesDict[self.hhldAttribs.nocName]
-	self.personsCol = colnamesDict[self.hhldAttribs.personsName]
-	self.unittypeCol = colnamesDict[self.hhldAttribs.unittypeName]
-	self.vehiclCol = colnamesDict[self.hhldAttribs.vehiclName]
-	self.wifCol = colnamesDict[self.hhldAttribs.wifName]
-	self.yrMovedCol = colnamesDict[self.hhldAttribs.yrMovedName]
+        self.bldgszCol = colnamesDict[self.hhldAttribs.bldgszName]
+        self.hhtCol = colnamesDict[self.hhldAttribs.hhtName]
+        self.hincCol = colnamesDict[self.hhldAttribs.hincName]
+        self.nocCol = colnamesDict[self.hhldAttribs.nocName]
+        self.personsCol = colnamesDict[self.hhldAttribs.personsName]
+        self.unittypeCol = colnamesDict[self.hhldAttribs.unittypeName]
+        self.vehiclCol = colnamesDict[self.hhldAttribs.vehiclName]
+        self.wifCol = colnamesDict[self.hhldAttribs.wifName]
+        self.yrMovedCol = colnamesDict[self.hhldAttribs.yrMovedName]
 
 
-	self.ageCol = colnamesDict[self.personAttribs.ageName]
-	self.clwkrCol = colnamesDict[self.personAttribs.clwkrName]
-	self.educCol = colnamesDict[self.personAttribs.educName]
-	self.enrollCol = colnamesDict[self.personAttribs.enrollName]
-	self.esrCol = colnamesDict[self.personAttribs.esrName]
-	self.indnaicsCol = colnamesDict[self.personAttribs.indnaicsName]
-	self.occcen5Col = colnamesDict[self.personAttribs.occcen5Name]
-	self.race1Col = colnamesDict[self.personAttribs.race1Name]
-	self.relateCol = colnamesDict[self.personAttribs.relateName]
-	self.sexCol = colnamesDict[self.personAttribs.sexName]
-	self.marstatCol = colnamesDict[self.personAttribs.marstatName]
-	self.hoursCol = colnamesDict[self.personAttribs.hoursName]
-	self.gradeCol = colnamesDict[self.personAttribs.gradeName]
-	self.hispanCol = colnamesDict[self.personAttribs.hispanName]
+        self.ageCol = colnamesDict[self.personAttribs.ageName]
+        self.clwkrCol = colnamesDict[self.personAttribs.clwkrName]
+        self.educCol = colnamesDict[self.personAttribs.educName]
+        self.enrollCol = colnamesDict[self.personAttribs.enrollName]
+        self.esrCol = colnamesDict[self.personAttribs.esrName]
+        self.indnaicsCol = colnamesDict[self.personAttribs.indnaicsName]
+        self.occcen5Col = colnamesDict[self.personAttribs.occcen5Name]
+        self.race1Col = colnamesDict[self.personAttribs.race1Name]
+        self.relateCol = colnamesDict[self.personAttribs.relateName]
+        self.sexCol = colnamesDict[self.personAttribs.sexName]
+        self.marstatCol = colnamesDict[self.personAttribs.marstatName]
+        self.hoursCol = colnamesDict[self.personAttribs.hoursName]
+        self.gradeCol = colnamesDict[self.personAttribs.gradeName]
+        self.hispanCol = colnamesDict[self.personAttribs.hispanName]
 
 
     def create_indices(self, data):
@@ -132,39 +132,39 @@ class Immigration(Model):
 
 
 
-        #raw_input('new implementation of indices')                                                                                 
+        #raw_input('new implementation of indices')
 
 
 
     def resolve_consistency(self, data, seed):
-	print 'Data processing for use in PopGen'
+        print 'Data processing for use in PopGen'
 
-	popgenConfigObject = ConfigParserPopGen(self.popgenConfig)
-	popgenManagerObj = PopgenManager(configObject=self.popgenConfig)
+        popgenConfigObject = ConfigParserPopGen(self.popgenConfig)
+        popgenManagerObj = PopgenManager(configObject=self.popgenConfig)
 
-	popgenConfigObject.parse_project()
-	popgenConfigObject.parse_scenarios()
-	scenario = popgenConfigObject.scenarioList[0]
-
-
-	print 'Household vars - ', self.hhldColNames, len(self.hhldColNames)
-	print 'Extra household vars - ', scenario.hhldVars, len(scenario.hhldVars)
-	hhldVars = copy.deepcopy(self.hhldColNames)
-	for var in scenario.hhldVars:
-	    if var not in hhldVars:
-		hhldVars.append(var)
-
-	print '\nHousehold vars - ', self.personColNames, len(self.personColNames)
-	print 'Extra household vars - ', scenario.personVars, len(scenario.personVars)
-	personVars = copy.deepcopy(self.personColNames)
-	for var in scenario.personVars:
-	    if var not in personVars:
-		personVars.append(var)
+        popgenConfigObject.parse_project()
+        popgenConfigObject.parse_scenarios()
+        scenario = popgenConfigObject.scenarioList[0]
 
 
+        print 'Household vars - ', self.hhldColNames, len(self.hhldColNames)
+        print 'Extra household vars - ', scenario.hhldVars, len(scenario.hhldVars)
+        hhldVars = copy.deepcopy(self.hhldColNames)
+        for var in scenario.hhldVars:
+            if var not in hhldVars:
+                hhldVars.append(var)
 
-	print '\nHousehold sample file location - ', scenario.sampleUserProv.hhLocation
-	print 'Person sample file location - ', scenario.sampleUserProv.personLocation
+        print '\nHousehold vars - ', self.personColNames, len(self.personColNames)
+        print 'Extra household vars - ', scenario.personVars, len(scenario.personVars)
+        personVars = copy.deepcopy(self.personColNames)
+        for var in scenario.personVars:
+            if var not in personVars:
+                personVars.append(var)
+
+
+
+        print '\nHousehold sample file location - ', scenario.sampleUserProv.hhLocation
+        print 'Person sample file location - ', scenario.sampleUserProv.personLocation
 
 
         # Create Index Matrix
@@ -172,150 +172,150 @@ class Immigration(Model):
         self.create_indices(data)
         self.create_col_numbers(data._colnames)
 
-	#highestHid = amax(self.hhldIndicesOfPersons[:,0])
+        #highestHid = amax(self.hhldIndicesOfPersons[:,0])
 
-	#fHhld = csv.writer(open(scenario.sampleUserProv.hhLocation, 'w'), delimiter=",")
-	fHhld = open(scenario.sampleUserProv.hhLocation, 'w')
+        #fHhld = csv.writer(open(scenario.sampleUserProv.hhLocation, 'w'), delimiter=",")
+        fHhld = open(scenario.sampleUserProv.hhLocation, 'w')
 
-	hhldVars_forPopGen = copy.deepcopy(hhldVars)
-	try:
-	    hidIndex = hhldVars_forPopGen.index('houseid')
-	    hhldVars_forPopGen[hidIndex] = 'hhid'
-	except ValueError, e:
-	    print 'Error replacing "houseid" name - ', e
-	    hidIndex = 0
+        hhldVars_forPopGen = copy.deepcopy(hhldVars)
+        try:
+            hidIndex = hhldVars_forPopGen.index('houseid')
+            hhldVars_forPopGen[hidIndex] = 'hhid'
+        except ValueError, e:
+            print 'Error replacing "houseid" name - ', e
+            hidIndex = 0
 
-	hhldVars_forPopGen.insert(hidIndex+1,'serialno')
-	hhldVars_forPopGen.insert(0,'pumano')
-	hhldVars_forPopGen.insert(0,'state')
-	print 'new hhldvars', hhldVars_forPopGen
-	#fHhld.writerow(hhldVars_forPopGen)
-	hhldVars_str = ''
-	for var in hhldVars_forPopGen:
-	    hhldVars_str += '%s,' %var
-	hhldVars_str = hhldVars_str[:-1]
-	#fHhld.writerow(hhldVars_forPopGen)
-	fHhld.write(hhldVars_str)
-	fHhld.write('\n')
+        hhldVars_forPopGen.insert(hidIndex+1,'serialno')
+        hhldVars_forPopGen.insert(0,'pumano')
+        hhldVars_forPopGen.insert(0,'state')
+        print 'new hhldvars', hhldVars_forPopGen
+        #fHhld.writerow(hhldVars_forPopGen)
+        hhldVars_str = ''
+        for var in hhldVars_forPopGen:
+            hhldVars_str += '%s,' %var
+        hhldVars_str = hhldVars_str[:-1]
+        #fHhld.writerow(hhldVars_forPopGen)
+        fHhld.write(hhldVars_str)
+        fHhld.write('\n')
 
-	personVars_forPopGen = copy.deepcopy(personVars)
-	#fPerson = csv.writer(open(scenario.sampleUserProv.personLocation, 'w'), delimiter=",")
-	fPerson = open(scenario.sampleUserProv.personLocation, 'w')
+        personVars_forPopGen = copy.deepcopy(personVars)
+        #fPerson = csv.writer(open(scenario.sampleUserProv.personLocation, 'w'), delimiter=",")
+        fPerson = open(scenario.sampleUserProv.personLocation, 'w')
 
-	try:
-	    hidIndex = personVars_forPopGen.index('houseid')
-	    personVars_forPopGen[hidIndex] = 'hhid'
-	except ValueError, e:
-	    print 'Error replacing "houseid" name - ', e
-	    hidIndex = 0
-	
-	try:
-	    pidIndex = personVars_forPopGen.index('personid')
-	    personVars_forPopGen[pidIndex] = 'pnum'
-	except ValueError, e:
-	    print 'Error replacing "personid" name - ', e
+        try:
+            hidIndex = personVars_forPopGen.index('houseid')
+            personVars_forPopGen[hidIndex] = 'hhid'
+        except ValueError, e:
+            print 'Error replacing "houseid" name - ', e
+            hidIndex = 0
+
+        try:
+            pidIndex = personVars_forPopGen.index('personid')
+            personVars_forPopGen[pidIndex] = 'pnum'
+        except ValueError, e:
+            print 'Error replacing "personid" name - ', e
 
 
-	personVars_forPopGen.insert(hidIndex+1,'serialno')
-	personVars_forPopGen.insert(0,'pumano')
-	personVars_forPopGen.insert(0,'state')
-	print 'new personvars', personVars_forPopGen
-	personVars_str = ''
-	for var in personVars_forPopGen:
-	    personVars_str += '%s,' %var
-	personVars_str = personVars_str[:-1]
-	#fPerson.writerow(personVars_forPopGen)
-	fPerson.write(personVars_str)
-	fPerson.write('\n')
+        personVars_forPopGen.insert(hidIndex+1,'serialno')
+        personVars_forPopGen.insert(0,'pumano')
+        personVars_forPopGen.insert(0,'state')
+        print 'new personvars', personVars_forPopGen
+        personVars_str = ''
+        for var in personVars_forPopGen:
+            personVars_str += '%s,' %var
+        personVars_str = personVars_str[:-1]
+        #fPerson.writerow(personVars_forPopGen)
+        fPerson.write(personVars_str)
+        fPerson.write('\n')
 
-	hhldCols = data.columns(hhldVars)
-	personCols = data.columns(personVars)
+        hhldCols = data.columns(hhldVars)
+        personCols = data.columns(personVars)
 
-	ti = time.time()
-	hhldRow_forPopGen = [0] * len(hhldVars_forPopGen)
-    	hhldRow_forPopGen[0] = 24
-    	hhldRow_forPopGen[1] = 99	
+        ti = time.time()
+        hhldRow_forPopGen = [0] * len(hhldVars_forPopGen)
+        hhldRow_forPopGen[0] = 24
+        hhldRow_forPopGen[1] = 99
 
-	personRow_forPopGen = [0] * len(personVars_forPopGen)
-	personRow_forPopGen[0] = 24
-	personRow_forPopGen[1] = 99
+        personRow_forPopGen = [0] * len(personVars_forPopGen)
+        personRow_forPopGen[0] = 24
+        personRow_forPopGen[1] = 99
 
         for hhldIndex in self.hhldIndicesOfPersons:
             firstPersonRec = hhldIndex[1]
             lastPersonRec = hhldIndex[2]
 
-	    #personRecs = DataArray(data.data[firstPersonRec:lastPersonRec, :], data.varnames)
+            #personRecs = DataArray(data.data[firstPersonRec:lastPersonRec, :], data.varnames)
 
-	    hhldRow = hhldCols.data[firstPersonRec].astype(int)
-	    personRows = personCols.data[firstPersonRec:lastPersonRec].astype(int)
+            hhldRow = hhldCols.data[firstPersonRec].astype(int)
+            personRows = personCols.data[firstPersonRec:lastPersonRec].astype(int)
 
-	    #print 'Hhlds\n', hhldRow
-	    #print 'Persons\n', personRows
-		
-	    # Writing out rows for the household sample file
-	    hhldRow_forPopGen[3:] = list(hhldRow)
-	    hhldRow_forPopGen[2] = hhldRow_forPopGen[3]
-	    #fHhld.writerow(list(hhldRow_forPopGen))
-	    fHhld.write(','.join(map(str, list(hhldRow_forPopGen))))
-	    fHhld.write('\n')
+            #print 'Hhlds\n', hhldRow
+            #print 'Persons\n', personRows
 
-	    # Writing out rows for the person sample file
-	    for personRow in personRows:
-	    	personRow_forPopGen[3:] = personRow
-	    	personRow_forPopGen[2] = personRow_forPopGen[3]
-		#fPerson.writerow(list(personRow_forPopGen))
-		fPerson.write(','.join(map(str, list(personRow_forPopGen))))
-		fPerson.write('\n')
-	fHhld.close()
-	fPerson.close()
-	print '\t Sample input files created in - %.4f' %(time.time()-ti)
+            # Writing out rows for the household sample file
+            hhldRow_forPopGen[3:] = list(hhldRow)
+            hhldRow_forPopGen[2] = hhldRow_forPopGen[3]
+            #fHhld.writerow(list(hhldRow_forPopGen))
+            fHhld.write(','.join(map(str, list(hhldRow_forPopGen))))
+            fHhld.write('\n')
 
-	print 'Startint to synthesize population - '
-	ti = time.time()
+            # Writing out rows for the person sample file
+            for personRow in personRows:
+                personRow_forPopGen[3:] = personRow
+                personRow_forPopGen[2] = personRow_forPopGen[3]
+                #fPerson.writerow(list(personRow_forPopGen))
+                fPerson.write(','.join(map(str, list(personRow_forPopGen))))
+                fPerson.write('\n')
+        fHhld.close()
+        fPerson.close()
+        print '\t Sample input files created in - %.4f' %(time.time()-ti)
 
-	popgenManagerObj.run_scenarios()
-	print '\t Synthesis complete in - %.4f' %(time.time()-ti)
+        print 'Startint to synthesize population - '
+        ti = time.time()
 
-	hhldSynLoc = scenario.synHousingTableNameLoc.location
-	hhldSynFileName = scenario.synHousingTableNameLoc.name
-	fHhldSyn = csv.reader(open('%s%s%s.dat' %(hhldSynLoc, os.path.sep, hhldSynFileName), 'r'), delimiter='\t')
-	hhldSynArr = self.load_file(fHhldSyn)
-	print hhldSynArr[:5,:]
-	hhldSynVars = self.parse_meta_file('%s%s%s_meta.txt' %(hhldSynLoc, os.path.sep, hhldSynFileName))
-	print 'Old var names - ', hhldSynVars	
+        popgenManagerObj.run_scenarios()
+        print '\t Synthesis complete in - %.4f' %(time.time()-ti)
 
-
-
-	persSynLoc = scenario.synPersTableNameLoc.location
-	persSynFileName = scenario.synPersTableNameLoc.name
-	fPersSyn = csv.reader(open('%s%s%s.dat' %(persSynLoc, os.path.sep, persSynFileName), 'r'), delimiter='\t')
-	persSynArr = self.load_file(fPersSyn)
-	print persSynArr[:5,:]	
-	personSynVars = self.parse_meta_file('%s%s%s_meta.txt' %(persSynLoc, os.path.sep, persSynFileName))	
-	print 'Old var names - ', personSynVars
-
-
-	hhldSynArr, persSynArr = self.update_houseids(hhldSynArr, persSynArr,
-							hhldSynVars, personSynVars, 
-							self.hhldIdSeries)
-
-	print '\nHousehold sample file location - ', scenario.synHousingTableNameLoc
-	print 'Person sample file location - ', scenario.synPersTableNameLoc
-
-
-	# changing the names of houseid and personid fields
-	hidIndex_popgenH = hhldSynVars.index('hhid')
-	hhldSynVars[hidIndex_popgenH] = 'houseid'
-	print 'New var names - ', hhldSynVars	
+        hhldSynLoc = scenario.synHousingTableNameLoc.location
+        hhldSynFileName = scenario.synHousingTableNameLoc.name
+        fHhldSyn = csv.reader(open('%s%s%s.dat' %(hhldSynLoc, os.path.sep, hhldSynFileName), 'r'), delimiter='\t')
+        hhldSynArr = self.load_file(fHhldSyn)
+        print hhldSynArr[:5,:]
+        hhldSynVars = self.parse_meta_file('%s%s%s_meta.txt' %(hhldSynLoc, os.path.sep, hhldSynFileName))
+        print 'Old var names - ', hhldSynVars
 
 
 
-	hidIndex_popgenP = personSynVars.index('hhid')
-	personSynVars[hidIndex_popgenP] = 'houseid'
+        persSynLoc = scenario.synPersTableNameLoc.location
+        persSynFileName = scenario.synPersTableNameLoc.name
+        fPersSyn = csv.reader(open('%s%s%s.dat' %(persSynLoc, os.path.sep, persSynFileName), 'r'), delimiter='\t')
+        persSynArr = self.load_file(fPersSyn)
+        print persSynArr[:5,:]
+        personSynVars = self.parse_meta_file('%s%s%s_meta.txt' %(persSynLoc, os.path.sep, persSynFileName))
+        print 'Old var names - ', personSynVars
 
-	pidIndex_popgen = personSynVars.index('pnum')
-	personSynVars[pidIndex_popgen] = 'personid'
-	print 'New var names - ', personSynVars
+
+        hhldSynArr, persSynArr = self.update_houseids(hhldSynArr, persSynArr,
+                                                        hhldSynVars, personSynVars,
+                                                        self.hhldIdSeries)
+
+        print '\nHousehold sample file location - ', scenario.synHousingTableNameLoc
+        print 'Person sample file location - ', scenario.synPersTableNameLoc
+
+
+        # changing the names of houseid and personid fields
+        hidIndex_popgenH = hhldSynVars.index('hhid')
+        hhldSynVars[hidIndex_popgenH] = 'houseid'
+        print 'New var names - ', hhldSynVars
+
+
+
+        hidIndex_popgenP = personSynVars.index('hhid')
+        personSynVars[hidIndex_popgenP] = 'houseid'
+
+        pidIndex_popgen = personSynVars.index('pnum')
+        personSynVars[pidIndex_popgen] = 'personid'
+        print 'New var names - ', personSynVars
 
 
 
@@ -325,62 +325,62 @@ class Immigration(Model):
 
     def update_houseids(self, hhldSyn, persSyn, hhldVars, persVars, highestHid):
 
-	hhldSynDataObj = DataArray(hhldSyn, hhldVars)
+        hhldSynDataObj = DataArray(hhldSyn, hhldVars)
         persSynDataObj = DataArray(persSyn, persVars)
 
-	
-	maxFreqCol = amax(hhldSynDataObj.columns(['frequency']).data)
-	powFreqCol = floor(log(maxFreqCol, 10)) + 1
 
-	coefficients = {'frequency':1, 'hhid':10**powFreqCol}
+        maxFreqCol = amax(hhldSynDataObj.columns(['frequency']).data)
+        powFreqCol = floor(log(maxFreqCol, 10)) + 1
 
-	newHid = hhldSynDataObj.calculate_equation(coefficients)
-	hhldSynDataObj.setcolumn('hhid', newHid)
+        coefficients = {'frequency':1, 'hhid':10**powFreqCol}
 
-	newHid = persSynDataObj.calculate_equation(coefficients)
-	persSynDataObj.setcolumn('hhid', newHid)
+        newHid = hhldSynDataObj.calculate_equation(coefficients)
+        hhldSynDataObj.setcolumn('hhid', newHid)
+
+        newHid = persSynDataObj.calculate_equation(coefficients)
+        persSynDataObj.setcolumn('hhid', newHid)
 
 
-	hhldSynDataObj.sort([self.idSpec.hidName])
-	persSynDataObj.sort([self.idSpec.hidName, self.idSpec.pidName])
+        hhldSynDataObj.sort([self.idSpec.hidName])
+        persSynDataObj.sort([self.idSpec.hidName, self.idSpec.pidName])
 
-	hidIndex_popgenH = hhldVars.index('hhid')
-	hidIndex_popgenP = persVars.index('hhid')
+        hidIndex_popgenH = hhldVars.index('hhid')
+        hidIndex_popgenP = persVars.index('hhid')
 
         self.create_indices(persSynDataObj)
 
-	hhldSyn = hhldSynDataObj.data
-	persSyn = persSynDataObj.data
+        hhldSyn = hhldSynDataObj.data
+        persSyn = persSynDataObj.data
 
-	row = 0
+        row = 0
         for hhldIndex in self.hhldIndicesOfPersons:
 
             firstPersonRec = hhldIndex[1]
             lastPersonRec = hhldIndex[2]
 
-	    #print hhldIndex[0], highestHid + 1, firstPersonRec, lastPersonRec
+            #print hhldIndex[0], highestHid + 1, firstPersonRec, lastPersonRec
 
-	    hhldSyn[row,hidIndex_popgenH] = highestHid + 1
-	    persSyn[firstPersonRec:lastPersonRec,hidIndex_popgenP] = highestHid + 1
+            hhldSyn[row,hidIndex_popgenH] = highestHid + 1
+            persSyn[firstPersonRec:lastPersonRec,hidIndex_popgenP] = highestHid + 1
 
-	    highestHid += 1
-	    row += 1
+            highestHid += 1
+            row += 1
 
-	return hhldSyn, persSyn
+        return hhldSyn, persSyn
 
 
     def parse_meta_file(self, loc):
-	varNames = []
-	f = open(loc, 'r')
-	for line in f:
-	    line = line.split(" ")
-	    varNames.append(line[-1][:-1])
-	return varNames
-	
+        varNames = []
+        f = open(loc, 'r')
+        for line in f:
+            line = line.split(" ")
+            varNames.append(line[-1][:-1])
+        return varNames
+
 
     def load_file(self, f):
-	arr = []
-	for line in f:
-	    arr.append(line)
-	arr = array(arr, int)
+        arr = []
+        for line in f:
+            arr.append(line)
+        arr = array(arr, int)
         return arr
