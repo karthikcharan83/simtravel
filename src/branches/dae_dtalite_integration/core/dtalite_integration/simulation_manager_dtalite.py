@@ -37,7 +37,7 @@ class SimulationManager(object):
         
         #, configObject=None, fileLoc=None, component=None):
         #TODO: REMOVE PLACEHOLDER 
-        fileLoc = 'C:/DTALite/New_PHXsubarea_1p/config_mag_dtalite.xml'
+        fileLoc = 'C:/DTALite/New_PHXsubarea_hov/config_mag_dtalite.xml'
         configObject = None
         
 
@@ -81,9 +81,9 @@ class SimulationManager(object):
         self.uniqueIds = None
         self.trips = 0
         
-        self.subregion = {}
-        
+        #self.subregion = {} 
         self.loadCurrentSkim = False
+	self.intratrips = {}
 
 
 
@@ -341,6 +341,14 @@ class SimulationManager(object):
             c.writerow(trip)
             #if trip[5] in self.subregion and trip[6] in self.subregion:
             #    c.writerow(trip)
+	    if trip[5] == trip[6]:
+		arrival = int(trip[7]) + 2
+		trip_id = float(trip[0])
+		if arrival not in self.intratrips.keys():
+		    self.intratrips[arrival] = [trip_id]
+		else:
+		    self.intratrips[arrival] += [trip_id]
+
         
         wfile.close()
         

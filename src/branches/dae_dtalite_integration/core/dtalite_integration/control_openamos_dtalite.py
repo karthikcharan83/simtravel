@@ -26,7 +26,8 @@ class RunAmosDtalite(object):
     def __init__(self):
         self.current_min = 1
         self.data_in_real_time = []
-        self.proj_path = "C:/DTALite/New_PHXsubarea/"
+        self.proj_path = "C:/DTALite/New_PHXsubarea_hov/"
+	self.only_openAMOS = True
         
         self.column_index_for_openamos = -1
         self.column_index_for_dtalite = -1
@@ -34,7 +35,7 @@ class RunAmosDtalite(object):
         
         self.tripsAct = {}
         self.manager = SimulationManager()
-        self.manager.subregion = self.read_subregion()
+        #self.manager.subregion = self.read_subregion()
         
         
     def read_Real_Time_Setting_CSV(self):
@@ -52,21 +53,6 @@ class RunAmosDtalite(object):
         ofile.close()
         
         
-#     def write_Real_Time_Setting_CSV(self):
-#         
-#         real_time_file_name = "%sinput_real_time_simulation_settings.csv" %(self.proj_path)
-#         wfile = open(real_time_file_name,"wb")
-#         
-#         c = csv.writer(wfile) 
-#         for row in self.data_in_real_time:
-#             c.writerow(row)
-#         
-#         wfile.close()
-        
-
-        
-        
-        
     def run_openamos_simulation(self):
         
         
@@ -75,7 +61,7 @@ class RunAmosDtalite(object):
         read_realtime_skim = False
         realtime_time_path = ""
         realtime_dist_path = ""
-        for i in range(31):
+        for i in range(numRuns):
 
             
             if i == 0:
@@ -90,17 +76,19 @@ class RunAmosDtalite(object):
                     dtal_output_name = self.data_in_real_time[i][self.column_index_for_dtalite]
                     realtime_skim_name = self.data_in_real_time[i][self.column_index_for_realtimeskim]
                     
-                    
-                    self.temp_create_dtalite(i-1)       # Just For Testing
+		    # For Only openAMOS Testing
+                    if self.only_openAMOS:
+                    	self.temp_create_dtalite(i-1)       
                     
                     
                     tripInfoArrivals = self.arrival_from_dtalite(i-1, dtal_output_name)
                     print "File name from OpenAmos: %s" %(openamos_output_name)
                     print "File name from DTALITE: %s" %(dtal_output_name)
                     self.manager.run_selected_components_for_dtalite(i, tripInfoArrivals, openamos_output_name)             
-                     
                     
-                    self.temp_trips_from_openamos(i)  # Just For Testing
+		    # For Only openAMOS Testing 
+                    if self.only_openAMOS:
+                    	self.temp_trips_from_openamos(i)    
 
 
 
@@ -144,7 +132,7 @@ class RunAmosDtalite(object):
                     try:
                         
                     
-                        tripInfoArrivals = self.read_arrivals_from_dtalite(out_dtalite_name)                  
+                        tripInfoArrivals = self.read_arrivals_from_dtalite(out_dtalite_name, time)                  
                         print "Time : %s" %(time)
                         print tripInfoArrivals
                         
@@ -158,7 +146,7 @@ class RunAmosDtalite(object):
             return tripInfoArrivals
 
 
-    def read_arrivals_from_dtalite(self, filename):
+    def read_arrivals_from_dtalite(self, filename, time):
         
         ifile = open(filename, "rb")
             
@@ -170,12 +158,20 @@ class RunAmosDtalite(object):
                 
             if isSkip == 0:
                 isSkip += 1
-                continue
+                continue# For Only openAMOS Testing
                 
             
             trip_ids.append(tripId[1])
             trip_distances.append(tripId[15])
-                
+            
+	if time in self.manager.intratrips.keys():
+
+	    for tripId in self.manager.intratrips[time]:
+		trip_ids.append(int(tripId))
+		trip_distances.append(0.25)
+
+	    del self.manager.intratrips[time]
+
         
         if len(trip_ids) > 0:        
             tripInfoArrivals = array(trip_ids+trip_distances)
@@ -202,11 +198,13 @@ class RunAmosDtalite(object):
                 isSkip += 1
                 continue
             
+	    if trip[5] == trip[6]:
+		continue
+
             trip_id = float(trip[0])
-                
             if int(trip_id) > 0.0:
                 starttime = float(trip[7])
-                arrivaltime = int(trip[8]) #int(starttime) + randint(1, 200)
+                arrivaltime = int(float(trip[8])) #int(starttime) + randint(1, 200)
 
                     
                 if arrivaltime not in self.tripsAct.keys():
