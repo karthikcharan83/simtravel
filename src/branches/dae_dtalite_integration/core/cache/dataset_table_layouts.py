@@ -65,6 +65,7 @@ class Households_Vehicles_Count_R(t.IsDescription):
     vehdefi = t.Int32Col()
     avratio = t.Float32Col()
     informationtype = t.Int32Col()
+    ecoflag = t.Int32Col()
 
 class Vehicles_R(t.IsDescription):
     houseid = t.Int64Col()
@@ -129,6 +130,7 @@ class Persons_R(t.IsDescription):
     hhwagerate = t.Float32Col()
     valueoftime = t.Float32Col()
     informationtype = t.Int32Col()
+    ecoflag = t.Int32Col()
 
 
 class Child_Dependency_R(t.IsDescription):
