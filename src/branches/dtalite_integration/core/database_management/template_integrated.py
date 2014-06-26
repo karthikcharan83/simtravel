@@ -7,6 +7,7 @@ from elixir import *
 
 __metadata__ = metadata
 
+
 class AnnualEmploymentControlTotal(Entity):
 	    using_options(tablename='annual_employment_control_totals')
 	    year = Field(Integer)
@@ -15,15 +16,20 @@ class AnnualEmploymentControlTotal(Entity):
 	    number_of_jobs = Field(Integer)
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Employment Control Total'
-	        list_display=['year', 'sector_id', 'home_based_status', 'number_of_jobs']
-	        #list_filter = ['sector_id', 'year']
+	        verbose_name = 'Employment Control Total'
+	        list_display = [
+	            'year', 'sector_id', 'home_based_status', 'number_of_jobs']
+	        # list_filter = ['sector_id', 'year']
 	        field_attributes = dict(year=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1900, maximum=2050),
-	                                sector_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                home_based_status=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1),
-	                                number_of_jobs=dict(delegate=delegates.IntegerDelegate, calculator=False)
+	                                sector_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                home_based_status=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1),
+	                                number_of_jobs=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False)
 	                                )
 	
+
 class AnnualHouseholdControlTotal(Entity):
 	    using_options(tablename='annual_household_control_totals')
 	    id = Field(Integer, primary_key=True)
@@ -31,12 +37,14 @@ class AnnualHouseholdControlTotal(Entity):
 	    total_number_of_households = Field(Integer)
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Household Control Total'
-	        list_display=['year', 'total_number_of_households']
+	        verbose_name = 'Household Control Total'
+	        list_display = ['year', 'total_number_of_households']
 	        field_attributes = dict(year=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1900, maximum=2050),
-	                                total_number_of_households=dict(delegate=delegates.IntegerDelegate, calculator=False)
+	                                total_number_of_households=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False)
 	                                )
 	
+
 class AnnualRelocationRatesForHousehold(Entity):
 	    using_options(tablename='annual_relocation_rates_for_households')
 	    age_of_head_min = Field(Integer)
@@ -46,15 +54,21 @@ class AnnualRelocationRatesForHousehold(Entity):
 	    probability_of_relocating = Field(Float)
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Annual Relocation Rates for Household'
-	        list_display=['age_of_head_min', 'age_of_head_max', 'income_min', 'income_max', 'probability_of_relocating']
+	        verbose_name = 'Annual Relocation Rates for Household'
+	        list_display = ['age_of_head_min', 'age_of_head_max',
+                         'income_min', 'income_max', 'probability_of_relocating']
 	        field_attributes = dict(age_of_head_min=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
-	                                age_of_head_max=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
-	                                income_min=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                income_max=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                probability_of_relocating=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1)
+	                                age_of_head_max=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
+	                                income_min=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                income_max=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                probability_of_relocating=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1)
 	                                )
 	
+
 class Building(Entity):
 	    using_options(tablename='buildings')
 	    id = Field(Integer, primary_key=True, colname='building_id')
@@ -70,8 +84,8 @@ class Building(Entity):
 	    zone = ManyToOne('Zone', colname='zone_id')
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Building'
-	        list_display=[
+	        verbose_name = 'Building'
+	        list_display = [
 	            'building_id',
 	            'building_type_id',
 	            'land_area',
@@ -83,20 +97,31 @@ class Building(Entity):
 	            'year_built',
 	            'average_value_per_unit',
 	            'zone'
-	            ]
+                ]
 	        field_attributes = dict(building_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_type_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                land_area=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                non_residential_sqft=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                non_residential_sqft_capacity=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                residential_units=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                residential_units_capacity=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                sqft_per_unit=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                year_built=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1800, maximum=2050),
-	                                average_value_per_unit=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                zone_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                building_type_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                land_area=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                non_residential_sqft=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                non_residential_sqft_capacity=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                residential_units=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                residential_units_capacity=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                sqft_per_unit=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                year_built=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1800, maximum=2050),
+	                                average_value_per_unit=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                zone_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	           
+
 class BuildingSqftPerJob(Entity):
 	    using_options(tablename='building_sqft_per_job')
 	    id = Field(Integer, primary_key=True)
@@ -105,13 +130,17 @@ class BuildingSqftPerJob(Entity):
 	    zone_id = Field(Integer)
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Building Sqft Per Job'
-	        list_display=['building_sqft_per_job', 'building_type_id', 'zone_id']
+	        verbose_name = 'Building Sqft Per Job'
+	        list_display = [
+	            'building_sqft_per_job', 'building_type_id', 'zone_id']
 	        field_attributes = dict(building_sqft_per_job=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                building_type_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                zone_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                building_type_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                zone_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	
+
 class BuildingType(Entity):
 	    using_options(tablename='building_types')
 	    id = Field(Integer, primary_key=True, colname='building_type_id')
@@ -119,16 +148,18 @@ class BuildingType(Entity):
 	    building_type_name = Field(String(20))
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Building Type'
-	        list_display=[
+	        verbose_name = 'Building Type'
+	        list_display = [
 	            'building_type_id',
 	            'is_residential',
 	            'building_type_name',
-	            ]
+                ]
 	        field_attributes = dict(building_type_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                is_residential=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1)
+	                                is_residential=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1)
 	                                )
 	 
+
 class County(Entity):
 	    using_options(tablename='counties')
 	    id = Field(Integer, primary_key=True, colname='county_id')
@@ -136,10 +167,12 @@ class County(Entity):
 	    county_fips = Field(String(10))
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Countie'
-	        list_display=['county_id', 'county_name', 'county_fips']
-	        field_attributes = dict(county_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1))
+	        verbose_name = 'Countie'
+	        list_display = ['county_id', 'county_name', 'county_fips']
+	        field_attributes = dict(
+	            county_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1))
 	
+
 class DevelopmentConstraint(Entity):
 	    using_options(tablename='development_constraints')
 	    id = Field(Integer, primary_key=True, colname='development_constraint_id')
@@ -149,15 +182,21 @@ class DevelopmentConstraint(Entity):
 	    non_residential_sqft_capacity = Field(Integer)
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Development Constraint'
-	        list_display=['development_constraint_id', 'zone_id', 'building_type_id', 'residential_units_capacity', 'non_residential_sqft_capacity']
+	        verbose_name = 'Development Constraint'
+	        list_display = ['development_constraint_id', 'zone_id', 'building_type_id',
+                         'residential_units_capacity', 'non_residential_sqft_capacity']
 	        field_attributes = dict(development_constraint_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                zone_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_type_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                residential_units_capacity=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                non_residential_sqft_capacity=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0)
+	                                zone_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                building_type_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                residential_units_capacity=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                non_residential_sqft_capacity=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0)
 	                                )
 	                               
+
 class DevelopmentEventHistory(Entity):
 	    using_options(tablename='development_event_history')
 	    id = Field(Integer, primary_key=True)
@@ -169,15 +208,21 @@ class DevelopmentEventHistory(Entity):
 	    change_type = Field(String(1))
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Development Event Historie'
-	        list_display=['zone_id', 'building_type_id', 'scheduled_year', 'residential_units', 'non_residential_sqft', 'change_type']
+	        verbose_name = 'Development Event Historie'
+	        list_display = ['zone_id', 'building_type_id', 'scheduled_year',
+                         'residential_units', 'non_residential_sqft', 'change_type']
 	        field_attributes = dict(zone_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_type_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                scheduled_year=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1950, maximum=2050),
-	                                residential_units=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
-	                                non_residential_sqft=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0)
+	                                building_type_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                scheduled_year=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1950, maximum=2050),
+	                                residential_units=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0),
+	                                non_residential_sqft=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0)
 	                                )
 	                               
+
 class EmploymentAdHocSectorGroupDefinition(Entity):
 	    using_options(tablename='employment_adhoc_sector_group_definitions')
 	    id = Field(Integer, primary_key=True)
@@ -185,12 +230,14 @@ class EmploymentAdHocSectorGroupDefinition(Entity):
 	    group = ManyToOne('EmploymentAdHocSectorGroup', colname='group_id')
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Employment Ad Hoc Sector Group Definition'
-	        list_display=['sector_id', 'group_id']
+	        verbose_name = 'Employment Ad Hoc Sector Group Definition'
+	        list_display = ['sector_id', 'group_id']
 	        field_attributes = dict(sector_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                group_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                group_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	                               
+
 class EmploymentAdHocSectorGroup(Entity):
 	    using_options(tablename='employment_adhoc_sector_groups')
 	    id = Field(Integer, primary_key=True)
@@ -198,32 +245,38 @@ class EmploymentAdHocSectorGroup(Entity):
 	    name = Field(String(20))
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Employment Ad Hoc Sector Group'
-	        list_display=['group_id', 'name']
-	        field_attributes = dict(group_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1))
+	        verbose_name = 'Employment Ad Hoc Sector Group'
+	        list_display = ['group_id', 'name']
+	        field_attributes = dict(
+	            group_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1))
 	   
+
 class EmploymentSector(Entity):
 	    using_options(tablename='employment_sectors')
 	    id = Field(Integer, primary_key=True, colname='sector_id')
 	    name = Field(String(20))
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Employment Sector'
-	        list_display=['sector_id', 'name']
-	        field_attributes = dict(sector_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1))
+	        verbose_name = 'Employment Sector'
+	        list_display = ['sector_id', 'name']
+	        field_attributes = dict(
+	            sector_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1))
 	       
+
 class Faz(Entity):
 	    using_options(tablename='fazes')
 	    id = Field(Integer, primary_key=True, colname='faz_id')
 	    large_area = ManyToOne('LargeArea', colname='large_area_id')
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Faz'
-	        list_display=['faz_id', 'large_area_id']
+	        verbose_name = 'Faz'
+	        list_display = ['faz_id', 'large_area_id']
 	        field_attributes = dict(faz_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                large_area_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                large_area_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	                               
+
 class HomeBasedStatus(Entity):
 	    using_options(tablename='home_based_status')
 	    id = Field(Integer, primary_key=True)
@@ -231,10 +284,12 @@ class HomeBasedStatus(Entity):
 	    name = Field(String(20))
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Home Based Statu'
-	        list_display=['home_based_status', 'name']
-	        field_attributes = dict(home_based_status=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1))
+	        verbose_name = 'Home Based Statu'
+	        list_display = ['home_based_status', 'name']
+	        field_attributes = dict(home_based_status=dict(
+	            delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1))
 	
+
 class Household(Entity):
 	    using_options(tablename='households')
 	    id = Field(Integer, primary_key=True, colname='household_id')
@@ -248,8 +303,8 @@ class Household(Entity):
 	    cars = Field(Integer)
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Household'
-	        list_display=[
+	        verbose_name = 'Household'
+	        list_display = [
 	            'household_id',
 	            'building_id',
 	            'persons',
@@ -259,18 +314,27 @@ class Household(Entity):
 	            'workers',
 	            'children',
 	            'cars'
-	            ]
+                ]
 	        field_attributes = dict(household_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                persons=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
-	                                income=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=1000000),
-	                                age_of_head=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
-	                                race_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                workers=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=15),
-	                                children=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
-	                                cars=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15)
+	                                building_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                persons=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
+	                                income=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=1000000),
+	                                age_of_head=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
+	                                race_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                workers=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=15),
+	                                children=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
+	                                cars=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15)
 	                                )
 	           
+
 class HouseholdCharacteristicsForHT(Entity):
 	    using_options(tablename='household_characteristics_for_ht')
 	    id = Field(Integer, primary_key=True)
@@ -279,12 +343,14 @@ class HouseholdCharacteristicsForHT(Entity):
 	    max = Field(Integer)
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Household Characteristics for HT'
-	        list_display=['characteristic', 'min', 'max']
+	        verbose_name = 'Household Characteristics for HT'
+	        list_display = ['characteristic', 'min', 'max']
 	        field_attributes = dict(min=dict(delegate=delegates.IntegerDelegate, calculator=False),
-	                                max=dict(delegate=delegates.IntegerDelegate, calculator=False)
+	                                max=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False)
 	                                )
 	
+
 class HouseholdsForEstimation(Entity):
 	    using_options(tablename='households_for_estimation')
 	    id = Field(Integer, primary_key=True)
@@ -299,8 +365,8 @@ class HouseholdsForEstimation(Entity):
 	    cars = Field(Integer)
 	
 	    class Admin(EntityAdmin):
-	        verbose_name='Households for Estimation'
-	        list_display=[
+	        verbose_name = 'Households for Estimation'
+	        list_display = [
 	            'household_id',
 	            'building_id',
 	            'persons',
@@ -310,18 +376,27 @@ class HouseholdsForEstimation(Entity):
 	            'workers',
 	            'children',
 	            'cars'
-	            ]
+                ]
 	        field_attributes = dict(household_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                persons=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
-	                                income=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=1000000),
-	                                age_of_head=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
-	                                race_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                workers=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=15),
-	                                children=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
-	                                cars=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15)
+	                                building_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                persons=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
+	                                income=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=1000000),
+	                                age_of_head=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=100),
+	                                race_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                workers=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=15),
+	                                children=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15),
+	                                cars=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1, maximum=15)
 	                                )
 	                               
+
 class Job(Entity):
 	    using_options(tablename='jobs')
 	    id = Field(Integer, primary_key=True, colname='job_id')
@@ -330,30 +405,40 @@ class Job(Entity):
 	    sector = ManyToOne('EmploymentSector', colname='sector_id')
 
 	    class Admin(EntityAdmin):
-	        verbose_name='Job'
-	        list_display=['job_id', 'building_id', 'home_based_status', 'sector_id']
+	        verbose_name = 'Job'
+	        list_display = [
+	            'job_id', 'building_id', 'home_based_status', 'sector_id']
 	        field_attributes = dict(job_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                home_based_status=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1),
-	                                sector_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                building_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                home_based_status=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1),
+	                                sector_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	                               
+
 class JobsForEstimation(Entity):
 	    using_options(tablename='jobs_for_estimatiion')
-	    id = Field(Integer, primary_key = True, colname='job_id')
+	    id = Field(Integer, primary_key=True, colname='job_id')
 	    building = ManyToOne('Building', colname='building_id')
 	    home_based_status = Field(Integer)
 	    sector = ManyToOne('EmploymentSector', colname='sector_id')
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Jobs for Estimation'
-	        list_display=['job_id', 'building_id', 'home_based_status', 'sector_id']
+	        verbose_name = 'Jobs for Estimation'
+	        list_display = [
+	            'job_id', 'building_id', 'home_based_status', 'sector_id']
 	        field_attributes = dict(job_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                building_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                home_based_status=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1),
-	                                sector_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                building_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
+	                                home_based_status=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=0, maximum=1),
+	                                sector_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	                               
+
 class LargeArea(Entity):
 	    using_options(tablename='large_areas')
 	    id = Field(Integer, primary_key=True, colname='large_area_id')
@@ -361,10 +446,11 @@ class LargeArea(Entity):
 	    county = ManyToOne('County', colname='county_id')
 	   
 	    class Admin(EntityAdmin):
-	        verbose_name='Large Area'
-	        list_display=['large_area_id', 'large_area_name', 'county_id']
+	        verbose_name = 'Large Area'
+	        list_display = ['large_area_id', 'large_area_name', 'county_id']
 	        field_attributes = dict(large_area_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1),
-	                                county_id=dict(delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
+	                                county_id=dict(
+	                                    delegate=delegates.IntegerDelegate, calculator=False, minimum=1)
 	                                )
 	
 	class PlanType(Entity): #Needed for zones?
@@ -426,11 +512,11 @@ class ScheduledDevelopmentEvents(Entity):
 	    action = Field(String(20))
 	    attribute = Field(String(25))  #optional, required if action is 'set_value', 'add_value', 'subtract_value', or multiply_value
 	    amount = Field(Integer)
-	    #fields to identify buildings(location and building type) for events
+	    # fields to identify buildings(location and building type) for events
 	    building = ManyToOne('Building', colname='building_id')
-	    ## alternatively, use primary or computed attributes of buildings
-	    #zone = ManyToOne('Zone', colname='zone_id')
-	    #building_type = ManyToOne('Building_type', colname='building_type_id')
+	    # alternatively, use primary or computed attributes of buildings
+	    # zone = ManyToOne('Zone', colname='zone_id')
+	    # building_type = ManyToOne('Building_type', colname='building_type_id')
 	   
 	    class Admin(EntityAdmin):
 	        verbose_name='Scheduled Development Event'
@@ -447,9 +533,9 @@ class ScheduledEmploymentEvents(Entity):
 	    action = Field(String)
 	    attribute = Field(String)   #optional, required if action is 'set_value', 'add_value', 'subtract_value', or multiply_value
 	    amount = Field(Integer)
-	    #fields to identify jobs for events
+	    # fields to identify jobs for events
 	    sector = ManyToOne('EmploymentSector', colname='sector_id')
-	    ##alternatively, use primary or computed attributes of jobs
+	    # alternatively, use primary or computed attributes of jobs
 	    # building = ManyToOne('Building', colname='building_id')
 	   
 	    class Admin(EntityAdmin):
@@ -480,7 +566,7 @@ class TravelData(Entity):
 	    from_zone_id = Field(Integer)
 	    to_zone_id = Field(Integer)
 	    am_single_vehicle_to_work_travel_time = Field(Integer)
-	    #Enter any additional columns needed from travel model skims
+	    # Enter any additional columns needed from travel model skims
 	   
 	    class Admin(EntityAdmin):
 	        verbose_name='Travel Data'
@@ -506,8 +592,8 @@ class Zone(Entity):
 below are the table required for OpenAMOS
 the tables are simple elixir tables
 """
-#start define the classes
-#Vehicle class
+# start define the classes
+# Vehicle class
 class Vehicle(Entity):
     using_options(tablename='vehicle')
     Vehicle_ID = Field(Integer, primary_key = True)
@@ -519,7 +605,7 @@ class Vehicle(Entity):
     Capacity = Field(UnicodeText)
 
 
-#TSP class
+# TSP class
 class TSP(Entity):
     using_options(tablename='tsp')
     TSP_ID = Field(Integer, primary_key = True)
@@ -530,7 +616,7 @@ class TSP(Entity):
     DO_ID = Field(Integer)
 
 
-#person schedule class
+# person schedule class
 class Person_Schedule(Entity):
     using_options(tablename='person_schedule')
     PS_ID = Field(Integer, primary_key = True)
@@ -538,7 +624,7 @@ class Person_Schedule(Entity):
     Schedule_ID = Field(Integer)
 
     
-#link class
+# link class
 class Link(Entity):
     using_options(tablename='link')
     Link_ID = Field(Integer, primary_key = True)
@@ -547,7 +633,7 @@ class Link(Entity):
     Y_Coordinates = Field(Integer)
     
     
-#destination opportunities class
+# destination opportunities class
 class Destination_Opportunities(Entity):
     using_options(tablename='destination_opportunities')
     DO_ID = Field(Integer, primary_key = True)
@@ -555,7 +641,7 @@ class Destination_Opportunities(Entity):
     Link_ID = Field(Integer)
 
 
-#trip class
+# trip class
 class Trip(Entity):
     using_options(tablename='trip')
     Trip_ID = Field(Integer, primary_key = True)
@@ -569,7 +655,7 @@ class Trip(Entity):
     Travel_Times = Field(Integer)
     
     
-#link od class
+# link od class
 class Link_OD(Entity):
     using_options(tablename='link_od')
     Link_OD_ID = Field(Integer, primary_key = True)
@@ -581,7 +667,7 @@ class Link_OD(Entity):
     Distance = Field(Integer)
     
 
-#household class
+# household class
 class Household(Entity):
     using_options(tablename='household')
     Household_ID = Field(Integer, primary_key = True)
@@ -601,7 +687,7 @@ class Household(Entity):
     zone_id = Field(Integer)
 
 
-#person trip class
+# person trip class
 class Person_Trip(Entity):
     using_options(tablename='person_trip')
     PT_ID = Field(Integer, primary_key = True)
@@ -609,7 +695,7 @@ class Person_Trip(Entity):
     Person_ID = Field(Integer)
 
 
-#schedule class
+# schedule class
 class Schedule(Entity):
     using_options(tablename='schedule')
     Schedule_ID = Field(Integer, primary_key = True)
@@ -620,7 +706,7 @@ class Schedule(Entity):
     Duration = Field(Integer)
 
 
-#person class
+# person class
 class Person(Entity):
     using_options(tablename='person')
     Person_ID = Field(Integer, primary_key = True)

@@ -1,3 +1,2 @@
 class TextError(Exception):
     pass
-

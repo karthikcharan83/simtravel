@@ -3,18 +3,20 @@ Template to generate the database schema: v1
 TODO: have to include the relationship between database.
 """
 
-#import the necessary modules
+# import the necessary modules
 from elixir import *
 
-#define metadata and connect to the database
+# define metadata and connect to the database
 metadata.bind = "postgres://postgres:1234@localhost/open_amos"
 metadata.bind.echo = True
 
-#start define the classes
-#schedule class
+# start define the classes
+# schedule class
+
+
 class Schedule(Entity):
     using_options(tablename='schedule')
-    Schedule_ID = Field(Integer, primary_key = True)
+    Schedule_ID = Field(Integer, primary_key=True)
     Type_of_Activity = Field(UnicodeText)
     Start_Time = Field(Integer)
     End_Time = Field(Integer)
@@ -22,10 +24,10 @@ class Schedule(Entity):
     Duration = Field(Integer)
 
 
-#link od class
+# link od class
 class Link_OD(Entity):
     using_options(tablename='link_od')
-    Link_OD_ID = Field(Integer, primary_key = True)
+    Link_OD_ID = Field(Integer, primary_key=True)
     TOD = Field(Integer)
     Mode = Field(UnicodeText)
     Travel_Time = Field(Integer)
@@ -34,10 +36,10 @@ class Link_OD(Entity):
     Distance = Field(Integer)
 
 
-#household class
+# household class
 class Household(Entity):
     using_options(tablename='household')
-    Household_ID = Field(Integer, primary_key = True)
+    Household_ID = Field(Integer, primary_key=True)
     adults = Field(Integer)
     age_of_head = Field(Integer)
     autos = Field(Integer)
@@ -53,40 +55,41 @@ class Household(Entity):
     tract_id = Field(Integer)
     zone_id = Field(Integer)
 
-    
-#TSP class
+
+# TSP class
 class TSP(Entity):
     using_options(tablename='tsp')
-    TSP_ID = Field(Integer, primary_key = True)
+    TSP_ID = Field(Integer, primary_key=True)
     Start_Location = Field(Integer)
     End_Location = Field(Integer)
     Start_Time = Field(Integer)
     End_Time = Field(Integer)
-    DO_ID_fk = ManyToOne('Destination_Opportunities', field=Destination_Opportunities_ID)
+    DO_ID_fk = ManyToOne(
+        'Destination_Opportunities', field=Destination_Opportunities_ID)
 
 
-#link class
+# link class
 class Link(Entity):
     using_options(tablename='link')
-    Link_ID = Field(Integer, primary_key = True)
+    Link_ID = Field(Integer, primary_key=True)
     Oppurtinities_by_Activity_Type = Field(UnicodeText)
     X_Coordinates = Field(Integer)
     Y_Coordinates = Field(Integer)
     DO_ID_fk = ManyToOne('Destination_Opportunities', field=DO_ID)
-    
 
-#destination opportunities class
+
+# destination opportunities class
 class Destination_Opportunities(Entity):
     using_options(tablename='destination_opportunities')
-    DO_ID = Field(Integer, primary_key = True)
+    DO_ID = Field(Integer, primary_key=True)
     Link_ID_fk = OneToMany('Link', field=Link_ID)
     TSP_ID_fk = OneToMany('TSP', field=TSP_ID)
 
-    
-#person class
+
+# person class
 class Person(Entity):
     using_options(tablename='person')
-    Person_ID = Field(Integer, primary_key = True)
+    Person_ID = Field(Integer, primary_key=True)
     Age = Field(Integer)
     Gender = Field(UnicodeText)
     School_Status = Field(UnicodeText)
@@ -102,20 +105,20 @@ class Person(Entity):
     Household_ID_fk = ManyToOne('Vehicle', field=Vehicle_ID)
     Vehicle_ID_fk = OneToMany('Vehicle', field=Vehicle_ID)
     PT_ID_fk = ManyToOne('Person_Trip', field=PT_ID)
-    
-    
-#person schedule class
+
+
+# person schedule class
 class Person_Schedule(Entity):
     using_options(tablename='person_schedule')
-    PS_ID = Field(Integer, primary_key = True)
+    PS_ID = Field(Integer, primary_key=True)
     Person_ID_fk = ManyToOne('Person', field=Person_ID)
     Schedule_ID_fk = ManyToOne('Schedule', field=Schedule_ID)
-    
-    
-#Vehicle class
+
+
+# Vehicle class
 class Vehicle(Entity):
     using_options(tablename='vehicle')
-    Vehicle_ID = Field(Integer, primary_key = True)
+    Vehicle_ID = Field(Integer, primary_key=True)
     Person_ID_fk = ManyToOne('Person', field=Person_ID)
     Body_Type = Field(UnicodeText)
     Fuel_Type = Field(UnicodeText)
@@ -124,11 +127,11 @@ class Vehicle(Entity):
     Capacity = Field(UnicodeText)
     Trip_ID_fk = OneToMany('Trip', field=Trip_ID)
 
-    
-#trip class
-class Trip(Entity): 
+
+# trip class
+class Trip(Entity):
     using_options(tablename='trip')
-    Trip_ID = Field(Integer, primary_key = True)
+    Trip_ID = Field(Integer, primary_key=True)
     Start_Time = Field(Integer)
     End_Time = Field(Integer)
     Vehicle_ID_fk = ManyToOne('Vehicle', field=Vehicle_ID)
@@ -137,20 +140,20 @@ class Trip(Entity):
     Mode = Field(UnicodeText)
     Fare = Field(Integer)
     Travel_Times = Field(Integer)
-    
 
-#person trip class
+
+# person trip class
 class Person_Trip(Entity):
     using_options(tablename='person_trip')
-    PT_ID = Field(Integer, primary_key = True)
+    PT_ID = Field(Integer, primary_key=True)
     Trip_ID_fk = OneToMany('Trip', field=Trip_ID)
     Person_ID_fk = OneToMany('Person', field=Person_ID)
 
 
-#create all the tables and commit the changes to the database
+# create all the tables and commit the changes to the database
 setup_all()
 create_all()
 
 session.commit()
 
-#end of schema generator template
+# end of schema generator template

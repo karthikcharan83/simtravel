@@ -13,7 +13,9 @@ from openamos.core.models.interaction_model import InteractionModel
 
 from multiprocessing import Process
 
+
 class ComponentManager(object):
+
     """
     The class reads the configuration file, creates the component and model objects,
     and runs the models to simulate the various activity-travel choice processes.
@@ -25,7 +27,7 @@ class ComponentManager(object):
 
     def __init__(self, configObject=None, fileLoc=None, component=None):
         if configObject is None and fileLoc is None:
-                raise ConfigurationError, """The configuration input is not valid; a """\
+            raise ConfigurationError, """The configuration input is not valid; a """\
                 """location of the XML configuration file or a valid etree """\
                 """object must be passed"""
 
@@ -42,9 +44,9 @@ class ComponentManager(object):
                 """invalid or the file is not a valid configuration file."""
 
         self.configObject = configObject
-        self.configParser = ConfigParser(configObject) #creates the model configuration parser
+        # creates the model configuration parser
+        self.configParser = ConfigParser(configObject)
         self.projectConfigObject = self.configParser.parse_projectAttributes()
-        
 
     def establish_databaseConnection(self):
         dbConfigObject = self.configParser.parse_databaseAttributes()
@@ -53,92 +55,90 @@ class ComponentManager(object):
         self.queryBrowser.create_mapper_for_all_classes()
         print 'Database Connection Established'
 
-
     def close_databaseConnection(self):
         pass
-        
+
     def establish_cacheDatabase(self, fileLoc, mode='w'):
         self.db = DB(fileLoc, mode)
         if mode == 'w':
             self.db.create()
-        # placeholders for creating the hdf5 tables 
-        # only the network data is read and processed for faster 
+        # placeholders for creating the hdf5 tables
+        # only the network data is read and processed for faster
         # queries
         self.db.createTableFromDatabase('travel_skims', self.queryBrowser)
-        
-        
+
     def run_components(self):
         t_c = time.time()
         componentList = self.configParser.parse_models()
-        
+
         subsample = self.projectConfigObject.subsample
-        
+
         for i in componentList:
             for j in i.model_list:
                 print j.dep_varname
-            #self.queryBrowser.dbcon_obj.new_sessionInstance()
+            # self.queryBrowser.dbcon_obj.new_sessionInstance()
             tableName = i.table
-            print '\nFor component - %s deleting corresponding table - %s' %(i.component_name, tableName)
+            print '\nFor component - %s deleting corresponding table - %s' % (i.component_name, tableName)
             # clean the run time tables
-            #delete the delete statement; this was done to clean the tables during testing
-            self.queryBrowser.delete_all(tableName)            
-        #self.queryBrowser.dbcon_obj.close_sessionInstance()            
-        
+            # delete the delete statement; this was done to clean the tables
+            # during testing
+            self.queryBrowser.delete_all(tableName)
+        # self.queryBrowser.dbcon_obj.close_sessionInstance()
+
         for i in componentList:
             # Create New Instance of the Session
-            #self.queryBrowser.dbcon_obj.new_sessionInstance()
+            # self.queryBrowser.dbcon_obj.new_sessionInstance()
 
             t = time.time()
-            print '\nRunning Component - %s; Analysis Interval - %s' %(i.component_name,
-                                                                       i.analysisInterval)
+            print '\nRunning Component - %s; Analysis Interval - %s' % (i.component_name,
+                                                                        i.analysisInterval)
 
-            # Prepare variable list/objects for retrieving the corresponding records for processing
+            # Prepare variable list/objects for retrieving the corresponding
+            # records for processing
             variableList = i.variable_list
 
-            #print '\tVariable List - ', len(variableList)
-            vars_dict, depvars_dict, prim_keys, count_keys = self.prepare_vars(variableList, i)
+            # print '\tVariable List - ', len(variableList)
+            vars_dict, depvars_dict, prim_keys, count_keys = self.prepare_vars(
+                variableList, i)
 
-            #Spatial Constraints list
+            # Spatial Constraints list
             spatialConst_list = i.spatialConst_list
 
-            #print '\nVARS BEFORE REMOVING TEMP', vars_dict
+            # print '\nVARS BEFORE REMOVING TEMP', vars_dict
             # Exclude the temp variables
             if 'temp' in vars_dict:
                 temp_tableEntries = vars_dict.pop('temp')
-                temp_dict = {'temp':temp_tableEntries}
+                temp_dict = {'temp': temp_tableEntries}
 
                 depvars_dict = self.update_dictionary(depvars_dict, temp_dict)
 
-                #print 'VARS AFTER REMOVING TEMP', vars_dict
-                #print type(temp_tableEntries)
+                # print 'VARS AFTER REMOVING TEMP', vars_dict
+                # print type(temp_tableEntries)
 
-            
             tableName = i.table
 
             analysisInterval = i.analysisInterval
 
-
             # Prepare Data
-            data = self.prepare_data(vars_dict, depvars_dict, count_keys, 
-                                     spatialConst_list, analysisInterval, subsample)        
+            data = self.prepare_data(vars_dict, depvars_dict, count_keys,
+                                     spatialConst_list, analysisInterval, subsample)
             # Append the Spatial Query Results
             # data = self.process_spatial_query(data, i.spatialConst_list)
-            
-            #if i.component_name == 'MorningVertex' or i.component_name == 'EveningVertex':
-            #    print 'Data', data.columns(['houseid', 'personid', 'scheduleid']).data
+
+            # if i.component_name == 'MorningVertex' or i.component_name == 'EveningVertex':
+            # print 'Data', data.columns(['houseid', 'personid',
+            # 'scheduleid']).data
 
             # Run the component
             nRowsProcessed = i.run(data, self.db)
-            
+
             if i.component_name == 'AfterSchoolActivities':
                 f = open('test_res', 'a')
-                f.write('%s,rows - %s\n' %(i.component_name, nRowsProcessed))
+                f.write('%s,rows - %s\n' % (i.component_name, nRowsProcessed))
                 f.close()
-                
-                #if nRowsProcessed <> 6:
+
+                # if nRowsProcessed <> 6:
                 #    raw_input()
-
-
 
             # Write the data to the database from the hdf5 results cache
             if i.key[1] is not None:
@@ -148,12 +148,12 @@ class ComponentManager(object):
             self.reflectToDatabase(tableName, keyCols, nRowsProcessed)
 
             print '-- Finished simulating model --'
-            print '-- Time taken to complete - %.4f' %(time.time()-t)
-            #print raw_input('-- Press any key to continue... --')
+            print '-- Time taken to complete - %.4f' % (time.time() - t)
+            # print raw_input('-- Press any key to continue... --')
             # Create New Instance of the Session
-            #self.queryBrowser.dbcon_obj.close_sessionInstance()
-            #raw_input()
-        print '-- TIME TAKEN  TO COMPLETE ALL COMPONENTS - %.4f' %(time.time()-t_c)
+            # self.queryBrowser.dbcon_obj.close_sessionInstance()
+            # raw_input()
+        print '-- TIME TAKEN  TO COMPLETE ALL COMPONENTS - %.4f' % (time.time() - t_c)
 
     def reflectToDatabase(self, tableName, keyCols=[], nRowsProcessed=0):
         """
@@ -164,17 +164,16 @@ class ComponentManager(object):
         and hence the need to reflect the run-time caches to the database
         """
 
-        #self.queryBrowser.inser_into_table(data.data
+        # self.queryBrowser.inser_into_table(data.data
         table = self.db.returnTableReference(tableName)
-        
-        
+
         #resIterator = table.iterrows()
         #t = time.time()
         #resArr = [row[:] for row in resIterator]
-        #print """\tCreating the array object (iterating through the hdf5 results) """\
+        # print """\tCreating the array object (iterating through the hdf5 results) """\
         #    """to insert into tbale - %.4f""" %(time.time()-t)
-        #print type(resArr)
-        
+        # print type(resArr)
+
         t = time.time()
 
         print '\tNumber of rows processed in this iteration - ', nRowsProcessed
@@ -182,30 +181,29 @@ class ComponentManager(object):
             return
         resArr = list(table[-nRowsProcessed:])
         print """\tCreating the array object (WITHOUT iterating through the hdf5 results) """\
-            """to insert into tbale - %.4f""" %(time.time()-t)
+            """to insert into tbale - %.4f""" % (time.time() - t)
         colsToWrite = table.colnames
 
-        #print resArr
+        # print resArr
         # TODO: delete rows from the local cache
         # In the current implementation, the rows are deleted before every update so that replication is not  done
-        # in actual implementation, the local cache should be wiped clean so as to avoid the latency of 
+        # in actual implementation, the local cache should be wiped clean so as to avoid the latency of
         # inserting old rows and creating indices for them
-        
-        #self.queryBrowser.delete_all(tableName)            
-        self.queryBrowser.insert_into_table(resArr, colsToWrite, tableName, keyCols, chunkSize=100000)
 
-        
+        # self.queryBrowser.delete_all(tableName)
+        self.queryBrowser.insert_into_table(
+            resArr, colsToWrite, tableName, keyCols, chunkSize=100000)
+
     def prepare_vars(self, variableList, component):
-        #print variableList
+        # print variableList
         indep_columnDict = self.prepare_vars_independent(variableList)
-        #print '\tIndependent Column Dictionary - ', indep_columnDict
+        # print '\tIndependent Column Dictionary - ', indep_columnDict
 
-        tempdep_columnDict = {'temp':[]}
+        tempdep_columnDict = {'temp': []}
         spatialquery_columnDict = {}
         dep_columnDict = {}
         prim_keys = {}
         count_keys = {}
-
 
         depVarTable = component.table
 
@@ -213,10 +211,9 @@ class ComponentManager(object):
             prim_keys[depVarTable] = component.key[0]
         if component.key[1] is not None:
             count_keys[depVarTable] = component.key[1]
-        
-        
+
         for submodel in component.model_list:
-            
+
             depVarName = submodel.dep_varname
 
             if isinstance(submodel.model, InteractionModel):
@@ -231,29 +228,28 @@ class ComponentManager(object):
                     dep_columnDict[depVarTable].append(depVarName)
                 else:
                     dep_columnDict[depVarTable] = [depVarName]
-        
 
-        #print '\tDependent Column Dictionary - ', dep_columnDict
-        #print '\tDependent Column Dictionary - ', tempdep_columnDict
-        #print '\tPrimary Keys - ', prim_keys
-        #print '\tIndex Keys - ', count_keys
-       
+        # print '\tDependent Column Dictionary - ', dep_columnDict
+        # print '\tDependent Column Dictionary - ', tempdep_columnDict
+        # print '\tPrimary Keys - ', prim_keys
+        # print '\tIndex Keys - ', count_keys
+
         #columnDict = self.update_dictionary(indep_columnDict, dep_columnDict)
         indep_columnDict = self.update_dictionary(indep_columnDict, prim_keys)
         indep_columnDict = self.update_dictionary(indep_columnDict, count_keys)
 
         if len(tempdep_columnDict['temp']) > 0:
-            dep_columnDict = self.update_dictionary(dep_columnDict, tempdep_columnDict)
+            dep_columnDict = self.update_dictionary(
+                dep_columnDict, tempdep_columnDict)
 
-        #print '\tIndependent Column Dictionary - ', indep_columnDict
-        #print '\tDependent Column Dictionary - ', dep_columnDict
+        # print '\tIndependent Column Dictionary - ', indep_columnDict
+        # print '\tDependent Column Dictionary - ', dep_columnDict
         return indep_columnDict, dep_columnDict, prim_keys, count_keys
-        
 
     def prepare_vars_independent(self, variableList):
-        # Here we append attributes for all columns that appear on the RHS in the 
+        # Here we append attributes for all columns that appear on the RHS in the
         # equations for the different models
-        #print variableList
+        # print variableList
 
         indepColDict = {}
         for i in variableList:
@@ -265,7 +261,6 @@ class ComponentManager(object):
                 indepColDict[tableName] = [colName]
 
         return indepColDict
-
 
     def update_dictionary(self, dict_master, dict_to_merge):
         dict_m = copy.deepcopy(dict_master)
@@ -282,22 +277,21 @@ class ComponentManager(object):
         keysList = []
         keysNoDuplicates = {}
         for i in keys:
-            if prim_keys_ind and i.find('_r') > -1:                
-                #print 'primary keys and _r (result) table found'
+            if prim_keys_ind and i.find('_r') > -1:
+                # print 'primary keys and _r (result) table found'
                 continue
             if len(set(keys[i]) & set(keysList)) == 0:
                 keysNoDuplicates[i] = keys[i]
                 keysList = keysList + keys[i]
-                #print '%s not in - ' %(i), keysList, i not in keysList
+                # print '%s not in - ' %(i), keysList, i not in keysList
         return keysNoDuplicates
-            
+
     def process_anchors(self, columnDict, anchor):
         anchor_cols = []
         anchor_cols.append(anchor.locationField)
 
         if anchor.timeField is not None:
             anchor_cols.append(anchor.timeField)
-
 
         if anchor.table in columnDict:
             cols = columnDict[anchor.table]
@@ -306,36 +300,35 @@ class ComponentManager(object):
         else:
             columnDict[anchor.table] = anchor_cols
 
-        #print columnDict
-        #raw_input()
+        # print columnDict
+        # raw_input()
         return columnDict
 
-    def prepare_data(self, indepVarDict, depVarDict, 
-                     count_keys=None, spatialConst_list=None, 
+    def prepare_data(self, indepVarDict, depVarDict,
+                     count_keys=None, spatialConst_list=None,
                      analysisInterval=None, subsample=None):
         # get hierarchy of the tables
 
-        #print indepVarDict
+        # print indepVarDict
 
         # PROCESSING TO INCLUDE THE APPROPRIATE SPATIAL QUERY ANCHORS
         if spatialConst_list is not None:
-            # Removing those table/column entries which will be processed                                               
-            # separately                                                                                                
+            # Removing those table/column entries which will be processed
+            # separately
             spatialQryTables = []
             for i in spatialConst_list:
                 if i.table not in spatialQryTables:
                     spatialQryTables.append(i.table)
 
-            #print 'SPATIAL QRY TABLES', spatialQryTables
+            # print 'SPATIAL QRY TABLES', spatialQryTables
             spatialQryDict = {}
             for i in spatialQryTables:
                 if i in indepVarDict:
                     spatialQryDict[i] = indepVarDict.pop(i)
-            # Include those variables that will be used to process the spatial                                          
-            # queries for example the htaz, wtaz etc.                                                                   
+            # Include those variables that will be used to process the spatial
+            # queries for example the htaz, wtaz etc.
 
-
-            #Processing Anchors for variables to be included                                                            
+            # Processing Anchors for variables to be included
             for i in spatialConst_list:
                 if i.countChoices is None:
                     # Adding the columns that can then be used to retrieve the
@@ -343,7 +336,8 @@ class ComponentManager(object):
                     stAnchor = i.startConstraint
                     endAnchor = i.endConstraint
                     indepVarDict = self.process_anchors(indepVarDict, stAnchor)
-                    indepVarDict = self.process_anchors(indepVarDict, endAnchor)
+                    indepVarDict = self.process_anchors(
+                        indepVarDict, endAnchor)
 
                 # the above cols are added for travel time type queries as they fit in the current
                 # select join query build framework
@@ -351,66 +345,69 @@ class ComponentManager(object):
                 # the cols for time space prism vertices will be added to the query in real time
                 # as they don't quite fit into the current setup
 
-
-
         tableOrderDict, tableNamesKeyDict = self.configParser.parse_tableHierarchy()
-        #print 'TABLE ORDER DICT', tableOrderDict
-        #print 'TABLE NAMES KEY DICT', tableNamesKeyDict
+        # print 'TABLE ORDER DICT', tableOrderDict
+        # print 'TABLE NAMES KEY DICT', tableNamesKeyDict
 
         orderKeys = tableOrderDict.keys()
         orderKeys.sort()
-        
+
         tableNamesOrderDict = {}
         #tableNamesKeyDict = {}
         for i in orderKeys:
             tableNamesOrderDict[tableOrderDict[i][0]] = i
             #tableNamesKeyDict[tableOrderDict[i][0]] = tableOrderDict[i][1]
 
-        #print 'TABLE NAMES ORDER', tableNamesOrderDict
+        # print 'TABLE NAMES ORDER', tableNamesOrderDict
         # table order
         tableNamesForComponent = indepVarDict.keys()
-        #print 'TABLE NAMES FOR COMPONENT', tableNamesForComponent
+        # print 'TABLE NAMES FOR COMPONENT', tableNamesForComponent
 
         found = []
         for i in list(set(tableNamesForComponent) & set(tableNamesOrderDict.keys())):
             order = tableNamesOrderDict[i]
             minOrder = min(tableNamesOrderDict.values())
-            found.insert(order-minOrder, i)
+            found.insert(order - minOrder, i)
             tableNamesForComponent.remove(i)
 
-        #print 'COMPONENT TABLES AFTER', tableNamesForComponent
-        #print 'HIERARCHY TABLES FOUND - ', found
-        #inserting back the ones that have a hierarchy defined
+        # print 'COMPONENT TABLES AFTER', tableNamesForComponent
+        # print 'HIERARCHY TABLES FOUND - ', found
+        # inserting back the ones that have a hierarchy defined
         tableNamesForComponent = found + tableNamesForComponent
 
-        #print '\ttableNamesforComponent - ', tableNamesForComponent
+        # print '\ttableNamesforComponent - ', tableNamesForComponent
 
         # replacing with the right keys for the main agents so that zeros are not
         # returned by the query statement especially for the variables defining the
         # agent id's
-        #print 'BEFORE FIXING INDEX KEYS', indepVarDict
-        
-        found.reverse() # so that the tables higher in the hierarchy are fixed last; lowest to highest now
+        # print 'BEFORE FIXING INDEX KEYS', indepVarDict
+
+        # so that the tables higher in the hierarchy are fixed last; lowest to
+        # highest now
+        found.reverse()
 
         for i in found:
-            key = tableNamesKeyDict[i][0] 
+            key = tableNamesKeyDict[i][0]
             for table in indepVarDict:
                 intersectKeyCols = set(key) & set(indepVarDict[table])
                 if len(intersectKeyCols) > 0:
-                    indepVarDict[table] = list(set(indepVarDict[table]) - intersectKeyCols)
-                    
+                    indepVarDict[table] = list(
+                        set(indepVarDict[table]) - intersectKeyCols)
+
                     if i in indepVarDict:
-                        indepVarDict[i] = indepVarDict[i] + list(intersectKeyCols)
+                        indepVarDict[i] = indepVarDict[
+                            i] + list(intersectKeyCols)
                     else:
                         indepVarDict[i] = intersectKeyCols
-        #print 'AFTER FIXING INDEX KEYS', indepVarDict
+        # print 'AFTER FIXING INDEX KEYS', indepVarDict
 
-        found.reverse() # reversing back the heirarchy to go from highest to lowest
+        # reversing back the heirarchy to go from highest to lowest
+        found.reverse()
 
         # matching keys
         matchingKey = {}
         mainTable = found[0]
-        #print 'mainTable', mainTable
+        # print 'mainTable', mainTable
         mainTableKeys = tableNamesKeyDict[mainTable][0]
 
         for i in indepVarDict.keys():
@@ -419,36 +416,36 @@ class ComponentManager(object):
             else:
                 matchTableKeys = tableNamesKeyDict[i][0]
             matchingKey[i] = list((set(mainTableKeys) and set(matchTableKeys)))
-        #print 'MATCHING KEY DICTIONARY', matchingKey
-        #raw_input()
+        # print 'MATCHING KEY DICTIONARY', matchingKey
+        # raw_input()
 
-        #for i in found:
+        # for i in found:
         #    if i in indepVarDict:
         #        matchingKey = tableNamesKeyDict[i][0]
         #        break
 
-        #print '\tMATCHING KEY - ', matchingKey
+        # print '\tMATCHING KEY - ', matchingKey
         # count dictionary or max dictionary
         if len(count_keys) == 0:
             max_dict = None
         else:
             max_dict = count_keys
 
-        #print 'COLUMN DICTIONARY', indepVarDict
-        #print 'TABLE HIERARCHY', tableNamesForComponent
-        #print 'MATCHING COLUMN', matchingKey
+        # print 'COLUMN DICTIONARY', indepVarDict
+        # print 'TABLE HIERARCHY', tableNamesForComponent
+        # print 'MATCHING COLUMN', matchingKey
         #maxDict = {'vehicles_r':['vehid']}
-        
+
         # Cleaning up the independent variables dictionary
         iterIndepDictKeys = indepVarDict.keys()
         for i in iterIndepDictKeys:
             if len(indepVarDict[i]) == 0:
                 indepVarDict.pop(i)
 
-        data = self.queryBrowser.select_join(indepVarDict, 
-                                             matchingKey, 
-                                             tableNamesForComponent, 
-                                             max_dict, 
+        data = self.queryBrowser.select_join(indepVarDict,
+                                             matchingKey,
+                                             tableNamesForComponent,
+                                             max_dict,
                                              spatialConst_list,
                                              analysisInterval,
                                              subsample)
@@ -456,13 +453,12 @@ class ComponentManager(object):
         self.append_cols_for_dependent_variables(data, depVarDict)
         self.process_data_for_locs(data, spatialConst_list)
         return data
-    
 
     def append_cols_for_dependent_variables(self, data, depVarDict):
-        #print 'INSERTING FOLLOWING DEPENDENT COLS', depVarDict
+        # print 'INSERTING FOLLOWING DEPENDENT COLS', depVarDict
 
         numRows = data.rows
-        tempValsArr = zeros((numRows,1))
+        tempValsArr = zeros((numRows, 1))
         for i in depVarDict:
             colsInTable = depVarDict[i]
             colsInTable.sort()
@@ -486,40 +482,45 @@ class ComponentManager(object):
                 originColName = i.originField
                 destinationColName = i.destinationField
                 skimColName = i.skimField
-                
+
                 skimsMatrix, uniqueIDs = self.db.returnTableAsMatrix(tableName,
                                                                      originColName,
                                                                      destinationColName,
                                                                      skimColName)
-                if i.countChoices is not None: 
+                if i.countChoices is not None:
                     print '\n\tNeed to sample location choices for the following model'
-                    self.sample_location_choices(data, skimsMatrix, uniqueIDs, i)
+                    self.sample_location_choices(
+                        data, skimsMatrix, uniqueIDs, i)
                 else:
                     print '\n\tNeed to extract skims'
                     self.extract_skims(data, skimsMatrix, i)
 
-        #raw_input()
+        # raw_input()
         return data
-    
-                                        
+
     def sample_location_choices(self, data, skimsMatrix, uniqueIDs, spatialconst):
         # extract destinations subject to the spatio-temporal
         # constraints
 
-        originLocColName = 'st_%s' %(spatialconst.startConstraint.locationField)
-        destinationLocColName = 'en_%s' %(spatialconst.endConstraint.locationField)
+        originLocColName = 'st_%s' % (
+            spatialconst.startConstraint.locationField)
+        destinationLocColName = 'en_%s' % (
+            spatialconst.endConstraint.locationField)
 
-        originTimeColName = 'st_%s' %(spatialconst.startConstraint.timeField)
-        destinationTimeColName = 'en_%s' %(spatialconst.endConstraint.timeField)
+        originTimeColName = 'st_%s' % (spatialconst.startConstraint.timeField)
+        destinationTimeColName = 'en_%s' % (
+            spatialconst.endConstraint.timeField)
 
         # insert column for data availability
-        originLocColVals = array(data.columns([originLocColName]).data, dtype=int)
-        destinationLocColVals = array(data.columns([destinationLocColName]).data, dtype=int)
+        originLocColVals = array(
+            data.columns([originLocColName]).data, dtype=int)
+        destinationLocColVals = array(
+            data.columns([destinationLocColName]).data, dtype=int)
 
-
-        originTimeColVals = array(data.columns([originTimeColName]).data, dtype=int)
-        destinationTimeColVals = array(data.columns([destinationTimeColName]).data, dtype=int)
-
+        originTimeColVals = array(
+            data.columns([originTimeColName]).data, dtype=int)
+        destinationTimeColVals = array(
+            data.columns([destinationTimeColName]).data, dtype=int)
 
         timeAvailable = destinationTimeColVals - originTimeColVals
 
@@ -530,108 +531,105 @@ class ComponentManager(object):
             timeToDest = skimsMatrix[originLocColVals, destZone]
             timeFromDest = skimsMatrix[destZone, destinationLocColVals]
 
-            #print 'TIME TO DEST', zone, min(timeToDest), max(timeToDest)
-            #print 'TIME FROM DEST', zone, min(timeFromDest), max(timeFromDest)
+            # print 'TIME TO DEST', zone, min(timeToDest), max(timeToDest)
+            # print 'TIME FROM DEST', zone, min(timeFromDest),
+            # max(timeFromDest)
 
-            rowsLessThan = (timeToDest + timeFromDest < timeAvailable)[:,0]
+            rowsLessThan = (timeToDest + timeFromDest < timeAvailable)[:, 0]
             destLocSetInd[rowsLessThan, zone] = 1
 
         destLocSetInd = ma.masked_equal(destLocSetInd, 0)
 
-        #print 'ORIGIN LOCS', originLocColVals[:5, 0]
-        #print 'DESTINATION LOCS', destinationLocColVals[:5, 0]
-        #print 'TIME AVAILABLE', timeAvailable[:5, 0]
-        #print destLocSetInd.sum(-1)
-        
+        # print 'ORIGIN LOCS', originLocColVals[:5, 0]
+        # print 'DESTINATION LOCS', destinationLocColVals[:5, 0]
+        # print 'TIME AVAILABLE', timeAvailable[:5, 0]
+        # print destLocSetInd.sum(-1)
+
         #destLocSetIndSum = destLocSetInd.sum(-1)
-        
+
         #probLocSet = (destLocSetInd.transpose()/destLocSetIndSum).transpose()
 
-
-        zoneLabels = ['geo-%s'%(i+1) for i in range(max(uniqueIDs)+1)]
+        zoneLabels = ['geo-%s' % (i + 1) for i in range(max(uniqueIDs) + 1)]
         #probDataArray = DataArray(probLocSet, zoneLabels)
 
-        sampleVarDict = {'temp':[]}
+        sampleVarDict = {'temp': []}
         sampleVarName = spatialconst.sampleField
 
         for i in range(spatialconst.countChoices):
-            sampleVarDict['temp'].append('%s%s' %(sampleVarName, i+1))
+            sampleVarDict['temp'].append('%s%s' % (sampleVarName, i + 1))
 
         self.append_cols_for_dependent_variables(data, sampleVarDict)
-        #print data.varnames
-        #print destLocSetInd.sum(-1)
+        # print data.varnames
+        # print destLocSetInd.sum(-1)
 
         seed = spatialconst.seed
         count = spatialconst.countChoices
         sampledChoicesCheck = True
         while (sampledChoicesCheck):
             print '\tSampling Locations'
-            self.sample_choices(data, destLocSetInd, zoneLabels, count, sampleVarName, seed)
+            self.sample_choices(
+                data, destLocSetInd, zoneLabels, count, sampleVarName, seed)
             sampledVarNames = sampleVarDict['temp']
-            sampledChoicesCheck = self.check_sampled_choices(data, sampledVarNames)
+            sampledChoicesCheck = self.check_sampled_choices(
+                data, sampledVarNames)
             seed = seed + 1
-
-
-
 
         #originLocColName = spatialconst.startConstraint.locationField
         #originLocColVals = array(data.columns([originLocColName]).data, dtype=int)
 
         for i in range(count):
-            sampleLocColName = '%s%s' %(sampleVarName, i+1)
-            sampleLocColVals = array(data.columns([sampleLocColName]).data, dtype=int)
+            sampleLocColName = '%s%s' % (sampleVarName, i + 1)
+            sampleLocColVals = array(
+                data.columns([sampleLocColName]).data, dtype=int)
 
             vals = skimsMatrix[originLocColVals, sampleLocColVals]
-            skimLocColName = '%s%s' %(spatialconst.skimField, i+1)
-            #print skimLocColName
+            skimLocColName = '%s%s' % (spatialconst.skimField, i + 1)
+            # print skimLocColName
             data.setcolumn(skimLocColName, vals)
         colsInTable = sampleVarDict['temp']
         colsInTable.sort()
-        #print data.columns(colsInTable + [originLocColName])
+        # print data.columns(colsInTable + [originLocColName])
         #tt = data.columns(['tt1', 'tt2', 'tt3', 'tt4', 'tt5'])
-        #print tt
+        # print tt
         print '\tTravel skims extracted for the sampled locations'
-        #raw_input()
+        # raw_input()
 
-            
-            
-            
     def extract_skims(self, data, skimsMatrix, spatialconst):
 
         # hstack a column for the skims that need to be extracted for the
         # location pair
         originLocColName = spatialconst.startConstraint.locationField
         destinationLocColName = spatialconst.endConstraint.locationField
-        
-        originLocColVals = array(data.columns([originLocColName]).data, dtype=int)
-        destinationLocColVals = array(data.columns([destinationLocColName]).data, dtype=int)
+
+        originLocColVals = array(
+            data.columns([originLocColName]).data, dtype=int)
+        destinationLocColVals = array(
+            data.columns([destinationLocColName]).data, dtype=int)
 
         vals = skimsMatrix[originLocColVals, destinationLocColVals]
         #vals.shape = (data.rows,1)
         data.insertcolumn(['tt'], vals)
-        
-
-
 
     def sample_choices(self, data, destLocSetInd, zoneLabels, count, sampleVarName, seed):
         for i in range(count):
             destLocSetIndSum = destLocSetInd.sum(-1)
-            #print 'NUMBER OF DESTINATIONS', destLocSetInd
-            probLocSet = (destLocSetInd.transpose()/destLocSetIndSum).transpose()
-            #print probLocSet.shape, 'PROBABILITY SHAPE'
-            #raw_input()
+            # print 'NUMBER OF DESTINATIONS', destLocSetInd
+            probLocSet = (
+                destLocSetInd.transpose() / destLocSetIndSum).transpose()
+            # print probLocSet.shape, 'PROBABILITY SHAPE'
+            # raw_input()
             probDataArray = DataArray(probLocSet, zoneLabels)
 
             # seed is the count of the sampled destination starting with 1
-            probModel = AbstractProbabilityModel(probDataArray, seed+i)
+            probModel = AbstractProbabilityModel(probDataArray, seed + i)
             res = probModel.selected_choice()
-            
+
             # Assigning the destination
-            # We subtract -1 from the results that were returned because the 
+            # We subtract -1 from the results that were returned because the
             # abstract probability model returns results indexed at 1
             # actual location id = choice returned - 1
-            
-            colName = '%s%s' %(sampleVarName, i+1)
+
+            colName = '%s%s' % (sampleVarName, i + 1)
             nonZeroRows = where(res.data <> 0)
             actualLocIds = res.data
             actualLocIds[nonZeroRows] -= 1
@@ -641,36 +639,31 @@ class ComponentManager(object):
             dataCol = data.columns([colName]).data
             rowIndices = array(xrange(dataCol.shape[0]), int)
             colIndices = actualLocIds.astype(int)
-            #print res.data.shape
+            # print res.data.shape
             destLocSetInd[rowIndices, colIndices] = 0
-        #print data.varnames
+        # print data.varnames
 
     def check_sampled_choices(self, data, sampledVarNames):
         for i in range(len(sampledVarNames)):
             varName = sampledVarNames[i]
-            checkAgainstVarNames = sampledVarNames[i+1:]
+            checkAgainstVarNames = sampledVarNames[i + 1:]
             for j in checkAgainstVarNames:
                 columnI = data.columns([varName]).data
                 columnJ = data.columns([j]).data
-                check = data.data[where(columnI[where(columnI == columnJ)] <> 0)]
+                check = data.data[
+                    where(columnI[where(columnI == columnJ)] <> 0)]
                 if check.shape[0] > 0:
-                    #print check
-                    #print columnI[:,0]
-                    #print columnJ[:,0]
-                    #raw_input()
+                    # print check
+                    # print columnI[:,0]
+                    # print columnJ[:,0]
+                    # raw_input()
                     print '\t -- Warning:Choices are repeated; Repeating location sampling step --'
                     return True
 
         print '\t -- Choices are not repeated --'
         return False
 
-                #xraw_input()
-        
-
-        
-        
-
-
+        # xraw_input()
 
         """
         tableName = 'travel_skims'
@@ -725,8 +718,8 @@ class ComponentManager(object):
         raw_input()
         """
 
-# Storing data ??                                                                                                             
-# Linearizing data for calculating activity-travel choice attributes??                                                        
+# Storing data ??
+# Linearizing data for calculating activity-travel choice attributes??
 # how to update data like schedules, open periods etc.??
 
 # create component list object
@@ -736,19 +729,17 @@ class ComponentManager(object):
 # - process the data further for retrieving accessibilities <>
 # - update model objects/equation specifications for generic choice models
 # - simulate
-# - 
+# -
 
 
 if __name__ == '__main__':
     fileloc = '/home/kkonduri/simtravel/test/vehown'
-    componentManager = ComponentManager(fileLoc = "%s/config.xml" %fileloc)
+    componentManager = ComponentManager(fileLoc="%s/config.xml" % fileloc)
     for i in range(1):
         f = open('test_res', 'a')
-        f.write('Run - %s' %(i+1))
+        f.write('Run - %s' % (i + 1))
         f.close()
         componentManager.establish_databaseConnection()
         componentManager.establish_cacheDatabase(fileloc, 'w')
         componentManager.run_components()
         componentManager.db.close()
-    
-

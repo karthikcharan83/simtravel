@@ -2,38 +2,40 @@ import os
 
 from lxml import etree
 
+
 class MainApp:
+
     def __init__(self):
         self.newproject = False
-        self.projectname=""
-        self.projectlocation=""
-    
+        self.projectname = ""
+        self.projectlocation = ""
+
     def run(self):
         input = raw_input("Please choose one of the following:\n" +
-                                "1. Start a new project\n" +
-                                "2. Open an existing project\n" +
-                                "Choice: ")
-        while(input not in ['1','2']):
+                          "1. Start a new project\n" +
+                          "2. Open an existing project\n" +
+                          "Choice: ")
+        while(input not in ['1', '2']):
             input = raw_input("Please choose either 1 (new project) or " +
-                                        "2 (existing project)!!: ")
+                              "2 (existing project)!!: ")
         if(input == '1'):
             self.newproject = True
             self.create_project()
- 
+
         elif(input == '2'):
             self.read_project()
-            
+
     def create_project(self):
         configroot = etree.Element('ProjectConfig')
         configtree = etree.ElementTree(configroot)
-        
+
         projectname = etree.SubElement(configroot, 'ProjectName')
         proname = raw_input("Enter Project Name: ")
         projectname.text = proname
 
         projecthome = etree.SubElement(configroot, 'ProjectHome')
         prohome = raw_input("Enter directory location for the " +
-                                        "new project: ")
+                            "new project: ")
         while(not os.path.isdir(prohome)):
             prohome = raw_input("Please enter a VALID directory!!: ")
         prohome = prohome + os.path.sep + proname
@@ -43,15 +45,15 @@ class MainApp:
 
         dbconfig = etree.SubElement(configroot, 'DBConfig')
         dbhost = raw_input("Enter database host location for the " +
-                                        "new project: ")
+                           "new project: ")
         dbconfig.set('dbhost', dbhost)
         dbusername = raw_input("Enter database username: ")
         dbconfig.set('dbusername', dbusername)
         dbpassword = raw_input("Enter database password: ")
         dbconfig.set('dbpassword', dbpassword)
-        
+
         modelconfig = etree.SubElement(configroot, 'ModelConfig')
-        
+
         longterm = etree.SubElement(modelconfig, 'LongTermModels')
         workstat = etree.SubElement(longterm, 'WorkStat')
         workstat.set('type', 'Multinomial Logit')
@@ -79,19 +81,18 @@ class MainApp:
         cat1 = etree.Element('Category', id='0-5yrs')
         cats.append(cat1)
         dist = etree.SubElement(cat1, 'Distribution')
-        dist.set('yes','0.9')
-        dist.set('no','0.1')
+        dist.set('yes', '0.9')
+        dist.set('no', '0.1')
         cat2 = etree.Element('Category', id='5-14yrs')
         cats.append(cat2)
         dist = etree.SubElement(cat2, 'Distribution')
-        dist.set('yes','0.6')
-        dist.set('no','0.4')
+        dist.set('yes', '0.6')
+        dist.set('no', '0.4')
         resloc = etree.SubElement(longterm, 'ResLoc')
         resloc.set('type', 'Multinomial Logit')
         resloc.set('altspec', 'False')
         vars = etree.SubElement(resloc, 'Variables')
         self.attach_vars(vars)
-
 
         fixedact = etree.SubElement(modelconfig, 'FixedActivityModels')
         workloc = etree.SubElement(fixedact, 'WorkLoc')
@@ -135,17 +136,17 @@ class MainApp:
         nest2.append(etree.Element('Alternative', id='SUV-Gas'))
         nest2.append(etree.Element('Alternative', id='SUV-Nongas'))
         alts = etree.SubElement(vehown, 'Alternatives')
-        alt1 = etree.SubElement(alts , 'Car-Gas')
+        alt1 = etree.SubElement(alts, 'Car-Gas')
         self.attach_vars(alt1)
-        alt2 = etree.SubElement(alts , 'Car-Nongas')
-        self.attach_vars(alt2)    
-        
+        alt2 = etree.SubElement(alts, 'Car-Nongas')
+        self.attach_vars(alt2)
+
         prism = etree.SubElement(modelconfig, 'FixedActivityPrismModels')
         daystart = etree.SubElement(prism, 'DayStart')
-        daystart.set('type', 'Stochastic Frontier')        
+        daystart.set('type', 'Stochastic Frontier')
         self.attach_vars(daystart)
         dayend = etree.SubElement(prism, 'DayEnd')
-        dayend.set('type', 'Stochastic Frontier')   
+        dayend.set('type', 'Stochastic Frontier')
         self.attach_vars(dayend)
         numwrk = etree.SubElement(prism, 'NumWorkEpisodes')
         numwrk.set('type', 'Negative Binomial')
@@ -156,7 +157,7 @@ class MainApp:
         vars = etree.SubElement(numwrk, 'Variables')
         self.attach_vars(vars)
         wrkstrt1 = etree.SubElement(prism, 'WorkStart1')
-        wrkstrt1.set('type', 'Stochastic Frontier')   
+        wrkstrt1.set('type', 'Stochastic Frontier')
         self.attach_vars(wrkstrt1)
         wrkend1 = etree.SubElement(prism, 'WorkEnd1')
         wrkend1.set('type', 'Stochastic Frontier')
@@ -170,13 +171,13 @@ class MainApp:
         vars = etree.SubElement(numsch, 'Variables')
         self.attach_vars(vars)
         schstrt1 = etree.SubElement(prism, 'SchStart1')
-        schstrt1.set('type', 'Stochastic Frontier')   
+        schstrt1.set('type', 'Stochastic Frontier')
         self.attach_vars(schstrt1)
         schend1 = etree.SubElement(prism, 'SchEnd1')
         schend1.set('type', 'Stochastic Frontier')
         self.attach_vars(schend1)
         preschstrt = etree.SubElement(prism, 'PreSchStart')
-        preschstrt.set('type', 'Stochastic Frontier')   
+        preschstrt.set('type', 'Stochastic Frontier')
         self.attach_vars(preschstrt)
         preschend = etree.SubElement(prism, 'PreSchEnd')
         preschend.set('type', 'Stochastic Frontier')
@@ -189,39 +190,40 @@ class MainApp:
         cat1 = etree.Element('Category', id='0-4yrs')
         cats.append(cat1)
         dist = etree.SubElement(cat1, 'Distribution')
-        dist.set('yes','0.9')
-        dist.set('no','0.1')
+        dist.set('yes', '0.9')
+        dist.set('no', '0.1')
         cat2 = etree.Element('Category', id='5-14yrs')
         cats.append(cat2)
         dist = etree.SubElement(cat2, 'Distribution')
-        dist.set('yes','0.6')
-        dist.set('no','0.4')
+        dist.set('yes', '0.6')
+        dist.set('no', '0.4')
         schdailyindep = etree.SubElement(child, 'SchDailyIndependence')
         schdailyindep.set('type', 'Probability Distribution')
         cats = etree.SubElement(schdailyindep, 'Categories')
         cat1 = etree.Element('Category', id='0-4yrs')
         cats.append(cat1)
         dist = etree.SubElement(cat1, 'Distribution')
-        dist.set('yes','0.9')
-        dist.set('no','0.1')
+        dist.set('yes', '0.9')
+        dist.set('no', '0.1')
         cat2 = etree.Element('Category', id='5-14yrs')
         cats.append(cat2)
         dist = etree.SubElement(cat2, 'Distribution')
-        dist.set('yes','0.6')
-        dist.set('no','0.4')
-        afterschdailyindep = etree.SubElement(child, 'AfterSchDailyIndependence')
+        dist.set('yes', '0.6')
+        dist.set('no', '0.4')
+        afterschdailyindep = etree.SubElement(
+            child, 'AfterSchDailyIndependence')
         afterschdailyindep.set('type', 'Probability Distribution')
         cats = etree.SubElement(afterschdailyindep, 'Categories')
         cat1 = etree.Element('Category', id='0-4yrs')
         cats.append(cat1)
         dist = etree.SubElement(cat1, 'Distribution')
-        dist.set('yes','0.9')
-        dist.set('no','0.1')
+        dist.set('yes', '0.9')
+        dist.set('no', '0.1')
         cat2 = etree.Element('Category', id='5-14yrs')
         cats.append(cat2)
         dist = etree.SubElement(cat2, 'Distribution')
-        dist.set('yes','0.6')
-        dist.set('no','0.4')
+        dist.set('yes', '0.6')
+        dist.set('no', '0.4')
         aftschacttype = etree.SubElement(child, 'AftSchActivityType')
         aftschacttype.set('type', 'Multinomial Logit')
         aftschacttype.set('altspec', 'True')
@@ -239,7 +241,7 @@ class MainApp:
         aftschactdur.set('type', 'Logistic Regression')
         vars = etree.SubElement(aftschactdur, 'Variables')
         self.attach_vars(vars)
-        
+
         adultdaily = etree.SubElement(modelconfig, 'AdultDailyStatusModels')
         wrkdailystat = etree.SubElement(adultdaily, 'WorkDailyStatus')
         wrkdailystat.set('type', 'Probability Distribution')
@@ -247,15 +249,15 @@ class MainApp:
         cat1 = etree.Element('Category', id='All')
         cats.append(cat1)
         dist = etree.SubElement(cat1, 'Distribution')
-        dist.set('yes','0.9')
-        dist.set('no','0.1')
+        dist.set('yes', '0.9')
+        dist.set('no', '0.1')
         wrkhmstrt1 = etree.SubElement(adultdaily, 'WorkAtHomeStart1')
-        wrkhmstrt1.set('type', 'Stochastic Frontier')   
+        wrkhmstrt1.set('type', 'Stochastic Frontier')
         self.attach_vars(wrkhmstrt1)
         wrkhmend1 = etree.SubElement(prism, 'WorkAtHomeEnd1')
         wrkhmend1.set('type', 'Stochastic Frontier')
         self.attach_vars(wrkhmend1)
-        
+
         actsim = etree.SubElement(modelconfig, 'ActTravelSimulator')
         aftschactmode = etree.SubElement(actsim, 'AftSchActivityMode')
         aftschactmode.set('type', 'Multinomial Logit')
@@ -280,14 +282,14 @@ class MainApp:
         nest1 = etree.SubElement(nests, 'Nest')
         nest1.set('id', 'Destination')
         vars = etree.SubElement(nest1, 'Variables')
-        self.attach_vars(vars)        
+        self.attach_vars(vars)
         nest2 = etree.SubElement(nests, 'Nest')
         nest2.set('id', 'Mode')
         alts = etree.SubElement(nest2, 'Alternatives')
-        alt1 = etree.SubElement(alts , 'SOV')
+        alt1 = etree.SubElement(alts, 'SOV')
         self.attach_vars(alt1)
-        alt2 = etree.SubElement(alts , 'HOV')
-        self.attach_vars(alt2)           
+        alt2 = etree.SubElement(alts, 'HOV')
+        self.attach_vars(alt2)
         discactdur = etree.SubElement(actsim, 'ActivityDuration')
         discactdur.set('type', 'Logistic Regression')
         vars = etree.SubElement(discactdur, 'Variables')
@@ -306,14 +308,13 @@ class MainApp:
         cat1 = etree.Element('Category', id='All')
         cats.append(cat1)
         dist = etree.SubElement(cat1, 'Distribution')
-        dist.set('yes','0.5')
-        dist.set('no','0.5')
+        dist.set('yes', '0.5')
+        dist.set('no', '0.5')
         tripveh = etree.SubElement(actsim, 'TripVehicle')
         tripveh.set('type', 'Multinomial Logit')
         tripveh.set('altspec', 'False')
         vars = etree.SubElement(tripveh, 'Variables')
         self.attach_vars(vars)
-
 
         configfileloc = prohome + os.path.sep + "config.xml"
         if(os.path.isfile(configfileloc)):
@@ -321,7 +322,7 @@ class MainApp:
         configfile = open(configfileloc, 'w')
         configtree.write(configfile, pretty_print=True)
         configfile.close()
-    
+
     def attach_vars(self, node):
         var1 = etree.SubElement(node, 'Variable')
         var1.set('db', 'somedb')
@@ -332,13 +333,13 @@ class MainApp:
         var2.set('db', 'somedb')
         var2.set('table', 'sometab')
         var2.set('var', 'somevar')
-        var2.set('coeff', '0.6')          
-    
+        var2.set('coeff', '0.6')
+
     def read_project(self):
         prohome = raw_input("Enter the directory for existing project:")
         while(not os.path.isdir(prohome)):
             prohome = raw_input("Please enter a VALID directory for existing " +
-                                            "project!!: ")
+                                "project!!: ")
         configfileloc = prohome + os.path.sep + "config.xml"
         configtree = etree.parse(configfileloc)
         print configtree

@@ -1,5 +1,6 @@
 /* File: arrayex.i */
 
+
 %module skimsquery
 
 %{

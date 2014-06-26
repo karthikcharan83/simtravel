@@ -38,7 +38,31 @@ int no_of_locations;
 
 //array
 int temp_locations[MAX];
+/*
+void initialize_mode(struct mode m, int nodes_temp)
+{
+    int x;
+    nodes = nodes_temp;
+    edges = nodes * nodes;
+    
+    //initialize the 2D array to the size of the number of nodes
+    tt_graph = (float **)malloc(nodes*sizeof(float *));
+    dist_graph = (float **)malloc(nodes*sizeof(float *));
 
+    real_tt_graph = (float **)malloc(nodes*sizeof(float *));
+    real_dist_graph = (float **)malloc(nodes*sizeof(float *));
+        
+    //create all the nodes
+    for(x = 0; x < nodes; x++)
+    {
+		tt_graph[x] = (float *)malloc(nodes*sizeof(float));
+		dist_graph[x] = (float *)malloc(nodes*sizeof(float));
+
+		real_tt_graph[x] = (float *)malloc(nodes*sizeof(float));
+		real_dist_graph[x] = (float *)malloc(nodes*sizeof(float));
+    }
+    //printf("C--> Graph created\n");
+*/
 
 /* Sample functions */
 /*********************************************/
