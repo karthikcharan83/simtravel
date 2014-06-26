@@ -1,0 +1,630 @@
+<ProjectConfig>
+  <Project name="mag_zone_dynamic" location="C:/DTALite/New_PHXsubarea/" seed="0" iteration="3" subsample="40000"/>
+  <DTAConnection value="True"/>
+  <DBConfig dbprotocol="postgres" dbhost="localhost" dbname="mag_zone_dynamic_sub" dbusername="postgres" dbpassword="openamos"/>
+  
+  <NetworkSkims>
+    <Period tablename="network_skims_0" origin_var="origin" destination_var="destination" intervalStart="0" intervalEnd="59">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim0.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_1" origin_var="origin" destination_var="destination" intervalStart="60" intervalEnd="119">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim1.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_2" origin_var="origin" destination_var="destination" intervalStart="120" intervalEnd="179">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim2.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_3" origin_var="origin" destination_var="destination" intervalStart="180" intervalEnd="239">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim3.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_4" origin_var="origin" destination_var="destination" intervalStart="240" intervalEnd="299">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim4.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_5" origin_var="origin" destination_var="destination" intervalStart="300" intervalEnd="359">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim5.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_6" origin_var="origin" destination_var="destination" intervalStart="360" intervalEnd="419">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim6.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_7" origin_var="origin" destination_var="destination" intervalStart="420" intervalEnd="479">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim7.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_8" origin_var="origin" destination_var="destination" intervalStart="480" intervalEnd="539">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim8.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_9" origin_var="origin" destination_var="destination" intervalStart="540" intervalEnd="599">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim9.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_10" origin_var="origin" destination_var="destination" intervalStart="600" intervalEnd="659">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim10.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_11" origin_var="origin" destination_var="destination" intervalStart="660" intervalEnd="719">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim11.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_12" origin_var="origin" destination_var="destination" intervalStart="720" intervalEnd="779">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim12.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_13" origin_var="origin" destination_var="destination" intervalStart="780" intervalEnd="839">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim13.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_14" origin_var="origin" destination_var="destination" intervalStart="840" intervalEnd="899">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim14.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_15" origin_var="origin" destination_var="destination" intervalStart="900" intervalEnd="959">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim15.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_16" origin_var="origin" destination_var="destination" intervalStart="960" intervalEnd="1019">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim16.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_17" origin_var="origin" destination_var="destination" intervalStart="1020" intervalEnd="1079">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim17.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_18" origin_var="origin" destination_var="destination" intervalStart="1080" intervalEnd="1139">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim18.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_19" origin_var="origin" destination_var="destination" intervalStart="1140" intervalEnd="1199">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim19.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_20" origin_var="origin" destination_var="destination" intervalStart="1200" intervalEnd="1259">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim20.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_21" origin_var="origin" destination_var="destination" intervalStart="1260" intervalEnd="1319">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim21.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_22" origin_var="origin" destination_var="destination" intervalStart="1320" intervalEnd="1379">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim22.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+    <Period tablename="network_skims_23" origin_var="origin" destination_var="destination" intervalStart="1380" intervalEnd="1500">
+      <Time skim_var="tt" fileLocation="C:/openamos_project/dynamic_sub/skim23.dat" delimiter=","/>
+      <Distance skim_var="dist" fileLocation="C:/openamos_project/dynamic_sub/distance0.dat" delimiter=","/>
+    </Period>
+  </NetworkSkims>
+
+
+  <Locations reference_tablename="locations" tablename="locations" location_var="locationid" indb="True">
+    <LocationVariable var="retail_employment"/>
+
+    <LocationVariable var="retail_employment_density"/>
+    <LocationVariable var="other_employment_density"/>
+    <LocationVariable var="office_employment_density"/>
+
+    <LocationVariable var="total_area"/>
+
+    <LocationVariable var="low_income"/>
+    <LocationVariable var="high_income"/>
+
+  </Locations>
+
+  <ModelConfig>
+
+      <Component name="MoveEpisodesElapsed" read_from_table="schedule_elapsed_r" write_to_table="schedule_r" skip="False" completed="True">
+        <DBTables>
+    	  <Table table="schedule_elapsed_r" key="houseid,personid" order="1"/>
+    	  <Table table="schedule_r" key="houseid,personid"/>
+        </DBTables>
+
+        <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	  <DependentVariable var="dummy"/>
+	  <Variance value="0"/>
+          <Variable table="schedule_elapsed_r" var="scheduleid" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="houseid" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="personid" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="activitytype" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="locationid" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="starttime" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="endtime" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="duration" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="dependentpersonid" coeff="1"/>
+          <Variable table="schedule_elapsed_r" var="tripcount" coeff="1"/>
+        </Model>
+
+      </Component>
+
+      <Component name="MoveEpisodesFinal" read_from_table="schedule_final_r" write_to_table="schedule_r" skip="False" completed="True">
+        <DBTables>
+    	  <Table table="schedule_final_r" key="houseid,personid" order="1"/>
+    	  <Table table="schedule_r" key="houseid,personid"/>
+        </DBTables>
+
+        <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	  <DependentVariable var="dummy"/>
+	  <Variance value="0"/>
+          <Variable table="schedule_final_r" var="scheduleid" coeff="1"/>
+          <Variable table="schedule_final_r" var="houseid" coeff="1"/>
+          <Variable table="schedule_final_r" var="personid" coeff="1"/>
+          <Variable table="schedule_final_r" var="activitytype" coeff="1"/>
+          <Variable table="schedule_final_r" var="locationid" coeff="1"/>
+          <Variable table="schedule_final_r" var="starttime" coeff="1"/>
+          <Variable table="schedule_final_r" var="endtime" coeff="1"/>
+          <Variable table="schedule_final_r" var="duration" coeff="1"/>
+          <Variable table="schedule_final_r" var="dependentpersonid" coeff="1"/>
+          <Variable table="schedule_final_r" var="tripcount" coeff="1"/>
+        </Model>
+
+      </Component>
+
+
+    <Component name="CleanAggregateActivitySchedule" read_from_table="schedule_r" write_to_table="schedule_aggregatefinal_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="schedule_r" key="houseid,personid" order="1"/>
+    	<Table table="persons_r" key="houseid,personid"/>
+    	<Table table="schedule_aggregatefinal_r" key="houseid,personid"/>
+      </DBTables>
+
+      <Model name="CleanFixedActivitySchedulesofChildren" formulation="Clean Aggregate Activity Schedule" seed="1">
+	<DependentVariable var="cleanfixedactivityschedulesofchildren"/>
+
+	<ActivityAttributes>
+	  <HouseholdIdName table="schedule_r" var="houseid"/>
+	  <PersonIdName table="schedule_r" var="personid"/>
+	  <ScheduleIdName table="schedule_r" var="scheduleid"/>
+	  <ActivityTypeName table="schedule_r" var="activitytype"/>
+	  <LocationIdName table="schedule_r" var="locationid"/>
+	  <StartTimeName table="schedule_r" var="starttime"/>
+	  <EndTimeName table="schedule_r" var="endtime"/>
+	  <DurationName table="schedule_r" var="duration"/>
+	  <DependentPersonName table="schedule_r" var="dependentpersonid"/>
+	  <TripCountName table="schedule_r" var="tripcount"/>
+	</ActivityAttributes>
+
+	<DailyStatus>
+	  <DailySchoolStatus table="persons_r" var="schdailystatus"/>
+	  <DailyWorkStatus table="persons_r" var="wrkdailystatus"/>
+	</DailyStatus>
+	
+	<Dependency>
+	  <ChildDependency table="persons_r" var="dependency"/>
+	</Dependency>
+      </Model>
+    </Component>	
+
+    <Component name="ChildDependencyResolution" read_from_table="schedule_aggregatefinal_r" write_to_table="schedule_allocatedependent_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons_r" key="houseid,personid"/>
+    	<Table table="schedule_aggregatefinal_r" key="houseid,personid" order="1"/>
+    	<Table table="schedule_allocatedependent_r" key="houseid,personid"/>
+      </DBTables>
+
+      <Model name="ChildDependencyAllocation" formulation="Child Dependency" type="Resolution" seed="1">
+	<DependentVariable var="childdependencyallocation"/>
+
+	<ActivityAttributes>
+	  <HouseholdIdName table="schedule_aggregatefinal_r" var="houseid"/>
+	  <PersonIdName table="schedule_aggregatefinal_r" var="personid"/>
+	  <ScheduleIdName table="schedule_aggregatefinal_r" var="scheduleid"/>
+	  <ActivityTypeName table="schedule_aggregatefinal_r" var="activitytype"/>
+	  <LocationIdName table="schedule_aggregatefinal_r" var="locationid"/>
+	  <StartTimeName table="schedule_aggregatefinal_r" var="starttime"/>
+	  <EndTimeName table="schedule_aggregatefinal_r" var="endtime"/>
+	  <DurationName table="schedule_aggregatefinal_r" var="duration"/>
+	  <DependentPersonName table="schedule_aggregatefinal_r" var="dependentpersonid"/>
+	  <TripCountName table="schedule_aggregatefinal_r" var="tripcount"/>
+	</ActivityAttributes>
+
+	<DailyStatus>
+	  <DailySchoolStatus table="persons_r" var="schdailystatus"/>
+	  <DailyWorkStatus table="persons_r" var="wrkdailystatus"/>
+	</DailyStatus>
+	
+	<Dependency>
+	  <ChildDependency table="persons_r" var="dependency"/>
+	</Dependency>
+      </Model>
+   </Component>	
+
+
+
+    <Component name="AddTripRecordsToScheduleTableForFixingTripPurposeNotation" read_from_table="trips_arrival_from_malta_r" write_to_table="schedule_allocatedependent_r" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_arrival_from_malta_r" key="tripid" order="1"/>
+    	<Table table="trips_r" key="tripid"/>
+    	<Table table="schedule_allocatedependent_r" key="houseid,personid"/>
+
+      </DBTables>
+      <PreProcessData name="PreProcessData">
+	<Filter table="trips_r" var="houseid" condition="equals" value="0"/>
+      </PreProcessData>
+
+      <Model name="scheduleid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="scheduleid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tripid" coeff="1"/>
+      </Model>
+
+
+      <Model name="houseidDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="houseid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="houseid" coeff="1"/>
+      </Model>
+      <Model name="personidDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="personid"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="personid" coeff="1"/>
+      </Model>
+
+      <Model name="locationid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="locationid"/>
+	<Variance value="0"/>
+        <Variable table="standard" var="one" coeff="-99"/>
+      </Model>
+      <Model name="activitytype" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="activitytype"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="trippurpose" coeff="1"/>
+      </Model>
+
+      <Model name="starttime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="starttime"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="starttime" coeff="1"/>
+      </Model>
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="trips_arrival_from_malta_r" var="arrivaltime" coeff="1"/>
+      </Model>
+
+      <Model name="duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+	<Variance value="0"/>
+        <Variable table="trips_arrival_from_malta_r" var="arrivaltime" coeff="1"/>
+        <Variable table="runtime" var="starttime" coeff="-1"/>
+
+      </Model>
+      <Model name="triptype" formulation="Persons On Trip Arrival Processing" seed="1">
+	<DependentVariable var="triptype"/>
+	<Id>
+	  <HouseId table="trips_r" var="houseid"/>
+	  <PersonId table="trips_r" var="personid"/>
+	</Id>
+	<PersonsArrivedAttributes>
+	  <TripDependentPersonIdName table="trips_r" var="dependentpersonid"/>
+	  <TripCountName1 table="trips_r" var="starttripcount"/>
+	  <TripCountName table="trips_r" var="tripcount"/>
+	  <ActDependentPersonIdName table="trips_r" var="startdependentpersonid"/>
+	</PersonsArrivedAttributes>
+      </Model>
+      <Model name="dependentpersonidDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="dependentpersoniddummy"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="dependentpersonid" coeff="1"/>
+      </Model>
+      <Model name="tripcountDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripcountdummy"/>
+	<Filter table="trips_r" var="houseid" condition="greater than equals" value="1"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tripcount" coeff="1"/>
+      </Model>
+
+    </Component>
+
+    <Component name="Fixing Trip Purpose" read_from_table="schedule_allocatedependent_r" write_to_table="schedule_inctrips_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="persons_r" key="houseid,personid"/>
+    	<Table table="schedule_allocatedependent_r" key="houseid,personid" order="1"/>
+    	<Table table="schedule_inctrips_r" key="houseid,personid"/>
+      </DBTables>
+
+      <Model name="ChildDependencyAllocation" formulation="Child Dependency" type="Fix Trip Purpose" seed="1">
+	<DependentVariable var="childdependencyallocation"/>
+
+	<ActivityAttributes>
+	  <HouseholdIdName table="schedule_allocatedependent_r" var="houseid"/>
+	  <PersonIdName table="schedule_allocatedependent_r" var="personid"/>
+	  <ScheduleIdName table="schedule_allocatedependent_r" var="scheduleid"/>
+	  <ActivityTypeName table="schedule_allocatedependent_r" var="activitytype"/>
+	  <LocationIdName table="schedule_allocatedependent_r" var="locationid"/>
+	  <StartTimeName table="schedule_allocatedependent_r" var="starttime"/>
+	  <EndTimeName table="schedule_allocatedependent_r" var="endtime"/>
+	  <DurationName table="schedule_allocatedependent_r" var="duration"/>
+	  <DependentPersonName table="schedule_allocatedependent_r" var="dependentpersonid"/>
+	  <TripCountName table="schedule_allocatedependent_r" var="tripcount"/>
+	</ActivityAttributes>
+
+	<DailyStatus>
+	  <DailySchoolStatus table="persons_r" var="schdailystatus"/>
+	  <DailyWorkStatus table="persons_r" var="wrkdailystatus"/>
+	</DailyStatus>
+	
+	<Dependency>
+	  <ChildDependency table="persons_r" var="dependency"/>
+	</Dependency>
+      </Model>
+   </Component>	
+
+
+    <Component1 name="TourAttributeProcessing" read_from_table="schedule_full_r" write_to_table="tours_r" key="houseid,personid" location="True" skip="False" completed="True">
+      <DBTables>
+    	<Table table="schedule_full_r" key="houseid,personid" order="1"/>
+    	<Table table="tours_r" key="houseid,personid"/>
+    	<Table table="persons_r" key="houseid,personid"/>
+      </DBTables>
+
+      <Model name="TourAttribute" formulation="Child Dependency" type="Extract Tour Attributes" seed="1">
+	<DependentVariable var="childdependencyallocation"/>
+
+	<ActivityAttributes>
+	  <HouseholdIdName table="schedule_full_r" var="houseid"/>
+	  <PersonIdName table="schedule_full_r" var="personid"/>
+	  <ScheduleIdName table="schedule_full_r" var="scheduleid"/>
+	  <ActivityTypeName table="schedule_full_r" var="activitytype"/>
+	  <LocationIdName table="schedule_full_r" var="locationid"/>
+	  <StartTimeName table="schedule_full_r" var="starttime"/>
+	  <EndTimeName table="schedule_full_r" var="endtime"/>
+	  <DurationName table="schedule_full_r" var="duration"/>
+	  <DependentPersonName table="schedule_full_r" var="dependentpersonid"/>
+	  <TripCountName table="schedule_full_r" var="tripcount"/>
+	</ActivityAttributes>
+
+	<DailyStatus>
+	  <DailySchoolStatus table="persons_r" var="schdailystatus"/>
+	  <DailyWorkStatus table="persons_r" var="wrkdailystatus"/>
+	</DailyStatus>
+	
+	<Dependency>
+	  <ChildDependency table="persons_r" var="dependency"/>
+	</Dependency>
+      </Model>
+    </Component1>	
+
+
+    <Component name="ActualTripPurposeDist" read_from_table="schedule_inctrips_r" write_to_table="trips_purpose_r" skip="False" completed="True">
+      <DBTables>
+    	<Table table="schedule_inctrips_r" key="houseid,personid" order="1"/>
+    	<Table table="trips_purpose_r" key="tripid"/>
+      </DBTables>
+
+      <PreProcessData name="PreProcessData">
+	<Filter table="schedule_inctrips_r" var="locationid" condition="greater than" value="0"/>
+      </PreProcessData>
+
+      <AnalysisIntervalFilter1 table="schedule_inctrips_r" var="locationid"/>
+      <DeleteBasedOn1 table="schedule_inctrips_r" var="scheduleid"/>
+
+      <Model name="tripid" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tripid"/>
+	<Variance value="0"/>
+        <Variable table="schedule_inctrips_r" var="scheduleid" coeff="1"/>
+      </Model>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="dummy"/>
+	<Variance value="0"/>
+        <Variable table="schedule_inctrips_r" var="houseid" coeff="0"/>
+        <Variable table="schedule_inctrips_r" var="personid" coeff="0"/>
+      </Model>
+
+      <Model name="trippurpose" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="trippurpose"/>
+	<Variance value="0"/>
+        <Variable table="schedule_inctrips_r" var="activitytype" coeff="1"/>
+      </Model>
+
+      <Model name="endtime" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="endtime"/>
+	<Variance value="0"/>
+        <Variable table="schedule_inctrips_r" var="endtime" coeff="1"/>
+      </Model>
+
+      <Model name="duration" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="duration"/>
+	<Variance value="0"/>
+        <Variable table="schedule_inctrips_r" var="duration" coeff="1"/>
+      </Model>
+
+
+    </Component>
+
+      <Component name="FinalSchedulTable" read_from_table="schedule_inctrips_r" write_to_table="schedule_full_r" skip="False" completed="True">
+        <DBTables>
+    	  <Table table="schedule_inctrips_r" key="houseid,personid" order="1"/>
+    	  <Table table="schedule_full_r" key="houseid,personid"/>
+        </DBTables>
+
+      <PreProcessData name="PreProcessData">
+	<Filter table="schedule_inctrips_r" var="locationid" condition="equals" value="-99"/>
+      </PreProcessData>
+
+        <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	  <DependentVariable var="dummy"/>
+	  <Variance value="0"/>
+          <Variable table="schedule_inctrips_r" var="scheduleid" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="houseid" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="personid" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="activitytype" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="locationid" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="starttime" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="endtime" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="duration" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="dependentpersonid" coeff="1"/>
+          <Variable table="schedule_inctrips_r" var="tripcount" coeff="1"/>
+        </Model>
+
+      </Component>
+
+
+
+   <Component name="TripsWithFullAttribs" read_from_table="trips_purpose_r" write_to_table="trips_full_r" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_full_r" key="tripid"/>
+    	<Table table="trips_r" key="tripid"/>
+	<Table table="trips_arrival_from_malta_r" key="tripid"/>
+    	<Table table="trips_purpose_r" key="tripid" order="1"/>
+      </DBTables>
+
+      <Model name="dummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="dummy"/>
+	<Variance value="0"/>
+        <Variable table="trips_purpose_r" var="houseid" coeff="0"/>
+        <Variable table="trips_purpose_r" var="personid" coeff="0"/>
+        <Variable table="trips_purpose_r" var="tripid" coeff="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="0"/>
+        <Variable table="trips_r" var="tozone" coeff="0"/>
+        <Variable table="trips_r" var="starttime" coeff="0"/>
+        <Variable table="trips_purpose_r" var="endtime" coeff="0"/>
+        <Variable table="trips_purpose_r" var="duration" coeff="0"/>
+        <Variable table="trips_purpose_r" var="trippurpose" coeff="0"/>
+        <Variable table="trips_r" var="dependentpersonid" coeff="0"/>
+        <Variable table="trips_r" var="tripcount" coeff="0"/>
+        <Variable table="trips_r" var="occupancy" coeff="0"/>
+        <Variable table="trips_arrival_from_malta_r" var="distance" coeff="0"/>
+      </Model>
+
+    </Component>
+
+
+    <Component name="CalculateGapFunction" read_from_table="trips_full_r" write_to_table="gap_function_r" skip="False" completed="True">
+      <DBTables>
+    	<Table table="trips_full_r" key="tripid" order="1"/>
+    	<Table table="trips_r" key="tripid"/>
+    	<Table table="gap_function_r" key="tripid"/>
+      </DBTables>
+
+      <AnalysisInterval start="0" end="1440" step="1"/>
+      <AnalysisIntervalFilter table="trips_full_r" var="starttime"/>
+
+      <Model name="houseidDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="houseid"/>
+	<Variance value="0"/>
+        <Variable table="trips_full_r" var="houseid" coeff="1"/>
+      </Model>
+      <Model name="personidDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="personid"/>
+	<Variance value="0"/>
+        <Variable table="trips_full_r" var="personid" coeff="1"/>
+      </Model>
+      <Model name="valueOfTimePerDistDummy" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="valueoftimeperdist"/>
+	<Variance value="0"/>
+        <Variable table="standard" var="one" coeff="0"/>
+      </Model>
+
+      <Model name="from" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="from"/>
+	<Variance value="0"/>
+        <Variable table="trips_full_r" var="fromzone" coeff="1"/>
+      </Model>
+      <Model name="to" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="to"/>
+	<Variance value="0"/>
+        <Variable table="trips_full_r" var="tozone" coeff="1"/>
+      </Model>
+      <Model name="tt_experienced" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_experienced"/>
+	<Variance value="0"/>
+        <Variable table="trips_full_r" var="duration" coeff="1"/>
+      </Model>
+
+      <Model name="tt_expected" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="tt_expected"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="endtime" coeff="1"/>
+        <Variable table="trips_full_r" var="starttime" coeff="-1"/>
+      </Model>
+      <DynamicSpatialConstraints table="travel_skims" skim_var="tt" as_var="sp_tt" dist_var="dist" origin_var="origin" destination_var="destination" after_model="tt_expected" before_model="gap_after">
+	<Start table="runtime" var="from"/>
+	<End table="runtime" var="tozone"/>
+	<ValueofTimePerDistance table="runtime" var="valueoftimeperdist"/>
+      </DynamicSpatialConstraints>
+      <Model name="gap_after" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="gap_after"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="sp_tt" coeff="-1"/>
+        <Variable table="runtime" var="tt_experienced" coeff="1"/>
+      </Model>
+      <Model name="gap_before" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="gap_before"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="tt_expected" coeff="-1"/>
+        <Variable table="runtime" var="tt_experienced" coeff="1"/>
+      </Model>
+
+    </Component>
+
+    <Component name="OD_OutputTable" read_from_table="trips_r" write_to_table="od_r" skip="False" completed="True" write_to_loc="True">
+      <DBTables>
+    	<Table table="trips_r" key="houseid,personid" order="1"/>
+    	<Table table="od_r" key="origin,destination"/>
+      </DBTables>
+      <Aggregate>	
+	<Variable table="trips_r" var="fromzone"/>
+	<Variable table="trips_r" var="tozone"/>
+      </Aggregate>
+      <Model name="origin" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="origin"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="fromzone" coeff="1"/>
+      </Model>
+      <Model name="destination" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="destination"/>
+	<Variance value="0"/>
+        <Variable table="trips_r" var="tozone" coeff="1"/>
+      </Model>
+      <Model name="count" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="count"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="frequency" coeff="1"/>
+      </Model>
+
+    </Component>
+
+    <Component name="Gap_Before_R" read_from_table="gap_function_r" write_to_table="gap_before_r" skip="False" completed="True" write_to_loc="True">
+      <DBTables>
+    	<Table table="gap_function_r" key="tripid" order="1"/>
+    	<Table table="gap_before_r" key="gap_before"/>
+      </DBTables>
+      <Aggregate>	
+	<Variable table="gap_function_r" var="gap_before"/>
+      </Aggregate>
+
+      <Model name="count" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="count"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="frequency" coeff="1"/>
+      </Model>
+
+    </Component>
+
+    <Component name="Gap_After_R" read_from_table="gap_function_r" write_to_table="gap_after_r" skip="False" completed="True" write_to_loc="True">
+      <DBTables>
+    	<Table table="gap_function_r" key="tripid" order="1"/>
+    	<Table table="gap_after_r" key="gap_after"/>
+      </DBTables>
+      <Aggregate>	
+	<Variable table="gap_function_r" var="gap_after"/>
+      </Aggregate>
+      <Model name="count" formulation="Regression" type="Linear" seed="1">
+	<DependentVariable var="count"/>
+	<Variance value="0"/>
+        <Variable table="runtime" var="frequency" coeff="1"/>
+      </Model>
+
+    </Component>
+
+
+
+  </ModelConfig>
+</ProjectConfig>
