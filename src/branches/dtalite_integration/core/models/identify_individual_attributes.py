@@ -107,7 +107,7 @@ class IdentifyIndividualAttributes(Model):
 
             hhldVerts = householdObject.retrieve_fixed_activity_vertices(seed)
             # for i in hhldVerts:
-            #	print i
+            #   print i
             # raw_input()
 
             verts += hhldVerts

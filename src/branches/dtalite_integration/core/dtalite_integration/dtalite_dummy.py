@@ -52,18 +52,18 @@ class DummyMALTA(object):
 
                     actArrival = trip[8] + 1
                     """
-		    if trip[8] - trip[7] == 1:
-			actArrival = trip[8] + 1
-		    else:
-			actArrival = trip[8]		    
+                    if trip[8] - trip[7] == 1:
+                        actArrival = trip[8] + 1
+                    else:
+                        actArrival = trip[8]
 
 
-		    if trip[8] > trip[7] + 1:
-			actArrival = trip[8]			
-		    else:
-			actArrival = trip[8] + 1
+                    if trip[8] > trip[7] + 1:
+                        actArrival = trip[8]
+                    else:
+                        actArrival = trip[8] + 1
 
-		    """
+                    """
 
                     if actArrival not in self.tripsAct.keys():
                         self.tripsAct[actArrival] = [trip[0]]
@@ -71,8 +71,8 @@ class DummyMALTA(object):
                         self.tripsAct[actArrival] += [trip[0]]
 
                     # if trip[0] >= 70 and trip[0] <=80:
-                    #	print 'tripid - %s, expected arrival - %s and actual arrival - %s' %(trip[0], trip[8], actArrival)
-                    #	raw_input()
+                    #   print 'tripid - %s, expected arrival - %s and actual arrival - %s' %(trip[0], trip[8], actArrival)
+                    #   raw_input()
 
 
 if __name__ == '__main__':

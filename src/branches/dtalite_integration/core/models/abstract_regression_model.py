@@ -55,7 +55,7 @@ class AbstractRegressionModel(Model):
 
     def calc_errorcomponent(self):
         """
-        The method returns the contribution of the error in the calculation 
+        The method returns the contribution of the error in the calculation
         of the predicted value for the different choices.
 
         Inputs:
@@ -65,7 +65,7 @@ class AbstractRegressionModel(Model):
 
     def calc_predvalue(self):
         """
-        The method returns the predicted value for the different choices in the 
+        The method returns the predicted value for the different choices in the
         specification input.
 
         Inputs:

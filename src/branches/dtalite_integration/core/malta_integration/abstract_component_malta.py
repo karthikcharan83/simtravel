@@ -228,7 +228,7 @@ class AbstractComponent(object):
         This will reflect changes for the particular component to the database
         So that future queries can fetch appropriate run-time columns as well
         because the output is currently cached on the hard drive and the queries
-        are using tables in the database which only contain the input tables 
+        are using tables in the database which only contain the input tables
         and hence the need to reflect the run-time caches to the database
         """
         # Reflecting the dynamic activity-travel generation to data table and
@@ -676,7 +676,7 @@ class AbstractComponent(object):
                               analysisInterval, skimsMatrix, fileLoc):
         """
         This method is called whenever there are location type queries involved as part
-        of the model run. Eg. In a Destination Choice Model, if there are N number of 
+        of the model run. Eg. In a Destination Choice Model, if there are N number of
         random location choices, and there is a generic MNL specifcation then in addition
         to generating the choices, one has to also retrieve the travel skims corresponding
         to the N random location choices.

@@ -473,7 +473,7 @@ class Graph(object):
         print dests_accessible
 
         print 'TIME BETWEEN SOURCE AND DESTINATION - %s' %(t_d - t_s)
-        
+
         """
         # for i in dests_accessible:
         #    print ("""Destination - %s, time from source - %s"""\
@@ -543,7 +543,7 @@ if __name__ == "__main__":
         locs = g.build_prism_between_nodes_static(net_graph, 4378, 4727, 601., 3000.)
     #print '\t', len(locs)
     print '\tTime Taken for 10 STATIC Prism query', (time.time()-ti)
-    
+
     """
     g = Graph()
     ti = time.time()
@@ -578,7 +578,7 @@ if __name__ == "__main__":
     g.departure_time(3002, 11965, 451)
     print 'Time to query possible destinations - %s' %(time.time()-ti)
 
-    
+
 
     print '\n4. Testing building a SPT from a source: Earliest Arrival'
     ti = time.time()
@@ -599,7 +599,7 @@ if __name__ == "__main__":
     print '\n\tNumber of nodes accessible to reach 11984 by 900 and should not start before 601 analysis interval'
     print '\t', len(g.build_tree_to_dest_at_time(net_graph, 11984, 900, 601))
     print '\tTime Taken:From a single source to entire network node with a cutoff of i hour or 600 analysis intervals - ', (time.time()-ti)
-    
+
     ti = time.time()
     print '\n5. Locations within Prism with Start Anchor -8232, 600s and End Anchor - 12236, 900s'
     print '\n\tNumber of nodes accessible subject to spatio-temporal constraints is - '
@@ -616,7 +616,7 @@ if __name__ == "__main__":
         f.write('\n')
 
 
-    
+
 
     ti = time.time()
     g = Graph()

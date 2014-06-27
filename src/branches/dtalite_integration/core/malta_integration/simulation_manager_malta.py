@@ -258,21 +258,21 @@ class SimulationManager(object):
                 """
                 tripInfo = zeros((3,11))
 
-		self.trips += 1
-		tripInfo[0,0] = self.trips
-		tripInfo[0,5] = 1850 + 11
-		tripInfo[0,6] = 1075 + 11 
+                self.trips += 1
+                tripInfo[0,0] = self.trips
+                tripInfo[0,5] = 1850 + 11
+                tripInfo[0,6] = 1075 + 11
 
-		self.trips += 1
-		tripInfo[1,0] = self.trips
-		tripInfo[1,5] = 1488 + 11
-		tripInfo[1,6] = 1074 + 11 
+                self.trips += 1
+                tripInfo[1,0] = self.trips
+                tripInfo[1,5] = 1488 + 11
+                tripInfo[1,6] = 1074 + 11
 
-		self.trips += 1
-		tripInfo[2,0] = self.trips
-		tripInfo[2,5] = 28 + 11
-		tripInfo[2,6] = 1995 + 11 
-		"""
+                self.trips += 1
+                tripInfo[2,0] = self.trips
+                tripInfo[2,5] = 28 + 11
+                tripInfo[2,6] = 1995 + 11
+                """
             print '\t-- Finished simulating component; time taken %.4f --' % (time.time() - t)
 
         tripInfo = tripInfo.astype(int)

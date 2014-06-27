@@ -75,7 +75,7 @@ class TravelSkimsInfo(object):
         self.table_ttLocationLookup[
             (intervalStart, intervalEnd)] = file_location
         # print '\tSkims file location - %s applies for interval starting at %s and ending at %s' %(file_location, intervalStart,
-        #                                                      					  intervalEnd)
+        #                                                                                         intervalEnd)
 
     def add_distTableLocationLookup(self, intervalStart, intervalEnd, file_location):
         self.table_distLocationLookup[

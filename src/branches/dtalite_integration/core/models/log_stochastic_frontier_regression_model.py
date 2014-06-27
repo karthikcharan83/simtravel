@@ -7,7 +7,7 @@ from openamos.core.models.stochastic_frontier_regression_model import StocFronRe
 class LogStocFronRegressionModel(StocFronRegressionModel):
 
     """
-    This is the base class for log-stochastic frontier 
+    This is the base class for log-stochastic frontier
     regression model in OpenAMOS
     """
 
@@ -17,7 +17,7 @@ class LogStocFronRegressionModel(StocFronRegressionModel):
 
     def calc_predvalue(self, data, seed=1):
         """
-        This method returns the predicted value for the 
+        This method returns the predicted value for the
         choice in the specification input.
 
         Inputs:

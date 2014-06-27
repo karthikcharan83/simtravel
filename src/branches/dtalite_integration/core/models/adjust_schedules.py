@@ -144,11 +144,11 @@ class AdjustSchedules(Model):
         workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
         if workStatusUnique.shape[0] > 1:
             print 'Work Status', workStatusUnique
-        
+
             raise Exception, "More than one values for status/dependency"
         else:
             workStatus = workStatusUnique[0]
-        
+
         schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
         if schoolStatusUnique.shape[0] > 1:
             print 'School Status', schoolStatusUnique
@@ -162,10 +162,10 @@ class AdjustSchedules(Model):
             raise Exception, "More than one values for status/dependency"
         else:
             childDependency = childDependencyUnique[0]
-        
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-	"""
+        """
         return workStatus, schoolStatus, childDependency
 
     def return_trip_occupancy_info(self, schedulesForPerson):
@@ -360,7 +360,7 @@ class TestReconcileModel(unittest.TestCase):
             for pid in pIdsUnique:
                 schedulesRowIndForPer = pIdsCol == pid
                 schedulesForPerson = schedulesForHh.rowsof(schedulesRowIndForPer)
-            
+
                 #print 'Raw schedules for hid:%s and pid:%s' %(hid, pid)
                 #print schedulesForPerson
 
@@ -372,15 +372,15 @@ class TestReconcileModel(unittest.TestCase):
                     starttime = sch[5]
                     endtime = sch[6]
                     duration = sch[7]
-                    
-                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid, 
+
+                    actepisode = ActivityEpisode(scheduleid, activitytype, locationid,
                                                  starttime, endtime, duration)
                     activityList.append(actepisode)
                 personObject = Person(hid, pid)
                 personObject.add_and_reconcile_episodes(activityList)
                 #print '\tReconciled Activity schedules - ', personObject.reconciledActivityEpisodes
                 #raw_input()
-		"""
+                """
         # pid = unique(self.actSchedules.columns(['houseid', 'personid']).
         #acts = self.actSchedules
 

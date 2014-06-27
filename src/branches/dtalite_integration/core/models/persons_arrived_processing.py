@@ -111,14 +111,14 @@ class PersonsArrivedProcessing(Model):
                 # raw_input()
 
             """
-	    for pid in parsedPersonIds:
-		rowCp = copy.deepcopy(row)
-		rowCp[self.pidCol] = pid
-		# if the pid on the trip is not getting off at the end do not change his trip count
-		if pid not in parsedDropOffs:
-		    rowCp[self.persTripCountCol] = -999
-		newData.append(list(rowCp))
-	    """
+            for pid in parsedPersonIds:
+                rowCp = copy.deepcopy(row)
+                rowCp[self.pidCol] = pid
+                # if the pid on the trip is not getting off at the end do not change his trip count
+                if pid not in parsedDropOffs:
+                    rowCp[self.persTripCountCol] = -999
+                newData.append(list(rowCp))
+            """
         data = DataArray(newData, data.varnames)
 
         # print data.varnames

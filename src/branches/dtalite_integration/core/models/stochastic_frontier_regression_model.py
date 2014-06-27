@@ -26,7 +26,7 @@ class StocFronRegressionModel(AbstractRegressionModel):
     def calc_errorcomponent(self, variance_norm, variance_halfnorm,
                             vertex, size, seed):
         """
-        The method returns the contribution of the error component in the 
+        The method returns the contribution of the error component in the
         calculation of the predicted value for the different choices.
 
         Inputs:

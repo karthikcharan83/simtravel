@@ -6,7 +6,7 @@ from openamos.core.models.abstract_model import Model
 class AbstractChoiceModel(Model):
 
     """
-    This is the base class for all discrete choice based mathematical 
+    This is the base class for all discrete choice based mathematical
     formulations in OpenAMOS.
 
     Inputs:
@@ -38,7 +38,7 @@ class AbstractChoiceModel(Model):
 
     def calc_exp_choice_utilities(self, data):
         """
-        The method returns the exponent of the observed portion of the 
+        The method returns the exponent of the observed portion of the
         utility associated with the different choices.
 
         Inputs:
@@ -48,7 +48,7 @@ class AbstractChoiceModel(Model):
 
     def calc_probabilities(self):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
 
         Inputs:

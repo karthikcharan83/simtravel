@@ -14,7 +14,7 @@ class SuccessiveAverageProcessor(object):
     This is the class for extending the C code to access the graph
     and get the travel times.
 
-    Input: 
+    Input:
     """
 
     def __init__(self, nodes):
@@ -61,7 +61,7 @@ class SuccessiveAverageProcessor(object):
 
     def delete_graph(self):
         """
-        This method is used the delete the dynamic arrays created 
+        This method is used the delete the dynamic arrays created
         in the C program
 
         Input:

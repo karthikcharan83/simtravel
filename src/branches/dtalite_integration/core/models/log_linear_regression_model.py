@@ -18,11 +18,11 @@ class LogLinearRegressionModel(LinearRegressionModel):
             self, specification, error_specification)
 
     def calc_predvalue(self, data, seed=1):
-        """                                                     
-        The method returns the predicted value for the different 
-        choices in the specification input.     
-        Inputs:     
-        data - DataArray object                                                                                      
+        """
+        The method returns the predicted value for the different
+        choices in the specification input.
+        Inputs:
+        data - DataArray object
         """
         if seed == None:
             raise Exception, "linear"

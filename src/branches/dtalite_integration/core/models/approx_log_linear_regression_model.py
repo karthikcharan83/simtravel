@@ -24,7 +24,7 @@ class ApproxLogRegressionModel(AbstractRegressionModel):
 
     def calc_predvalue(self, data, seed=1):
         """
-        The method returns the predicted value for the different choices in the 
+        The method returns the predicted value for the different choices in the
         specification input.
 
         Inputs:

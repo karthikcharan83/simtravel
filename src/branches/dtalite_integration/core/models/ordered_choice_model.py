@@ -41,7 +41,7 @@ class OrderedModel(AbstractChoiceModel):
 
     def calc_probabilities(self, data):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
 
         Inputs:

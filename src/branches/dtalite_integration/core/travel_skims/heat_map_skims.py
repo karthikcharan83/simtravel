@@ -171,7 +171,7 @@ class PlotHeatMap(object):
             arr.append(i)
             k += 1
             # if k > 1000:
-            # 	break
+            #   break
         arr = array(arr, float)
 
         return arr

@@ -1,939 +1,359 @@
-/* File: arrayex.c */
 #include<stdio.h>
 #include<stdlib.h>
 #include<malloc.h>
 #include<math.h>
 #include<string.h>
+
 #include "skimsquery.h"
 
-#define MAX 1996
-
-//declare the files
-char *tt_file_name;
-char *dist_file_name;
-
-char *real_tt_file_name;
-char *real_dist_file_name;
-
-char *locations_file = "locations.txt";
-
-
-//dynamic array
-float **tt_graph;
-float **dist_graph;
-
-float **real_tt_graph;
-float **real_dist_graph;
-
-int **location_choices;
-
-//initialize edges and nodes
-int nodes;
-int edges;
-int start, end;
-float tt, dist;
-int rows;
-int columns;
-int no_of_locations;
-
-//array
-int temp_locations[MAX];
-/*
-void initialize_mode(struct mode m, int nodes_temp)
+struct Mode alloc_mode(struct Mode mode)
 {
     int x;
-    nodes = nodes_temp;
-    edges = nodes * nodes;
-    
-    //initialize the 2D array to the size of the number of nodes
-    tt_graph = (float **)malloc(nodes*sizeof(float *));
-    dist_graph = (float **)malloc(nodes*sizeof(float *));
 
-    real_tt_graph = (float **)malloc(nodes*sizeof(float *));
-    real_dist_graph = (float **)malloc(nodes*sizeof(float *));
-        
-    //create all the nodes
-    for(x = 0; x < nodes; x++)
+    mode.skims = (struct Skim *)malloc(mode.count_skims*sizeof(struct Skim));
+
+
+    for (x = 0; x < mode.count_skims; x++)
     {
-		tt_graph[x] = (float *)malloc(nodes*sizeof(float));
-		dist_graph[x] = (float *)malloc(nodes*sizeof(float));
-
-		real_tt_graph[x] = (float *)malloc(nodes*sizeof(float));
-		real_dist_graph[x] = (float *)malloc(nodes*sizeof(float));
+        mode.skims[x] = alloc_skim_memory(mode.nodes);
     }
-    //printf("C--> Graph created\n");
-*/
+    return mode;
+}
 
-/* Sample functions */
-/*********************************************/
-/*
-Sample methods to create and print arrays.
-*/
-void print_array(int a[], int n)
+
+struct Skim alloc_skim_memory(int nodes)
 {
-    int i;    
-    for(i = 0; i < n; i++)
+    //initialize the 2D array to the size of the number of nodes
+    int x, matrix_size;
+    struct Skim skim;
+
+    matrix_size = nodes+1;
+
+    //The matrix size is actually (nodes + 1) X (nodes + 1)
+    //Actual data gets stored in indexes 1 through nodes
+    //Therefore, when looping through the matrix go from 1 through nodes
+
+
+    skim.tt_matrix = (float **)malloc(matrix_size*sizeof(float *));
+    skim.dist_matrix = (float **)malloc(matrix_size*sizeof(float *));
+
+    //create all the nodes
+    for(x = 0; x <= nodes; x++)
     {
-        printf("[%d] = %d \n", i, a[i]);
+	skim.tt_matrix[x] = (float *)malloc(matrix_size*sizeof(float));
+	skim.dist_matrix[x] = (float *)malloc(matrix_size*sizeof(float));
+    }
+    printf("\nC--> Graph created");
+    return skim;
+}
+
+void populate_skim(struct Mode mode, int index, char *loc)
+{
+    int x, origin, dest, num_records;
+    float tt, dist;
+    //open the file to read data
+    //printf("\nC--> Starting to populate - %d skim", index);
+    num_records = mode.nodes * mode.nodes;
+
+    FILE *fileSkim = fopen(loc, "r");
+    if(fileSkim != NULL)
+    {
+        for(x = 0; x < num_records; x++)
+        {
+            //read the origin, destination, tt (in min), and distance (in miles else need to add conversion factor /5280.0) and save it
+            fscanf(fileSkim, "%d, %d, %f, %f", &origin, &dest, &tt, &dist);
+	    //printf("%d, %d, %f, %f\n", origin, dest, tt, dist);
+            //set the value of tt to the graph
+            mode.skims[index].tt_matrix[origin][dest] = tt;
+	    mode.skims[index].dist_matrix[origin][dest] = dist;
+        }
+        fclose(fileSkim);
+    }
+    else
+    {
+        //error if file is null
+        perror(loc);
+    }
+    printf("\nC--> Travel time matrix populated");
+}
+/*
+void get_tt(struct Mode mode, int skim_index, int *origin, int *dest, double *tt, int size)
+{
+    //local variables
+    int x;
+
+    //get the travel times using the origin and destination
+    for ( x = 0; x < size; x++ )
+    {
+        //if origin or destination are zero set travel time to 0
+        if (origin[x] == 0 | dest[x] == 0)
+        {
+            tt[x] = 0;
+            continue;
+        }
+        tt[x] = mode.skims[skim_index].tt_matrix[origin[x]][dest[x]];            
+        //printf("\nthis is what is assigned - %d,%d,%.4f", origin[x], dest[x],res.data[x]);   
+    }
+    //printf("\nC--> Travel times retrieved");
+}
+*/
+void get_dist(struct Mode mode, int skim_index, int *origin, int *dest, double *dist, int size)
+{
+    //local variables
+    int x;
+
+    //get the travel times using the origin and destination
+    for ( x = 0; x < size; x++ )
+    {
+        //if origin or destination are zero set dist to 0
+        if (origin[x] == 0 | dest[x] == 0)
+        {
+            dist[x] = 0;
+            continue;
+        }
+        dist[x] = mode.skims[skim_index].dist_matrix[origin[x]][dest[x]];
+        //printf("\nthis is what is assigned - %d,%d,%.4f", origin[x], dest[x],res.data[x]);   
+    }
+    //printf("\nC--> Travel times retrieved");
+}
+
+void get_tt(struct Mode mode, int skim_index, int *origin, int *dest, double *tt, double *votd, int size)
+{
+    //local variables
+    int x;
+    double tempdist;
+    double temptt;
+
+    //get the travel times using the origin and destination
+    for ( x = 0; x < size; x++ )
+    {
+        if (origin[x] == 0 | dest[x] == 0)
+        {
+            tt[x] = 0;
+            continue;
+        }
+        //if origin or destination are zero the location is invalid. set travel time to 0
+        temptt = mode.skims[skim_index].tt_matrix[origin[x]][dest[x]];
+        tempdist = mode.skims[skim_index].dist_matrix[origin[x]][dest[x]];
+
+	tt[x] = temptt + tempdist*votd[x];
+
+	//printf("Dist - %f\n", temp);
+        //printf("\nthis is what is assigned - %d,%d,%.4f", origin[x], dest[x],res.data[x]);   
+    }
+    //printf("\nC--> Travel times retrieved");
+}
+
+void assign_random_nodes(int count, int nodes_list, int nodes_count, int *locations, int row_index, int seed)
+{
+    int x, rand_num, rand_int;
+    srand(seed);
+
+    for ( x = 0; x < count; x++ )
+    {
+        rand_num = rand();
+        rand_int = rand_num % 100;
+
+        //printf("\nthis is the random number -%d, rand int - %d for index - %d", rand_num, rand_int, x+1);
+    }
+}
+
+void print_2d_array(int *arr, int dim1, int dim2)
+{
+    int x,y;
+    printf("\nPrinting array of dimensions - (%d,%d)\n", dim1, dim2);
+    for (x = 0; x < dim1; x++)
+    {
+        for (y = 0; y < dim2; y++)
+        {
+            printf("%d,", arr[x*dim2 + y]);
+        }
+        printf("\n");
+    }
+}
+
+void print_1d_array(int *arr, int dim1)
+{
+    int x,y;
+    printf("\nPrinting array of dimensions - (%d)\n", dim1);
+    for (x = 0; x < dim1; x++)
+    {
+        printf("%d,", arr[x]);
     }
     printf("\n");
 }
 
 
-void create_array(int a[], int n)
-{
-    int i, count;
-    count = 0;
-    for(i = 0; i < n; i++)
-    {
-        a[i] = count;
-        count++;
-    }
-}
-/*********************************************/
-
-
-/* String Functions */
-/*********************************************/
-/*
-This method is used to set the location of the file name.
-The flag is used to indicate the type of file: node file or graph file
-*/
-void set_tt_file(char *s, int length){
-   //if flag is 1 then nodes of the graph were not provided
-   //set the file name to the node_file_name(function needs to be called twice)
-   //if flag is 0 nodes are already known 
-   //set the file name to the graph_file_name
-   tt_file_name = (char *)malloc(length*sizeof(char));
-   tt_file_name = s;
-}
-
-void set_dist_file(char *s, int length){
-   //if flag is 1 then nodes of the graph were not provided
-   //set the file name to the node_file_name(function needs to be called twice)
-   //if flag is 0 nodes are already known 
-   //set the file name to the graph_file_name
-   dist_file_name = (char *)malloc(length*sizeof(char));
-   dist_file_name = s;
-}
-
-
-void set_real_tt_file(char *s, int length){
-   //if flag is 1 then nodes of the graph were not provided
-   //set the file name to the node_file_name(function needs to be called twice)
-   //if flag is 0 nodes are already known 
-   //set the file name to the graph_file_name
-   real_tt_file_name = (char *)malloc(length*sizeof(char));
-   real_tt_file_name = s;
-}
-
-void set_real_dist_file(char *s, int length){
-   //if flag is 1 then nodes of the graph were not provided
-   //set the file name to the node_file_name(function needs to be called twice)
-   //if flag is 0 nodes are already known 
-   //set the file name to the graph_file_name
-   real_dist_file_name = (char *)malloc(length*sizeof(char));
-   real_dist_file_name = s;
-}
-
-/* Print the file location */
-void print_string()
-{
-    //printf("C--> printing the file names\n");
-    //printf("C--> node file name:  %s\n", node_file_name);
-    //printf("C--> graph file name:  %s\n", graph_file_name);
-}
-/*********************************************/
-
-
-/*File functions */
-/*********************************************/
-/*
-This function writes all the locations to a temporary locations file
-*/
-void write_locations(int index)
-{
-    //write all locations to a temp file 
-    FILE *fp = NULL;
-    int i, j, k;
-    //printf("C--> Write to file\n");
-    
-    //if index is 0 then its the first entry. create a new file
-    if(index > 0)
-    {
-        fp = fopen(locations_file, "a");
-    }
-    //else open the file in append mode
-    else
-    {
-        fp = fopen(locations_file, "w");
-    }
-    //file open error return error message
-    if(fp == NULL)
-    {
-        printf("C--> Error opening file ", locations_file);
-        printf("\n");
-    }
-    //else write all locations to file
-    else
-    {
-        fprintf(fp, "For location id: %d\n", index);
-        for(i = 0; i < MAX; i++)
-        {
-            fprintf(fp, "%d\n", temp_locations[i]);
-        }
-        fclose(fp);
-    }
-}
-/*********************************************/
-
-
-/* Main functions */
-/*********************************************/
-
-/*
-This function initializes the dynamic array/graph.
-It allocates memory to the array/graph based on the number of nodes.
-*/
-void initialize_array(int nodes_temp)
-{
-    int x;
-    nodes = nodes_temp;
-    edges = nodes * nodes;
-    
-    //initialize the 2D array to the size of the number of nodes
-    tt_graph = (float **)malloc(nodes*sizeof(float *));
-    dist_graph = (float **)malloc(nodes*sizeof(float *));
-
-    real_tt_graph = (float **)malloc(nodes*sizeof(float *));
-    real_dist_graph = (float **)malloc(nodes*sizeof(float *));
-        
-    //create all the nodes
-    for(x = 0; x < nodes; x++)
-    {
-		tt_graph[x] = (float *)malloc(nodes*sizeof(float));
-		dist_graph[x] = (float *)malloc(nodes*sizeof(float));
-
-		real_tt_graph[x] = (float *)malloc(nodes*sizeof(float));
-		real_dist_graph[x] = (float *)malloc(nodes*sizeof(float));
-    }
-    //printf("C--> Graph created\n");
-}
-
-
-/*
-This function reads the origin, destination and tt from a file.
-It then sets the array/graph elements to tt read from the file.
-*/
-void set_array(int offset)
-{
-    int i;
-
-    //open the file to read data
-
-    FILE *fileTt = fopen(tt_file_name, "r");
-    if( tt_file_name != NULL )
-    {
-        for(i = 0; i < edges; i++)
-        {
-            //read the origin, destination and tt and save it
-            fscanf(fileTt, "%d, %d, %f, %f", &start, &end, &tt, &dist);
-	    //printf("%f, %f", tt, dist);
-            //set the value of tt to the graph
-            tt_graph[start-offset][end-offset] = tt;
-	    dist_graph[start-offset][end-offset] = dist/5280.0;
-        }
-        fclose(fileTt);
-    }
-    else
-    {
-        //error if file is null
-        perror(tt_file_name);
-    }
-    /*
-    FILE *fileDist = fopen(dist_file_name, "r");
-    if( dist_file_name != NULL )
-    {
-        for(i = 0; i < edges; i++)
-        {
-            //read the origin, destination and tt and save it
-            fscanf(fileDist, "%d, %d, %f", &start, &end, &dist);
-            //set the value of tt to the graph
-            dist_graph[start-offset][end-offset] = dist;
-        }
-        fclose(fileDist);
-    }
-    else
-    {
-        //error if file is null
-        perror(dist_file_name);
-    }
-    */
-}
-
-void set_real_array(int offset)
-{
-    int i;
-
-    //open the file to read data
-    FILE *fileTt = fopen(real_tt_file_name, "r");
-    if( real_tt_file_name != NULL )
-    {
-        for(i = 0; i < edges; i++)
-        {
-            //read the origin, destination and tt and save it
-            fscanf(fileTt, "%d, %d, %f, %f", &start, &end, &tt, &dist);
-			//printf("%f, %f, %d, %d", tt, dist, start-offset, end-offset);
-            //set the value of tt to the graph
-            real_tt_graph[start-offset][end-offset] = tt;
-			real_dist_graph[start-offset][end-offset] = dist/5280.0;
-        }
-        fclose(fileTt);
-    }
-    else
-    {
-        //error if file is null
-        perror(real_tt_file_name);
-    }
-}
-
-/*
-This function is used to get the travel times from the graph.
-Input: two array of same size that have the origins and destinations
-Output: array with all the travel times.
-*/
-void get_tt(int org[], int dest[], float tt[], int arr_len, int offset )
+void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, double *available_tt, double *votd, int size, int *nodes_available, int nodes_available_size, int *locations, int count, int* seed)
 {
     //local variables
-    int i;
-    int st, en;
-    float temp;
+    //TODO: Change nodes_available to be individual specific
+    int x, y, node, from, to, count_sampled, count_nodes, rand_node_index, seed_x;
+    double tt_from, tt_to, dist_from, dist_to, gen_tt_from, gen_tt_to;
+    int* nodes_checked_copy;
+    int* nodes_checked;
 
-    //get the travel times using the origin and destination
-    for ( i = 0; i < arr_len; i++ )
+    nodes_checked_copy = (int *)malloc(nodes_available_size*sizeof(int));
+ 
+    for (x = 0; x < nodes_available_size; x++)
     {
-        st = org[i];
-        en = dest[i];
-        
-        //if origin or destination are zero the location is invalid. set travel time to 0
-        if (st == 0 || en == 0) 
-        {
-            tt[i] = 0;
-        }
-        else
-        {
-            temp = tt_graph[st-offset][en-offset];
-	    //printf("Dist - %f\n", temp);
-	    if (temp < 3)
-	    {
-             	tt[i] = 3;
-	    }
-	    tt[i] = temp;
-        }
-    }
-    //printf("C--> Travel times retrieved\n");
-}
-
-void get_real_tt(int org[], int dest[], float tt[], int arr_len, int offset )
-{
-    //local variables
-    int i;
-    int st, en;
-    float temp;
-
-    //get the travel times using the origin and destination
-    for ( i = 0; i < arr_len; i++ )
-    {
-        st = org[i];
-        en = dest[i];
-        
-        //if origin or destination are zero the location is invalid. set travel time to 0
-        if (st == 0 || en == 0) 
-        {
-            tt[i] = 0;
-        }
-        else
-        {
-            temp = real_tt_graph[st-offset][en-offset];
-	    //printf("Dist - %f\n", temp);
-	    if (temp < 3)
-	    {
-             	tt[i] = 3;
-	    }
-	    tt[i] = temp;
-        }
-    }
-    //printf("C--> Travel times retrieved\n");
-}
-
-void get_dist(int org[], int dest[], float dist[], int arr_len, int offset )
-{
-    //local variables
-    int i;
-    int st, en;
-    float temp;
-    
-    //get the travel times using the origin and destination
-    for ( i = 0; i < arr_len; i++ )
-    {
-        st = org[i];
-        en = dest[i];
-        
-        //if origin or destination are zero the location is invalid. set travel time to 0
-        if (st == 0 || en == 0) 
-        {
-            dist[i] = 0;
-        }
-        else
-        {
-            temp = dist_graph[st-offset][en-offset];
-	    //printf("Dist - %f\n", temp);
-	    if (temp == 0)
-	    {
-		dist[i] = 0.5;
-	    }
-	    dist[i] = temp;
-        }
-    }
-    //printf("C--> Travel distances retrieved\n");
-}
-
-void get_real_dist(int org[], int dest[], float dist[], int arr_len, int offset )
-{
-    //local variables
-    int i;
-    int st, en;
-    float temp;
-    
-    //get the travel times using the origin and destination
-    for ( i = 0; i < arr_len; i++ )
-    {
-        st = org[i];
-        en = dest[i];
-        
-        //if origin or destination are zero the location is invalid. set travel time to 0
-        if (st == 0 || en == 0) 
-        {
-            dist[i] = 0;
-        }
-        else
-        {
-            temp = real_dist_graph[st-offset][en-offset];
-	    //printf("Dist - %f\n", temp);
-	    if (temp == 0)
-	    {
-		dist[i] = 0.5;
-	    }
-	    dist[i] = temp;
-        }
-    }
-    //printf("C--> Travel distances retrieved\n");
-}
-
-void get_generalized_time(int org[], int dest[], float votd[], float gentt[], int arr_len, int offset )
-{
-    //local variables
-    int i;
-    int st, en;
-    float temptt, tempdist;
-    
-    //get the travel times using the origin and destination
-    for ( i = 0; i < arr_len; i++ )
-    {
-        st = org[i];
-        en = dest[i];
-        
-        //if origin or destination are zero the location is invalid. set travel time to 0
-        if (st == 0 || en == 0) 
-        {
-            gentt[i] = 0;
-        }
-        else
-        {
-            temptt = tt_graph[st-offset][en-offset];
-            tempdist = dist_graph[st-offset][en-offset];
-
-	    gentt[i] = temptt + tempdist*votd[i];
-
-	    if (gentt[i] < 3) {
-		gentt[i] = 3;
-	    }
-
-
-	    //printf("Generalized travel time - %f\n", gentt[i]);
-        }
-    }
-    //printf("C--> Travel distances retrieved\n");
-}
-
-void get_generalized_real_time(int org[], int dest[], float votd[], float gentt[], int arr_len, int offset )
-{
-    //local variables
-    int i;
-    int st, en;
-    float temptt, tempdist;
-    
-    //get the travel times using the origin and destination
-    for ( i = 0; i < arr_len; i++ )
-    {
-        st = org[i];
-        en = dest[i];
-        
-        //if origin or destination are zero the location is invalid. set travel time to 0
-        if (st == 0 || en == 0) 
-        {
-            gentt[i] = 0;
-        }
-        else
-        {
-            temptt = real_tt_graph[st-offset][en-offset];
-            tempdist = real_dist_graph[st-offset][en-offset];
-
-	    gentt[i] = temptt + tempdist*votd[i];
-
-	    if (gentt[i] < 3) {
-		gentt[i] = 3;
-	    }
-
-
-	    //printf("Generalized travel time - %f\n", gentt[i]);
-        }
-    }
-    //printf("C--> Travel distances retrieved\n");
-}
-
-/*
-This function is used to delete the original graph 
-and travel times array and free memory.
-*/
-
-void delete_array()
-{
-    int i;
-    
-    //delete all the rows
-    for ( i = 0; i < nodes; i++ )
-    {
-        free(tt_graph[i]);
-	free(dist_graph[i]);
+        nodes_checked_copy[x] = 0;
     }
     
-    //delete the pointer to the array
-    free(tt_graph);  
-    free(dist_graph);
-        
-    //set the pointer to NULL to avoid any memory access
-    tt_graph = NULL;
-    dist_graph = NULL;    
-
-}
-
-/*********************************************/
-
-
-/* Print functions */
-/*********************************************/
-/* Print the travel times array */
-void print_tt_array(int org[], int dest[], float tt[], int len)
-{
-    int i;
-
-    for(i = 0; i < len; i++)
+    for (x = 0; x < size; x++)
     {
-        printf("%d %d %g\n", org[i], dest[i], tt[i]);
-    }
-}
+        from = origin[x];
+        to = dest[x];
 
-
-/* Print the original graph */
-void print_travel_time_array(int offset)
-{
-    int i, j;    
-    for(i = 0; i < 10; i++)
-    {
-        for(j = 0; j < 10; j++)
+        if (from == 0 | to == 0)
         {
-            printf("C--> tt_graph[%d][%d] = %g\n", (i+offset), (j+offset), tt_graph[i][j]);
+            continue;
         }
-    }
-}
-/*********************************************/
 
+        count_sampled = 0;
+        count_nodes = 0;
+	seed_x = seed[x];
+        srand(seed_x);
 
-/* Location choices functions */
-/*********************************************/
-/*
-This function initializes the location choices dynamic array
-It allocates memory to the array based on the number of nodes.
-*/
-void initialize_location_array(int arr_len)
-{
-    int x;
-    rows = arr_len;
-    //printf("C--> Initializing locations graph\n");
-    
-    //initialize the 2D array to the size of the number of nodes
-    location_choices = (int **)malloc(rows*sizeof(int *));
-
-    //create all the nodes
-    for(x = 0; x < rows; x++)
-    {
-        location_choices[x] = (int *)malloc(nodes*sizeof(int));
-    }
-    //printf("C--> Locations graph created\n");
-}
-
-
-/*
-This function is used to the set values of all the nodes in 
-the location choices array to 0.
-*/
-void set_location_array_to_zero(int arr_len)
-{
-    int i, j;
-    //printf("C--> Setting locations graph to 0\n");
-    
-    //set the rows to 0
-    for(i = 0; i < arr_len; i++)
-    {
-        //set the columns in each row to 0
-        for(j = 0; j < nodes; j++)
+        // Implementation where the number of options is less than the count
+        if (nodes_available_size <= count)
         {
-            location_choices[i][j] = 0;
-        }
-    }    
-}
-
-
-/*
-This function is used to the set values of all the nodes in 
-the temp location choices array to 0.
-*/
-void set_temp_location_array()
-{
-    int x;
-    //printf("C--> Setting temp locations array to 0\n");
-    
-    //set all elements in temp locations array to 0
-    for(x = 0; x < MAX; x++)
-    {
-        temp_locations[x] = 0;
-    }
-
-}
-
-
-/*
-This function prints the locations array.
-*/
-void print_location_array(int arr_len)
-{
-    int i, j;
-    
-    //for(i = 700; i < 1000; i++)
-    for(i = 0; i < arr_len; i++)
-    {
-        //for(j = 1000; j < 1500; j++)
-        for(j = 0; j < nodes; j++)
-        {
-            if(location_choices[i][j] == 1)
+            for (y = 0; y < nodes_available_size; y++)
             {
-                printf("%d ", location_choices[i][j]);
+                node = nodes_available[y];
+                tt_from = mode.skims[skim_index].tt_matrix[origin[x]][node];
+                tt_to = mode.skims[skim_index].tt_matrix[node][dest[x]];
+
+                dist_from = mode.skims[skim_index].dist_matrix[origin[x]][node];
+                dist_to = mode.skims[skim_index].dist_matrix[node][dest[x]];
+
+                gen_tt_from = tt_from + dist_from*votd[x];
+                gen_tt_to = tt_to + dist_to*votd[x];
+
+                if (gen_tt_from + gen_tt_to <= available_tt[x])
+                {
+                    locations[x*count + count_sampled] = node;
+                    count_sampled = count_sampled + 1;
+                }
+            }
+            continue;
+        }
+    
+        // Implementation where the number of options is more than the count
+        nodes_checked = (int *)malloc(nodes_available_size*sizeof(int));
+        //memcpy(&nodes_checked, &nodes_checked_copy, sizeof(nodes_checked_copy));
+        //printf("\nThis is the checked array");
+        //print_1d_array(nodes_checked, nodes_available_size);
+        //printf("\nThis is the default copy");
+        //print_1d_array(nodes_checked_copy, nodes_available_size);
+        memset(nodes_checked, 0, nodes_available_size*sizeof(int));
+
+        while((count_sampled < count) & (count_nodes < nodes_available_size))
+        {
+            rand_node_index = rand() % nodes_available_size;
+            if (nodes_checked[rand_node_index] == 1)
+            {
+                continue;
+            }
+            nodes_checked[rand_node_index] = 1;
+            node = nodes_available[rand_node_index];
+            count_nodes = count_nodes + 1;
+
+            tt_from = mode.skims[skim_index].tt_matrix[origin[x]][node];
+            tt_to = mode.skims[skim_index].tt_matrix[node][dest[x]];
+
+            dist_from = mode.skims[skim_index].dist_matrix[origin[x]][node];
+            dist_to = mode.skims[skim_index].dist_matrix[node][dest[x]];
+
+            gen_tt_from = tt_from + dist_from*votd[x];
+            gen_tt_to = tt_to + dist_to*votd[x];
+
+
+            if (gen_tt_from + gen_tt_to <= available_tt[x])
+            {
+                locations[x*count + count_sampled] = node;
+                count_sampled = count_sampled + 1;
+                //printf("\nThis node is selected - %d ", node);
             }
         }
-        printf("\n");
-    }
-}
-
-
-/*
-This function is used to generate random locations from 
-and save them in the temp locations array
-*/
-void generate_random_locations(int loc_length, int no_of_loc, int index)
-{
-    int i, j, limit, random_num, count;
-    i = 0;
-    count = 0;
-
-    //number of locations obtained are more than number of locations required
-    if(loc_length > no_of_loc)
-    {
-        //run a loop till no of locations required         //for(i = 0; i < no_of_loc; i++)
-        while(temp_locations[no_of_loc-1] == 0)
+        //printf("\nThis is how many were scanned - %d and found - %d\n", count_nodes, count_sampled);
+        free(nodes_checked);
+        /*
+        for (y = 0; y < nodes_available_size; y++)
         {
-            //generate a random number based on no of locations obtained
-            random_num = rand();
-            limit = random_num % nodes;
+            node = nodes_available[y]
+            tt_from = mode.skims[skim_index].tt_matrix[origin[x]][node]
+            tt_to = mode.skims[skim_index].tt_matrix[node][dest[x]] 
+         
+            if ((nodes_available[x*nodes_available_size + y] != 0) &
+                (tt_from + tt_to <= available_tt[x]))
+            {
+                printf("Conditions satisfied");
+            }
+
             
-            //need to check for repeat random numbers
-            if (location_choices[index][limit] == 1)
-            {   
-                location_choices[index][limit] = 0;
-                temp_locations[count] = limit + 1;
-                count++;
-            }
+	   
         }
+        */
+
+        
     }
-    //number of locations obtained and required are the same
-    else if(loc_length == no_of_loc)
-    {
-        for(i = 0; i < nodes; i++)
-        {
-            if(location_choices[index][i] == 1)
-            {
-                temp_locations[count] = i + 1;
-                count++;
-            }
-            if(count == no_of_loc)
-            {
-                break;
-            }
-        }
-    }
-    //number of locations obtained are less than number locations required
-    else
-    {
-        for(i = 0; i < nodes; i++)
-        {
-            if(location_choices[index][i] == 1)
-            {
-                temp_locations[count] = i + 1;
-                count++;
-            }
-            if(count == loc_length)
-            {
-                break;
-            }
-        }        
-    }
+
+
+
 }
+ 
+/*
+
+    if (nodes_available_size == mode.nodes)
+    {
+        printf("\nDon't need to selectively scan");
+        for (x = 0; x < size; x++)
+        {
+            from = origin[x];
+            to = dest[x];
+            available_time = available_tt[x]
+
+            for (node = 1; node <= mode.nodes; node++)
+            {
+                temptt_from = mode.skims[skim_index].tt_matrix[from][node];
+                temptt_to = mode.skims[skim_index].tt_matrix[from][to];    
+                if (temptt_from + temptt_to <= available_tt)
+                {
+                    nodes_indicator[node-1] = 1;
+                }
+                else
+                {
+                    nodes_indicator[node-1] = 0;
+                }
+            get_random_locations(count, 
+            }
+        }
+    }
+    else 
+    {
+        printf("\nNeed to selectively scan");
+    }
+
+*/
+
 
 
 /*
-This function is used to get the location choices for set of 
-origin destination pairs
-*/
-void get_location_choices(int origin[], int destination[], float travel_time[], float votd[], int locations[], int arr_len, int offset, int no_of_locations, int land_use_array[], int land_use_length, int seed)
+void release_tt_snapshot_memory(struct Mode mode)
 {
-    int i, j, k;
-    int org, dest;
-    float tt_to, tt_from, dist_to, dist_from, gentt_to, gentt_from, temp_tt;
-    int count, counter;
-    int final_count, loop_counter;
-    int length;
-    int land_use_var;
-    counter = 0;
-    final_count = 0;
-    loop_counter = 0;
-    printf("C--> inside location choices\n");
+    int x;
     
-    srand(seed);
-
-    //check if land use data is present
-    if(land_use_length == nodes)
-    {
-        //land use data not present. loop over all the nodes
-        //i --> rows in origin/dest j --> all nodes k --> final location choices
-        //run a loop on the number of origin-destination pairs for every pair look for nodes that are accessible
-        printf("C--> No land use data\n");
-        for(i = 0; i < arr_len; i++)
-        {
-            //set the origin, destination and travel time to local variable
-            count = 0;
-            org = origin[i];
-            dest = destination[i];
-            tt = travel_time[i];
-            if( org == 0 || dest == 0)
-            {
-                //invalid origin or destination. set all the locations to zero. copy the locations into location choices
-	            //printf("C--> Origin or destination are zeros - %d\n", i);
-                for(k = 0; k < no_of_locations; k++)
-                {
-                    if(i == 0)
-                    {
-                        locations[k] = 0;
-                    }
-                    else
-                    {
-                        counter = i * no_of_locations + k;
-                        locations[counter] = 0;
-                    }
-                }
-            }
-            else
-            {
-                //run a loop over all the nodes to get the locations accessible
-                for(j = 0; j < nodes; j++)
-                {
-		
-		    tt_to = tt_graph[org-offset][j];
-		    tt_from = tt_graph[j][dest-offset];
-
-		    dist_to = dist_graph[org-offset][j];
-		    dist_from = dist_graph[j][dest-offset];
-
-		    gentt_to = tt_to + dist_to*votd[i];
-		    gentt_from = tt_from + dist_from*votd[i];
-
-
-                    temp_tt = gentt_to + gentt_from;
-                    //printf("BEFORE CHECKING--> org: %d dest: %d tt:%f count of nodes: %d i: %d j: %d votd: %f temp_tt: %f\n", org, dest, tt, nodes, i, j, votd[i], temp_tt);
-                    //check if the travel time is less than travel time of OD pair
-                    if(temp_tt <= tt)
-                    {
-                        //save the node to temp locations
-                        location_choices[i][j] = 1;
-                        
-                        //printf("AFTER CHECKING--> org: %d dest: %d tt:%f count of nodes: %d j: %d temp_tt: %f\n", org, dest, tt, nodes, j, temp_tt);
-    
-                        //count will help determine the length of temp_locations
-                        count++;
-                    }
-                }
-    		//printf ("BEFORE GENERATING LOCATION CHOICES");
-                //generate randome locations
-                generate_random_locations(count, no_of_locations, i);
-            	//printf ("AFTER GENERATING LOCATION CHOICES");
-                //copy the locations into location choices
-                for(k = 0; k < no_of_locations; k++)
-                {
-                    if(i == 0)
-                    {
-                        locations[k] = temp_locations[k];
-                    }
-                    else
-                    {
-                        counter = i * no_of_locations + k;
-                        locations[counter] = temp_locations[k];
-                    }
-                }
-        
-                //write all the locations to the file
-                write_locations(i);
-                
-                //after copying the locations, reset temp locations
-                set_temp_location_array();
-            }
-        }
-    }
-    else
-    {
-        //land use data is present. loop over all the elements in the land use array
-        //i --> rows in origin/dest j --> all nodes k --> final location choices
-        //run a loop on the number of origin-destination pairs for every pair look for nodes that are accessible
-        //printf("C--> Land use data present.\n");
-        for(i = 0; i < arr_len; i++)
-        {
-            //set the origin, destination and travel time to local variable
-            count = 0;
-            org = origin[i];
-            dest = destination[i];
-            tt = travel_time[i];
-            if( org == 0 || dest == 0)
-            {
-                //invalid origin or destination. set all the locations to zero. copy the locations into location choices
-	            //printf("C--> Origin or destination are zeros - %d\n", i);
-                for(k = 0; k < no_of_locations; k++)
-                {
-                    if(i == 0)
-                    {
-                        locations[k] = 0;
-                    }
-                    else
-                    {
-                        counter = i * no_of_locations + k;
-                        locations[counter] = 0;
-                    }
-                }
-            }
-            else
-            {
-                //run a loop over all the nodes to get the locations accessible
-                for(j = 0; j < land_use_length; j++)
-                {
-                    land_use_var = land_use_array[j];
-                    //temp_tt = tt_graph[org-offset][land_use_var-1] + tt_graph[land_use_var-1][dest-offset];
-
-		    tt_to = tt_graph[org-offset][land_use_var-1];
-		    tt_from = tt_graph[land_use_var-1][dest-offset];
-
-		    dist_to = dist_graph[org-offset][land_use_var-1];
-		    dist_from = dist_graph[land_use_var-1][dest-offset];
-
-		    gentt_to = tt_to + dist_to*votd[i];
-		    gentt_from = tt_from + dist_from*votd[i];
-
-
-                    temp_tt = gentt_to + gentt_from;
-
-
-                    //check if the travel time is less than travel time of OD pair
-                    if(temp_tt <= tt)
-                    {
-                        //save the node to temp locations
-                        location_choices[i][land_use_var-1] = 1;
-                        
-                        //printf("C--> org: %d dest: %d tt:%f count of nodes: %d j: %d temp_tt: %f\n", org, dest, tt, nodes, j, temp_tt);
-    
-                        //count will help determine the length of temp_locations
-                        count++;
-                    }
-                }
-    
-                //generate randome locations
-                generate_random_locations(count, no_of_locations, i);
-        
-                //copy the locations into location choices
-                for(k = 0; k < no_of_locations; k++)
-                {
-                    if(i == 0)
-                    {
-                        locations[k] = temp_locations[k];
-                    }
-                    else
-                    {
-                        counter = i * no_of_locations + k;
-                        locations[counter] = temp_locations[k];
-                    }
-                }
-        
-                //write all the locations to the file
-                //write_locations(i);
-                
-                //after copying the locations, reset temp locations
-                set_temp_location_array();
-            }
-        }
-    }
-}
-
-
-/*
-This function is used to delete the location choices array 
-and free memory.
-*/
-void delete_location_array(int arr_len)
-{
-    int i;
-    //printf("C--> Starting to delete location array\n");    
-    //printf("Nodes-%d\n", nodes);
     //delete all the rows
-    for ( i = 0; i < arr_len; i++ )
+    for (x = 0; x < mode.nodes; x++)
     {
-	//printf("Counter-%d\n", i);
-        free(location_choices[i]);
+        free(mode.tt_snapshots.graph[x]);
     }
     
     //delete the pointer to the array
-    free(location_choices);
-    
+    free(mode.tt_snapshots.graph);  
+        
     //set the pointer to NULL to avoid any memory access
-    location_choices = NULL;
-    //printf("C--> Location array deleted\n");
+    mode.tt_snapshots.graph = NULL;
 }
-/*********************************************/
-
-
-
-
+*/

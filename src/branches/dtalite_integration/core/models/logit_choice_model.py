@@ -51,7 +51,7 @@ class LogitChoiceModel(AbstractChoiceModel):
 
     def calc_exp_choice_utilities(self, data, choiceset):
         """
-        The method returns the exponent of the observed portion of the 
+        The method returns the exponent of the observed portion of the
         utility associated with the different choices.
 
         Inputs:
@@ -64,7 +64,7 @@ class LogitChoiceModel(AbstractChoiceModel):
 
     def calc_probabilities(self, data, choiceset):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
 
         Inputs:

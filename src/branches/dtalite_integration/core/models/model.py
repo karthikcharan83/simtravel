@@ -90,13 +90,13 @@ class SubModel(object):
         #f.write('%s,%s\n' %(iteration, seed))
         # f.close()
         """
-	if ('houseid' in data._colnames) and ('personid' in data._colnames):
-	    seed = ((data.columns(['houseid']).data*100 + data.columns(['personid']).data + seed)[:,0].astype(int))
-	elif ('houseid' in data._colnames):
-	    seed = ((data.columns(['houseid']).data*100 + seed)[:,0].astype(int))
-	else:
-	    seed = self.seed + iteration
-	"""
+        if ('houseid' in data._colnames) and ('personid' in data._colnames):
+            seed = ((data.columns(['houseid']).data*100 + data.columns(['personid']).data + seed)[:,0].astype(int))
+        elif ('houseid' in data._colnames):
+            seed = ((data.columns(['houseid']).data*100 + seed)[:,0].astype(int))
+        else:
+            seed = self.seed + iteration
+        """
         # print '\t    Running model - %s; Seed - %s' %(self.dep_varname, seed)
         if self.model_type == 'regression':
             result = self.model.calc_predvalue(data, seed)

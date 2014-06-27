@@ -4,11 +4,11 @@ Created on Jan 21, 2011
 @author: dhyou
 '''
 
-""" 
-shapefile.py 
-Provides read and write support for ESRI Shapefiles. 
-author: jlawhead<at>nvs-inc.com 
-date: 20110113 
+"""
+shapefile.py
+Provides read and write support for ESRI Shapefiles.
+author: jlawhead<at>nvs-inc.com
+date: 20110113
 """
 
 from struct import pack, unpack, calcsize
@@ -35,7 +35,7 @@ MULTIPATCH = 31
 
 class _Array(array.array):
 
-    """Converts python tuples to lits of the appropritate type. 
+    """Converts python tuples to lits of the appropritate type.
     Used to unpack different shapefile header parts."""
 
     def __repr__(self):
@@ -45,14 +45,14 @@ class _Array(array.array):
 class _Shape:
 
     def __init__(self, shapeType=None):
-        """Stores the geometry of the different shape types 
-        specified in the Shapefile spec. Shape types are 
-        usually point, polyline, or polygons. Every shape type 
-        except the "Null" type contains points at some level for 
-        example verticies in a polygon. If a shape type has 
-        multiple shapes containing points within a single 
-        geometry record then those shapes are called parts. Parts 
-        are designated by their starting index in geometry record's 
+        """Stores the geometry of the different shape types
+        specified in the Shapefile spec. Shape types are
+        usually point, polyline, or polygons. Every shape type
+        except the "Null" type contains points at some level for
+        example verticies in a polygon. If a shape type has
+        multiple shapes containing points within a single
+        geometry record then those shapes are called parts. Parts
+        are designated by their starting index in geometry record's
         list of shapes."""
         self.shapeType = shapeType
         self.points = []
@@ -75,22 +75,22 @@ class ShapefileException(Exception):
 
 class Reader:
 
-    """Reads the three files of a shapefile as a unit or 
-    separately.  If one of the three files (.shp, .shx, 
-    .dbf) is missing no exception is thrown until you try 
-    to call a method that depends on that particular file. 
-    The .shx index file is used if available for efficiency 
-    but is not required to read the geometry from the .shp 
-    file. The "shapefile" argument in the constructor is the 
-    name of the file you want to open. 
+    """Reads the three files of a shapefile as a unit or
+    separately.  If one of the three files (.shp, .shx,
+    .dbf) is missing no exception is thrown until you try
+    to call a method that depends on that particular file.
+    The .shx index file is used if available for efficiency
+    but is not required to read the geometry from the .shp
+    file. The "shapefile" argument in the constructor is the
+    name of the file you want to open.
 
-    You can instantiate a Reader without specifying a shapefile 
-    and then specify one later with the load() method. 
+    You can instantiate a Reader without specifying a shapefile
+    and then specify one later with the load() method.
 
-    Only the shapefile headers are read upon loading. Content 
-    within each file is only accessed when required and as 
-    efficiently as possible. Shapefiles are usually not large 
-    but they can be. 
+    Only the shapefile headers are read upon loading. Content
+    within each file is only accessed when required and as
+    efficiently as possible. Shapefiles are usually not large
+    but they can be.
     """
 
     def __init__(self, shapefile=None):
@@ -106,9 +106,9 @@ class Reader:
         self.load(shapefile)
 
     def load(self, shapefile=None):
-        """Opens a shapefile from a filename or file-like 
-        object. Normally this method would be called by the 
-        constructor with the file object or file name as an 
+        """Opens a shapefile from a filename or file-like
+        object. Normally this method would be called by the
+        constructor with the file object or file name as an
         argument."""
         if shapefile:
             (shapeName, ext) = os.path.splitext(shapefile)
@@ -130,14 +130,14 @@ class Reader:
                 pass
 
     def __getFileObj(self, f):
-        """Checks to see if the requested shapefile file object is 
+        """Checks to see if the requested shapefile file object is
         available. If not a ShapefileException is raised."""
         if not f:
             raise ShapefileException("Required file not available.")
         return f
 
     def __restrictIndex(self, i):
-        """Provides list-like handling of a record index with a clearer 
+        """Provides list-like handling of a record index with a clearer
         error message if the index is out of bounds."""
         if self.numRecords:
             max = self.numRecords - 1
@@ -217,7 +217,7 @@ class Reader:
         return record
 
     def __shapeIndex(self, i=None):
-        """Returns the offset in a .shp file for a shape based on information 
+        """Returns the offset in a .shp file for a shape based on information
         in the .shx index file."""
         f = self.__getFileObj(self.shx)
         if not f:
@@ -237,7 +237,7 @@ class Reader:
             return self._offsets[i]
 
     def shape(self, i=0):
-        """Returns a shape object for a shape in the the geometry 
+        """Returns a shape object for a shape in the the geometry
         record file."""
         f = self.shp
         i = self.__restrictIndex(i)
@@ -344,13 +344,13 @@ class Reader:
         return records
 
     def shapeRecord(self, i=0):
-        """Returns a combination geometry and attribute record for the 
+        """Returns a combination geometry and attribute record for the
         supplied record index."""
         i = self.__restrictIndex(i)
         return _ShapeRecord(shape=self.shape(i), record=self.record(i))
 
     def shapeRecords(self):
-        """Returns a list of combination geometry/attribute records for 
+        """Returns a list of combination geometry/attribute records for
         all records in a shapefile."""
         shapeRecords = []
         return [_ShapeRecord(shape=rec[0], record=rec[1]) for rec in zip(self.shapes(), self.records())]
@@ -488,8 +488,8 @@ class Writer:
         return [min(m), max(m)]
 
     def bbox(self):
-        """Returns the current bounding box for the shapefile which is 
-        the lower-left and upper-right corners. It does not contain the 
+        """Returns the current bounding box for the shapefile which is
+        the lower-left and upper-right corners. It does not contain the
         elevation or measure extremes."""
         return self.__bbox(self._shapes)
 
@@ -502,8 +502,8 @@ class Writer:
         return self.__mbox(self._shapes)
 
     def __shapefileHeader(self, fileObj, headerType='shp'):
-        """Writes the specified header type to the specified file-like object. 
-        Several of the shapefile formats are so similar that a single generic 
+        """Writes the specified header type to the specified file-like object.
+        Several of the shapefile formats are so similar that a single generic
         method to read or write them is warranted."""
         f = self.__getFileObj(fileObj)
         f.seek(0)
@@ -694,16 +694,16 @@ class Writer:
         self._shapes.append(pointShape)
 
     def line(self, parts=[], shapeType=POLYLINE):
-        """Creates a line shape. This method is just a convienience method 
-        which wraps 'poly()'. 
+        """Creates a line shape. This method is just a convienience method
+        which wraps 'poly()'.
         """
         self.poly(parts, shapeType, [])
 
     def poly(self, parts=[], shapeType=POLYGON, partTypes=[]):
-        """Creates a shape that has multiple collections of points (parts) 
-        including lines, polygons, and even multipoint shapes. If no shape type 
-        is specified it defaults to 'polygon'. If no part types are specified 
-        (which they normally won't be) then all parts default to the shape type. 
+        """Creates a shape that has multiple collections of points (parts)
+        including lines, polygons, and even multipoint shapes. If no shape type
+        is specified it defaults to 'polygon'. If no part types are specified
+        (which they normally won't be) then all parts default to the shape type.
         """
         polyShape = _Shape(shapeType)
         polyShape.parts = []
@@ -727,12 +727,12 @@ class Writer:
         self.fields.append((name, fieldType, size, decimal))
 
     def record(self, *recordList, **recordDict):
-        """Creates a dbf attribute record. You can submit either a sequence of 
-        field values or keyword arguments of field names and values. Before 
-        adding records you must add fields for the record values using the 
-        fields() method. If the record values exceed the number of fields the 
-        extra ones won't be added. In the case of using keyword arguments to specify 
-        field/value pairs only fields matching the already registered fields 
+        """Creates a dbf attribute record. You can submit either a sequence of
+        field values or keyword arguments of field names and values. Before
+        adding records you must add fields for the record values using the
+        fields() method. If the record values exceed the number of fields the
+        extra ones won't be added. In the case of using keyword arguments to specify
+        field/value pairs only fields matching the already registered fields
         will be added."""
         record = []
         fieldCount = len(self.fields)
@@ -788,8 +788,8 @@ class Writer:
         self.dbf.close()
 
     def save(self, target=""):
-        """Save the shapefile data to three files or 
-        three file-like objects. SHP and DBF files can 
+        """Save the shapefile data to three files or
+        three file-like objects. SHP and DBF files can
         be written exclusively using saveShp, saveShx, and saveDbf respectively."""
         # TODO: Create a unique filename for target if None.
         self.saveShp(target)
@@ -818,7 +818,7 @@ class Editor(Writer):
         pass
 
     def delete(self, shape=None, part=None, point=None):
-        """Deletes the specified part of any shape by specifying a shape 
+        """Deletes the specified part of any shape by specifying a shape
         number, part number, or point number."""
         # shape, part, point
         if shape and part and point:
@@ -847,8 +847,8 @@ class Editor(Writer):
                 del s[part]
 
     def point(self, x=None, y=None, z=None, m=None, shape=None, part=None, point=None, addr=None):
-        """Creates/updates a point shape. The arguments allows 
-        you to update a specific point by shape, part, point of any 
+        """Creates/updates a point shape. The arguments allows
+        you to update a specific point by shape, part, point of any
         shape type."""
         # shape, part, point
         if shape and part and point:
@@ -914,14 +914,14 @@ class Editor(Writer):
             self.balance()
 
     def validate(self):
-        """An optional method to try and validate the shapefile 
+        """An optional method to try and validate the shapefile
         as much as possible before writing it (not implemented)."""
         # TODO: Implement validation method
         pass
 
     def balance(self):
-        """Adds a corresponding empty attribute or null geometry record depending 
-        on which type of record was created to make sure all three files 
+        """Adds a corresponding empty attribute or null geometry record depending
+        on which type of record was created to make sure all three files
         are in synch."""
         if len(self.records) > len(self._shapes):
             self.null()
@@ -929,7 +929,7 @@ class Editor(Writer):
             self.record()
 
     def __fieldNorm(self, fieldName):
-        """Normalizes a dbf field name to fit within the spec and the 
+        """Normalizes a dbf field name to fit within the spec and the
         expectations of certain ESRI software."""
         if len(fieldName) > 11:
             fieldName = fieldName[:11]
@@ -946,10 +946,10 @@ def test():
     doctest.testmod(usage, verbose=1)
 
 if __name__ == "__main__":
-    """ 
-    Doctests are contained in the module 'usage.py'. This library was developed 
-    using Python 2.3. Python 2.4 and above have some excellent improvements in the built-in 
-    testing libraries but for now unit testing is done using what's available in 
-    2.3. 
+    """
+    Doctests are contained in the module 'usage.py'. This library was developed
+    using Python 2.3. Python 2.4 and above have some excellent improvements in the built-in
+    testing libraries but for now unit testing is done using what's available in
+    2.3.
     """
     test()

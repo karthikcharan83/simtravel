@@ -135,32 +135,32 @@ class SimulationManager(object):
         self.setup_inputCacheTables()
         self.setup_outputCacheTables()
         """
-	# Copying results for components that generate runtime outputs e.g. od_r, gap_before_r, gap_after_r etc.
-	for component in self.componentList:
-	    if component.writeToLocFlag == True:
-		tableName = component.writeToTable
-		self.reflectFromDatabaseToLoc(queryBrowser, tableName, backupDirectoryLoc)
-		print 'Backing up results for table - %s' %tableName
+        # Copying results for components that generate runtime outputs e.g. od_r, gap_before_r, gap_after_r etc.
+        for component in self.componentList:
+            if component.writeToLocFlag == True:
+                tableName = component.writeToTable
+                self.reflectFromDatabaseToLoc(queryBrowser, tableName, backupDirectoryLoc)
+                print 'Backing up results for table - %s' %tableName
 
 
 
-	# create populate cache - 
-	tableList = self.db.list_of_outputtables()
+        # create populate cache -
+        tableList = self.db.list_of_outputtables()
 
-	tableList = ['schedule_skeleton_r', 'schedule_final_r', 'schedule_elapsed_r', 
-		     'trips_r', 'trips_to_malta_r', 'trips_arrival_from_malta_r',
-		     'households_vehicles_count_r', 'persons_r', 'schedule_full_r', 'trips_purpose_r']
+        tableList = ['schedule_skeleton_r', 'schedule_final_r', 'schedule_elapsed_r',
+                     'trips_r', 'trips_to_malta_r', 'trips_arrival_from_malta_r',
+                     'households_vehicles_count_r', 'persons_r', 'schedule_full_r', 'trips_purpose_r']
 
-	for tableName in tableList:
-	    #print 'Backing up results for table - ', tableName
-	    self.reflectFromDatabaseToCache(queryBrowser, tableName)
+        for tableName in tableList:
+            #print 'Backing up results for table - ', tableName
+            self.reflectFromDatabaseToCache(queryBrowser, tableName)
 
-	# Copying the hdf 5 file
-	print 'Copying the hdf 5 file to the iteration folder'
-	fileLoc = os.path.join(self.projectConfigObject.location, 'amosdb.h5')
-	backupFileLoc = os.path.join(backupDirectoryLoc, 'amosdb.h5')
-	shutil.copyfile(fileLoc, backupFileLoc)
-	"""
+        # Copying the hdf 5 file
+        print 'Copying the hdf 5 file to the iteration folder'
+        fileLoc = os.path.join(self.projectConfigObject.location, 'amosdb.h5')
+        backupFileLoc = os.path.join(backupDirectoryLoc, 'amosdb.h5')
+        shutil.copyfile(fileLoc, backupFileLoc)
+        """
 
         # Copying the skims ...
         print 'Copying the skim files to the iteration folder'
@@ -189,32 +189,32 @@ class SimulationManager(object):
         print "\tDumping the postgres database completed"
 
         """
-        
-	# Skims
-	fSkimsConv = open(backupDirectoryLoc + os.path.sep + 'skimsConv.txt', 'w')
-	for skimsTable in self.projectSkimsObject.table_ttLocationLookup.keys():
-	    skimsTableLoc = self.projectSkimsObject.table_ttLocationLookup[skimsTable]
-	    skimsTableName = self.projectSkimsObject.table_lookup[skimsTable]
-   
-	    shutil.copy(skimsTableLoc, backupDirectoryLoc)
-	    oldFile = os.path.join(oldFileFolder, "%s.dat" %skimsTableName)
-	    if self.iteration > 1:
-	    	dev = self.calculate_skims_convergence_criterion(oldFile, skimsTableLoc, skimsTableName, backupDirectoryLoc)
-	    	print 'deviation - ', dev
-	    	fSkimsConv.write('%s,%.4f\n' %(skimsTable,dev))
-	fSkimsConv.close()
-	
+
+        # Skims
+        fSkimsConv = open(backupDirectoryLoc + os.path.sep + 'skimsConv.txt', 'w')
+        for skimsTable in self.projectSkimsObject.table_ttLocationLookup.keys():
+            skimsTableLoc = self.projectSkimsObject.table_ttLocationLookup[skimsTable]
+            skimsTableName = self.projectSkimsObject.table_lookup[skimsTable]
+
+            shutil.copy(skimsTableLoc, backupDirectoryLoc)
+            oldFile = os.path.join(oldFileFolder, "%s.dat" %skimsTableName)
+            if self.iteration > 1:
+                dev = self.calculate_skims_convergence_criterion(oldFile, skimsTableLoc, skimsTableName, backupDirectoryLoc)
+                print 'deviation - ', dev
+                fSkimsConv.write('%s,%.4f\n' %(skimsTable,dev))
+        fSkimsConv.close()
 
 
-	if self.iteration > 1:	
-	    # OD
-	    fODConv = open(backupDirectoryLoc + os.path.sep + 'odConv.txt', 'w')
 
-	    oldFile = os.path.join(oldFileFolder, 'od_r_None.csv')
-	    newFile = os.path.join(backupDirectoryLoc, 'od_r_None.csv')
-	    dev = self.calculate_od_convergence_criterion(oldFile, newFile, backupDirectoryLoc)
-	    fODConv.write('%.4f\n' %dev)
-	    fODConv.close()
+        if self.iteration > 1:
+            # OD
+            fODConv = open(backupDirectoryLoc + os.path.sep + 'odConv.txt', 'w')
+
+            oldFile = os.path.join(oldFileFolder, 'od_r_None.csv')
+            newFile = os.path.join(backupDirectoryLoc, 'od_r_None.csv')
+            dev = self.calculate_od_convergence_criterion(oldFile, newFile, backupDirectoryLoc)
+            fODConv.write('%.4f\n' %dev)
+            fODConv.close()
         """
         # Creating and copying tabulations
         self.backup_result_tabulations(backupDirectoryLoc)
@@ -533,7 +533,7 @@ class SimulationManager(object):
                                                nRowsProcessed2, partId, createIndex, deleteIndex)
 
                     # if nRowsProcessed > 0:
-                    # 	raw_input('Check outputs for this component --- ')
+                    #   raw_input('Check outputs for this component --- ')
                 configParser.update_completedFlag(
                     comp.component_name, comp.analysisInterval)
 
@@ -649,7 +649,7 @@ class SimulationManager(object):
         This will reflect changes for the particular component to the database
         So that future queries can fetch appropriate run-time columns as well
         because the output is currently cached on the hard drive and the queries
-        are using tables in the database which only contain the input tables 
+        are using tables in the database which only contain the input tables
         and hence the need to reflect the run-time caches to the database
         """
 

@@ -10,7 +10,7 @@ class ErrorSpecification(object):
 
     Inputs:
     variance - array of numeric values (covariance matrix)
-    distribution - string (type of distribution)     
+    distribution - string (type of distribution)
     """
 
     def __init__(self, variance, distribution):

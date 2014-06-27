@@ -160,7 +160,7 @@ class ComponentManager(object):
         This will reflect changes for the particular component to the database
         So that future queries can fetch appropriate run-time columns as well
         because the output is currently cached on the hard drive and the queries
-        are using tables in the database which only contain the input tables 
+        are using tables in the database which only contain the input tables
         and hence the need to reflect the run-time caches to the database
         """
 
@@ -468,7 +468,7 @@ class ComponentManager(object):
     def process_data_for_locs(self, data, spatialConst_list):
         """
         This method is called whenever there are location type queries involved as part
-        of the model run. Eg. In a Destination Choice Model, if there are N number of 
+        of the model run. Eg. In a Destination Choice Model, if there are N number of
         random location choices, and there is a generic MNL specifcation then in addition
         to generating the choices, one has to also retrieve the travel skims corresponding
         to the N random location choices.
@@ -676,13 +676,13 @@ class ComponentManager(object):
         ttMatrix = zeros((max(origin)+1, max(destination)+1))
 
         ttMatrix[origin, destination] = tt
-        
+
         originQ = 110
         destinationQ = 1745
         timeWindow = 45
 
         randint = random.randint
-        
+
         destMatrix = zeros((10000, max(destination) + 1))
 
 
@@ -700,7 +700,7 @@ class ComponentManager(object):
 
         print 'travel skims read'
         raw_input()
-        
+
         print cols
         queryData = array([i[:] for i in query_gen])
 
@@ -712,7 +712,7 @@ class ComponentManager(object):
         from numpy import where
         t = time.time()
         print 'start'
-        
+
         print sum(data.columns(['origin']).data == 101), sum(data.columns(['destination']).data == 1994)
         print 'end', time.time()-t
         raw_input()

@@ -2,13 +2,13 @@
 setup.py file for SWIG example
 
 here successive_average is the module name.
-to create a new setup.py file replace the word "successive_average" with the new module name 
+to create a new setup.py file replace the word "successive_average" with the new module name
 at all places in the file
 
-the "module_name_wrap.c" file is created by SWIG. 
+the "module_name_wrap.c" file is created by SWIG.
 
 for example, module name is template
-template_module = Extension('_template', 
+template_module = Extension('_template',
                             sources=['template_wrap.c', 'template.c'],
                             )
 

@@ -117,7 +117,7 @@ class ChildDependencyProcessing(Model):
                                                                  :]
             # if hhldIndex[0] not in [8843,20008,20440,30985,48365,54850,60085,64006,68037,73093,77192,84903,84963]:
             # 1047
-            #	continue
+            #   continue
             householdObject = Household(hhldIndex[0])
 
             for perIndex in persIndicesForActsForHhld:
@@ -196,11 +196,11 @@ class ChildDependencyProcessing(Model):
         workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
         if workStatusUnique.shape[0] > 1:
             print 'Work Status', workStatusUnique
-        
+
             raise Exception, "More than one values for status/dependency"
         else:
             workStatus = workStatusUnique[0]
-        
+
         schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
         if schoolStatusUnique.shape[0] > 1:
             print 'School Status', schoolStatusUnique
@@ -214,10 +214,10 @@ class ChildDependencyProcessing(Model):
             raise Exception, "More than one values for status/dependency"
         else:
             childDependency = childDependencyUnique[0]
-        
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus, 
+
+        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
         #                                           childDependency)
-	"""
+        """
         return workStatus, schoolStatus, childDependency
 
 

@@ -76,7 +76,7 @@ class ConfigParser(object):
 
     """
     The class defines the parser for translating the model configuration
-    file into python objects for execution.  
+    file into python objects for execution.
     """
 
     def __init__(self, configObject, component=None):
@@ -355,11 +355,11 @@ class ConfigParser(object):
                 tempComponent.analysisInterval = startInterval + i
                 componentList.append(tempComponent)
             """
-	    repeatComponentList = [repeatComponent] * (endInterval - startInterval)
-	    for i in range(endInterval - startInterval):
-		repeatComponentList[i].analysisInterval = startInterval + i
-	    componentList += repeatComponentList
-	    """
+            repeatComponentList = [repeatComponent] * (endInterval - startInterval)
+            for i in range(endInterval - startInterval):
+                repeatComponentList[i].analysisInterval = startInterval + i
+            componentList += repeatComponentList
+            """
 
         else:
             component = self.create_component(
@@ -763,7 +763,7 @@ class ConfigParser(object):
         if model_type == 'Log Linear':
             for i in varianceIterator:
                 variance = array([[float(i.get('value'))]])
-            errorSpec = LinearRegErrorSpecification(variance)         
+            errorSpec = LinearRegErrorSpecification(variance)
             model = LogLinearRegressionModel(specification, errorSpec)
         """
 
@@ -1081,22 +1081,22 @@ class ConfigParser(object):
                     specification = Specification([var], coefficients)
                     model = LinearRegressionModel(specification, errorSpec)
                     model_type = 'regression'
-                    model_object = SubModel(model, model_type, var, dataFilter + [dataFilterLoc], 
+                    model_object = SubModel(model, model_type, var, dataFilter + [dataFilterLoc],
                                             runUntilFilter, seed=seed, filter_type=filter_type,
                                             run_filter_type=run_filter_type)
                     self.model_list.append(model_object)
 
                     #Models to populate the travel time from destination variable
-                    var = 'tt_from' 
+                    var = 'tt_from'
                     coefficients = [{'%s%s'%(var, i+1):1}]
                     specification = Specification([var], coefficients)
                     model = LinearRegressionModel(specification, errorSpec)
                     model_type = 'regression'
-                    model_object = SubModel(model, model_type, var, dataFilter + [dataFilterLoc], 
+                    model_object = SubModel(model, model_type, var, dataFilter + [dataFilterLoc],
                                             runUntilFilter, seed=seed, filter_type=filter_type,
                                             run_filter_type=run_filter_type)
                     self.model_list.append(model_object)
-		    """
+                    """
                     # Models to populate the location id variable
                     coefficients = [{'%s%s' % (destinationField, i + 1): 1}]
                     specification = Specification(choice, coefficients)
@@ -2895,7 +2895,7 @@ class ConfigParser(object):
 
         writeToTable2 = component_element.get('write_to_table_2')
 
-        """    
+        """
         prim_keys = component_element.get('key')
         if prim_keys is not None:
             prim_keys = re.split('[,]', prim_keys)
@@ -2913,23 +2913,23 @@ if __name__ == '__main__':
     import time
     """
     from numpy import zeros, random
-    fileloc = '/home/kkonduri/simtravel/test/config.xml' 
+    fileloc = '/home/kkonduri/simtravel/test/config.xml'
     configObject = etree.parse(fileloc)
     conf_parser = ConfigParser(configObject)
     component_list = conf_parser.parse_models()
-    
+
     colnames = ['one', 'age', 'parttime', 'telcomm', 'empserv', 'commtime', 'popres',
                 'numchild', 'numdrv', 'respb', 'autoworkmode', 'gender', 'numadlts',
                 'numadltsgender', 'schstat',
-                'daystart', 'dayend', 'numjobs', 'workstart1', 'workend1', 
-                'workstat', 'workloc', 'numadlts', 'timeend', 
+                'daystart', 'dayend', 'numjobs', 'workstart1', 'workend1',
+                'workstat', 'workloc', 'numadlts', 'timeend',
                 'numvehs', 'schdailystatus', 'actdestination', 'actduration']
-    
+
     cols = len(colnames)
     cols_dep = 15
-    
+
     ti = time.time()
-    
+
     proc_time = []
     for i in range(4):
         rows = 10**(i)
@@ -2937,12 +2937,12 @@ if __name__ == '__main__':
 
         ti = time.time()
         rand_input = random.random_integers(1, 4, (rows,cols - cols_dep))
-    
+
         data = zeros((rows, cols))
 
         data[:,:cols-cols_dep] = rand_input
         data = DataArray(data, colnames)
-    
+
         #print data.data[0,:]
 
 
@@ -2954,7 +2954,7 @@ if __name__ == '__main__':
         diff = time.time()-ti
         proc_time.append(diff)
         print '\tTIME ELAPSED USING ARRAY FORMAT - %.2f' %(diff)
-    
+
 
     """
 
@@ -3007,11 +3007,11 @@ if __name__ == '__main__':
         if c> 10:
             break
         print i.household_id
-        
+
     print 'records read', c
-    
-    
-    
+
+
+
 
 
     # create a mapper object
@@ -3038,7 +3038,7 @@ if __name__ == '__main__':
     class_name = 'School'
     newobject.delete_all(class_name)
 
-    
+
 
 
 

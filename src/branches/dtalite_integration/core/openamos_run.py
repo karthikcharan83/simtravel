@@ -34,7 +34,7 @@ parser.add_argument('-year', help="""this attribute specifies the year for which
 
 def run(argsGFromFuncCall=None):
     """
-    Runs the OpenAMOS program to simulate the activity-travel choices as 
+    Runs the OpenAMOS program to simulate the activity-travel choices as
     indicated by the models and their specifications in the config file.
 
     Please refer to OpenAMOS documentation on www.simtravel.wikispaces.asu.edu
@@ -104,25 +104,25 @@ def run(argsGFromFuncCall=None):
         simulationManagerObject.divide_database(numParts)
         simulationManagerObject.parse_config()
         simulationManagerObject.clean_database_tables()
-	
-	
-	simulationManagerObject.setup_cacheDatabase()
-	simulationManagerObject.setup_inputCacheTables()
-    	queryBrowser = simulationManagerObject.setup_databaseConnection()
-	simulationManagerObject.setup_tod_skims()
-    	simulationManagerObject.setup_location_information(queryBrowser)
-    	simulationManagerObject.close_database_connection(queryBrowser)    
-	
 
-	# Everything related to parts from here on ....
+
+        simulationManagerObject.setup_cacheDatabase()
+        simulationManagerObject.setup_inputCacheTables()
+        queryBrowser = simulationManagerObject.setup_databaseConnection()
+        simulationManagerObject.setup_tod_skims()
+        simulationManagerObject.setup_location_information(queryBrowser)
+        simulationManagerObject.close_database_connection(queryBrowser)
+
+
+        # Everything related to parts from here on ....
         partsList = range(numParts)
 
-	# Creating the output cache branches
-	for partId in partsList:
+        # Creating the output cache branches
+        for partId in partsList:
             simulationManagerObject.setup_outputCacheTables(partId+1)
-	    simulationManagerObject.clean_database_tables(partId+1)
+            simulationManagerObject.clean_database_tables(partId+1)
 
-       
+
         #Multiprocessing
         pool = multiprocessing.Pool()
         print partsList
@@ -130,13 +130,13 @@ def run(argsGFromFuncCall=None):
         print argsParallel
 
         pool.map(run_components_in_parallel, argsParallel)
-        
+
         simulationManagerObject.collate_results(numParts)
-        
+
 
 def run_components_in_parallel(args):
     print args
-    
+
     fileLoc = args[0]
     partId = args[1]
     simulationManagerObject = SimulationManager(fileLoc = fileLoc)
@@ -144,7 +144,7 @@ def run_components_in_parallel(args):
     simulationManagerObject.parse_config()
     simulationManagerObject.run_components(partId)
     simulationManagerObject.close_cache_connection()
-    
+
 """
 
 if __name__ == "__main__":

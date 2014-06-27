@@ -11,8 +11,8 @@ class InteractionModel(Model):
 
     def calculate_expected_values(self, data):
         """
-        The method returns the product using the coefficients 
-        in the specification input as power. 
+        The method returns the product using the coefficients
+        in the specification input as power.
 
         Inputs:
         data - DataArray object
@@ -29,9 +29,9 @@ class InteractionModel(Model):
 
     def calc_predvalue(self, data, seed=1):
         """
-        The method returns evaluates the product for the 
+        The method returns evaluates the product for the
         different choices using the coefficients in the specification
-        input as power. 
+        input as power.
 
         Inputs:
         data - DataArray object

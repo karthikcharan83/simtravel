@@ -14,7 +14,7 @@ class CountRegressionModel(Model):
     implements both poisson and negative-binomial regression models.
 
     Inputs:
-    count_specification - CountSpecification object 
+    count_specification - CountSpecification object
     """
 
     def __init__(self, count_specification):
@@ -40,8 +40,8 @@ class CountRegressionModel(Model):
     def calc_probabilities(self, data):
         """
         The method returns the probabilities for the different count alternatives
-        for the choice variable under consideration. Based on whether 
-        model is specified as poisson/negative-binomial, the appropriate 
+        for the choice variable under consideration. Based on whether
+        model is specified as poisson/negative-binomial, the appropriate
         probabilities are calculated.
 
         Inputs:

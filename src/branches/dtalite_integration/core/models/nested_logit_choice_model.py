@@ -9,8 +9,8 @@ from openamos.core.errors import SpecificationError
 class NestedLogitChoiceModel(AbstractChoiceModel):
 
     """
-    This is the base class for implementing nested logit choice models 
-    in OpenAMOS. The formulation can accommodate any number of nests, and 
+    This is the base class for implementing nested logit choice models
+    in OpenAMOS. The formulation can accommodate any number of nests, and
     also accommodates variable choice sets across respondents.
 
     Input:
@@ -62,7 +62,7 @@ class NestedLogitChoiceModel(AbstractChoiceModel):
 
     def calc_exp_choice_utilities(self, data, choiceset):
         """
-        The method returns the exponent of the observed portion of the 
+        The method returns the exponent of the observed portion of the
         utility associated with the different choices.
 
         Inputs:
@@ -147,7 +147,7 @@ class NestedLogitChoiceModel(AbstractChoiceModel):
 
     def calc_probabilities(self, data, choiceset):
         """
-        The method returns the selection probability associated with the 
+        The method returns the selection probability associated with the
         the different choices.
 
         Inputs:

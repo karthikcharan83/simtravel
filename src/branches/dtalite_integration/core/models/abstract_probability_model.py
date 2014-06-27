@@ -28,7 +28,7 @@ class AbstractProbabilityModel(object):
 
     def check(self):
         """
-        This method checks the probabilities input and raises appropriate 
+        This method checks the probabilities input and raises appropriate
         error prompts as necessary.
 
         Inputs:
@@ -39,7 +39,7 @@ class AbstractProbabilityModel(object):
 
     def check_probabilities(self):
         """
-        The method checks to make sure that the probabilities is a 
+        The method checks to make sure that the probabilities is a
         valid array object.
 
         Inputs:
@@ -50,7 +50,7 @@ class AbstractProbabilityModel(object):
 
     def check_sum(self):
         """
-        The method checks to make sure that the probabilities add up to 
+        The method checks to make sure that the probabilities add up to
         1 across choices.
 
         Inputs:
@@ -79,7 +79,7 @@ class AbstractProbabilityModel(object):
 
     def generate_random_numbers(self):
         """
-        The method generates a random array for making the choice of 
+        The method generates a random array for making the choice of
         the alternative.
 
         Inputs:

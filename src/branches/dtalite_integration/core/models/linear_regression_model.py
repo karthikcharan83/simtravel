@@ -24,7 +24,7 @@ class LinearRegressionModel(AbstractRegressionModel):
 
     def calc_errorcomponent(self, size, mean=0, sd=1, seed=1):
         """
-        The method returns the contribution of the error in the calculation 
+        The method returns the contribution of the error in the calculation
         of the predicted value for the different choices.
 
         Inputs:
@@ -57,7 +57,7 @@ class LinearRegressionModel(AbstractRegressionModel):
 
     def calc_predvalue(self, data, seed=1):
         """
-        The method returns the predicted value for the different choices in the 
+        The method returns the predicted value for the different choices in the
         specification input.
 
         Inputs:

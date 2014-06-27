@@ -120,10 +120,10 @@ class ChildDependencyAllocation(Model):
                                                                  :]
 
             # if hhldIndex[0] not in [8, 1839, 6006, 13139, 15080, 22501, 25779, 32174,
-            # 			    34664, 35751, 40563, 71887,
-            #			    49815, 57273, 94554, 95335, 96768, 130599, 1353601, 149978]:
+            #                       34664, 35751, 40563, 71887,
+            #                       49815, 57273, 94554, 95335, 96768, 130599, 1353601, 149978]:
             # continue
-            #	pass
+            #   pass
 
             householdObject = Household(hhldIndex[0])
 
@@ -154,11 +154,11 @@ class ChildDependencyAllocation(Model):
             actListJoint += reconciledSchedulesJoint
 
             # if (hhldIndex[0] == 8 or hhldIndex[0] == 6006 or hhldIndex[0] == 13139
-            #	or hhldIndex[0] == 15080 or hhldIndex[0] == 35751
-            # 	or hhldIndex[0] == 95335 or hhldIndex[0] == 57273
-            #	or hhldIndex[0] == 94554 or hhldIndex[0] == 96768
-            #	or hhldIndex[0] == 1353601 or hhldIndex[0] == 149978 or hhldIndex[0] == 155946):
-            #	householdObject.persons[1].print_activity_list()
+            #   or hhldIndex[0] == 15080 or hhldIndex[0] == 35751
+            #   or hhldIndex[0] == 95335 or hhldIndex[0] == 57273
+            #   or hhldIndex[0] == 94554 or hhldIndex[0] == 96768
+            #   or hhldIndex[0] == 1353601 or hhldIndex[0] == 149978 or hhldIndex[0] == 155946):
+            #   householdObject.persons[1].print_activity_list()
             # raw_input()
                 pass
 

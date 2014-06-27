@@ -85,7 +85,7 @@ class DataArray(object):
         for i in columnames:
             colnum = self._colnames[i]
             colsIndex = self.data[:,colnum].argsort(0)
-            
+
             self.data = self.data[colsIndex,:]
         """
 
@@ -293,8 +293,8 @@ class DataArray(object):
 
     def columns(self, columnames, rows=None):
         """
-        the method retrieves and returns a dataarray of columnames that 
-        were passed to the method. 
+        the method retrieves and returns a dataarray of columnames that
+        were passed to the method.
         """
         if not isinstance(columnames, list):
             return DataError, """the column names input should be a list"""\
@@ -338,7 +338,7 @@ class DataArray(object):
 
     def rowsof(self, rows):
         """
-        the method retrieves and returns a dataarray of rows that 
+        the method retrieves and returns a dataarray of rows that
         were passed to the method.
         """
 
@@ -386,11 +386,11 @@ class DataFilter(object):
 
     Inputs:
     varname - string
-    filter_string - string (less than, greater than, less than equals, 
+    filter_string - string (less than, greater than, less than equals,
     greater than equals, equals, not equals)
     value - numeric value (used for filtering)
     coefficients - dictionary (used for recalculating the varname after say some
-    a certain choice process was simulated)  
+    a certain choice process was simulated)
     """
 
     def __init__(self, varname, filter_string, value, filter_type=None):
