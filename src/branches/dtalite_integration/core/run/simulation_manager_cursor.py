@@ -534,51 +534,6 @@ class SimulationManager(object):
         self.close_database_connection(queryBrowser)
         print '-- TIME TAKEN  TO COMPLETE ALL COMPONENTS - %.4f --' % (time.time() - t_c)
 
-    """
-    def identify_skims_matrix(self, comp):
-        ti = time.time()
-        if len(comp.spatialConst_list) == 0 and len(comp.dynamicspatialConst_list) == 0:
-            # When there are no spatial constraints to be processed
-            # return an empty skims object
-            ttTableLocation = None
-            distTableLocation = None
-            pass
-        else:
-            analysisInterval = comp.analysisInterval
-
-            if comp.analysisInterval is not None:
-                ttTableLocation = self.projectSkimsObject.lookup_ttTableLocation(
-                    analysisInterval)
-                distTableLocation = self.projectSkimsObject.lookup_distTableLocation(
-                    analysisInterval)
-            else:
-                # Corresponding to the morning peak
-                # currently fixed can be varied as need be
-                ttTableLocation = self.projectSkimsObject.lookup_ttTableLocation(
-                    240)
-                distTableLocation = self.projectSkimsObject.lookup_distTableLocation(
-                    240)
-
-        print '\tSkims Matrix Identified in - %.4f' % (time.time() - ti)
-        return ttTableLocation, distTableLocation
-
-    def load_skims_matrix(self, comp, ttTableLocation, distTableLocation):
-
-        print 'tt Table Location - ', ttTableLocation
-        print 'dist Table Location - ', distTableLocation
-
-        #raw_input("check memory before creating travel skims -- ")
-        self.skimsMatrix.set_tt_fileString(ttTableLocation)
-        self.skimsMatrix.set_dist_fileString(distTableLocation)
-        self.skimsMatrix.create_graph()
-
-        # print 'TRAVEL Skims object created --'
-        #raw_input("check memory after distance skims -- ")
-        # print 'Check travel times -- ', self.skimsMatrix.get_travel_times(array([1,2,3,4]), array([1,2,3,4]))
-        # print 'Check distances -- ', self.skimsMatrix.get_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
-        # print 'Check generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
-        #raw_input("Check values -- ")
-    """
     def save_configFile(self, configParser, partId):
         return
         """"
