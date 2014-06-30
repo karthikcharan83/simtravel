@@ -112,9 +112,7 @@ void get_dist(struct Mode mode, int skim_index, int *origin, int *dest, double *
             continue;
         }
         dist[x] = mode.skims[skim_index].dist_matrix[origin[x]][dest[x]];
-        //printf("\nthis is what is assigned - %d,%d,%.4f", origin[x], dest[x],res.data[x]);   
     }
-    //printf("\nC--> Travel times retrieved");
 }
 
 void get_tt(struct Mode mode, int skim_index, int *origin, int *dest, double *tt, double *votd, int size)
@@ -137,24 +135,10 @@ void get_tt(struct Mode mode, int skim_index, int *origin, int *dest, double *tt
         tempdist = mode.skims[skim_index].dist_matrix[origin[x]][dest[x]];
 
 	tt[x] = temptt + tempdist*votd[x];
-
-	//printf("Dist - %f\n", temp);
-        //printf("\nthis is what is assigned - %d,%d,%.4f", origin[x], dest[x],res.data[x]);   
-    }
-    //printf("\nC--> Travel times retrieved");
-}
-
-void assign_random_nodes(int count, int nodes_list, int nodes_count, int *locations, int row_index, int seed)
-{
-    int x, rand_num, rand_int;
-    srand(seed);
-
-    for ( x = 0; x < count; x++ )
-    {
-        rand_num = rand();
-        rand_int = rand_num % 100;
-
-        //printf("\nthis is the random number -%d, rand int - %d for index - %d", rand_num, rand_int, x+1);
+        if (tt[x] < 3)
+        {
+            tt[x] = 3;
+        }
     }
 }
 
@@ -193,6 +177,8 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
     int* nodes_checked_copy;
     int* nodes_checked;
 
+    srand(0);
+
     nodes_checked_copy = (int *)malloc(nodes_available_size*sizeof(int));
  
     for (x = 0; x < nodes_available_size; x++)
@@ -212,8 +198,10 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
 
         count_sampled = 0;
         count_nodes = 0;
-	seed_x = seed[x];
-        srand(seed_x);
+	//seed_x = seed[x];
+        //srand(seed_x); TODO: Moving this to outside the loop because the seed
+        // is same across individuals needs to be changed once seed varies across
+        // individuals
 
         // Implementation where the number of options is less than the count
         if (nodes_available_size <= count)
@@ -229,6 +217,16 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
 
                 gen_tt_from = tt_from + dist_from*votd[x];
                 gen_tt_to = tt_to + dist_to*votd[x];
+
+	        if (gen_tt_from < 3)
+	        {
+	            gen_tt_from = 3;
+	        }
+
+	        if (gen_tt_to < 3)
+	        {
+	            gen_tt_to = 3;
+	        }
 
                 if (gen_tt_from + gen_tt_to <= available_tt[x])
                 {
@@ -248,9 +246,11 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
         //print_1d_array(nodes_checked_copy, nodes_available_size);
         memset(nodes_checked, 0, nodes_available_size*sizeof(int));
 
+        //printf("\nFirst origin-%d,dest-%d", origin[x],dest[x]);
         while((count_sampled < count) & (count_nodes < nodes_available_size))
         {
             rand_node_index = rand() % nodes_available_size;
+            //printf("\n\t%d rand node is - %d",count_sampled, nodes_available[rand_node_index]);
             if (nodes_checked[rand_node_index] == 1)
             {
                 continue;
@@ -268,6 +268,16 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
             gen_tt_from = tt_from + dist_from*votd[x];
             gen_tt_to = tt_to + dist_to*votd[x];
 
+	    if (gen_tt_from < 3)
+	    {
+	        gen_tt_from = 3;
+	    }
+
+	    if (gen_tt_to < 3)
+	    {
+	        gen_tt_to = 3;
+	    }
+
 
             if (gen_tt_from + gen_tt_to <= available_tt[x])
             {
@@ -276,84 +286,27 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
                 //printf("\nThis node is selected - %d ", node);
             }
         }
-        //printf("\nThis is how many were scanned - %d and found - %d\n", count_nodes, count_sampled);
-        free(nodes_checked);
-        /*
-        for (y = 0; y < nodes_available_size; y++)
-        {
-            node = nodes_available[y]
-            tt_from = mode.skims[skim_index].tt_matrix[origin[x]][node]
-            tt_to = mode.skims[skim_index].tt_matrix[node][dest[x]] 
-         
-            if ((nodes_available[x*nodes_available_size + y] != 0) &
-                (tt_from + tt_to <= available_tt[x]))
-            {
-                printf("Conditions satisfied");
-            }
-
-            
-	   
-        }
-        */
-
-        
     }
-
-
-
 }
  
-/*
 
-    if (nodes_available_size == mode.nodes)
-    {
-        printf("\nDon't need to selectively scan");
-        for (x = 0; x < size; x++)
-        {
-            from = origin[x];
-            to = dest[x];
-            available_time = available_tt[x]
-
-            for (node = 1; node <= mode.nodes; node++)
-            {
-                temptt_from = mode.skims[skim_index].tt_matrix[from][node];
-                temptt_to = mode.skims[skim_index].tt_matrix[from][to];    
-                if (temptt_from + temptt_to <= available_tt)
-                {
-                    nodes_indicator[node-1] = 1;
-                }
-                else
-                {
-                    nodes_indicator[node-1] = 0;
-                }
-            get_random_locations(count, 
-            }
-        }
-    }
-    else 
-    {
-        printf("\nNeed to selectively scan");
-    }
-
-*/
-
-
-
-/*
-void release_tt_snapshot_memory(struct Mode mode)
+void release_memory(struct Mode mode)
 {
-    int x;
-    
-    //delete all the rows
-    for (x = 0; x < mode.nodes; x++)
+    int x, y;
+
+    for(x = 0; x <= mode.count_skims; x++)
     {
-        free(mode.tt_snapshots.graph[x]);
+	for(y = 0; y <= mode.count_skims; y++)
+        {
+	    free(mode.skims[x].tt_matrix[y]);
+	    free(mode.skims[x].dist_matrix[y]);
+	}
+        free(mode.skims[x].tt_matrix);
+        free(mode.skims[x].dist_matrix);
     }
-    
-    //delete the pointer to the array
-    free(mode.tt_snapshots.graph);  
+    mode.skims[x].tt_matrix = NULL;
+    mode.skims[x].dist_matrix = NULL;
+    printf("\nC--> Graph deleted");
         
-    //set the pointer to NULL to avoid any memory access
-    mode.tt_snapshots.graph = NULL;
 }
-*/
+

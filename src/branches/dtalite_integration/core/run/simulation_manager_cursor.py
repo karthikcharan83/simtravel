@@ -17,7 +17,7 @@ from openamos.core.data_array import DataArray
 from openamos.core.cache.dataset import DB
 from openamos.core.models.abstract_probability_model import AbstractProbabilityModel
 from openamos.core.models.interaction_model import InteractionModel
-from openamos.core.travel_skims.skimsprocessor import SkimsProcessor
+from openamos.core.travel_skims.skimsprocessor import NetworkConditions
 #from openamos.core.travel_skims.distprocessor import DistProcessor
 #from openamos.core.travel_skims.successive_avg_processor import SuccessiveAverageProcessor
 
@@ -220,6 +220,22 @@ class SimulationManager(object):
         self.backup_result_tabulations(backupDirectoryLoc)
 
         self.close_database_connection(queryBrowser)
+
+    def setup_network_conditions(self):
+        ti = time.time()
+        self.networkConditions = NetworkConditions()
+        #TODO: Repeat this for all modes
+
+        loc_dict = self.projectSkimsObject.return_tablelocdict()
+        endIntervalForSkims = self.projectSkimsObject.ttIntervalEnd
+        
+        self.networkConditions.add_mode(175, 48, "auto", 1,  "historic", 1, endIntervalForSkims)
+        print "Loading using text as inputs"
+        self.networkConditions.read_skims(loc_dict, "auto", "historic")
+        print "Time taken to read skims is - %.4f" %(time.time()-ti)
+        #print "Skim for minute 29 - ",  self.modalConditions.modes["Historic Skims"].lookup_skim_index(29)
+        #print "Skim for minute 30 - ",  self.modalConditions.modes["Historic Skims"].lookup_skim_index(30)        
+        #print "Skim for minute 31 - ",  self.modalConditions.modes["Historic Skims"].lookup_skim_index(31)                
 
     def backup_result_tabulations(self, fileLoc):
         app = QApplication(sys.argv)
@@ -461,48 +477,17 @@ class SimulationManager(object):
             # note that the taz id's should be indexed at the offset and be in increments
             # of 1 for every subsequent taz id
 
-            self.skimsMatrix = SkimsProcessor(1, 1995)
-
             for comp in self.componentList:
                 t = time.time()
                 print '\nRunning Component - %s; Analysis Interval - %s' % (comp.component_name,
                                                                             comp.analysisInterval)
 
-                # if comp.component_name not in ["AfterSchoolActivities", "PersonAttributesRuntime"]:
-                #    continue
-                # for model in comp.model_list:
-                #    print "\tModel name - %s and formulation - %s" %(model.dep_varname, model.model_type), model.data_filter
-                # raw_input()
-
                 if comp.skipFlag:
                     print '\tSkipping the run for this component'
                     continue
 
-                # Load skims matrix outside so that when there is temporal aggregation
-                # of tod skims then loading happens only so many times
-
-                t_sk = time.time()
-                ttTableLoc, distTableLoc = self.identify_skims_matrix(comp)
-
-                if ttTableLoc <> lastTtTableLoc and (len(comp.spatialConst_list) > 0 or len(comp.dynamicspatialConst_list) > 0):
-                    # Load the skims matrix
-                    print """\tThe tod interval for the the previous component is not same """\
-                        """as current component. """\
-                        """Therefore the skims matrix should be reloaded."""
-
-                    self.load_skims_matrix(comp, ttTableLoc, distTableLoc)
-
-                    lastTtTableLoc = ttTableLoc
-
-                elif ttTableLoc == lastTtTableLoc:
-                    print """\tThe tod interval for the the previous component is same """\
-                        """as current component. """\
-                        """Therefore the skims matrix need not be reloaded."""
-                print '\tTime taken to process skims %.4f' % (time.time() - t_sk)
-                #raw_input('\tPress any key to continue')
-
                 data = comp.pre_process(queryBrowser,
-                                        self.skimsMatrix,
+                                        self.networkConditions,
                                         self.db, self.projectConfigObject.seed)
 
                 if data is not None:
@@ -511,7 +496,7 @@ class SimulationManager(object):
                     # data is written to the hdf5 cache because of the faster
                     # I/O
                     nRowsProcessed, nRowsProcessed2 = comp.run(
-                        data, self.skimsMatrix, partId)
+                        data, self.networkConditions, partId)
 
                     # Write the data to the database from the hdf5 results cache
                     # after running each component because the subsequent components
@@ -549,6 +534,7 @@ class SimulationManager(object):
         self.close_database_connection(queryBrowser)
         print '-- TIME TAKEN  TO COMPLETE ALL COMPONENTS - %.4f --' % (time.time() - t_c)
 
+    """
     def identify_skims_matrix(self, comp):
         ti = time.time()
         if len(comp.spatialConst_list) == 0 and len(comp.dynamicspatialConst_list) == 0:
@@ -592,8 +578,10 @@ class SimulationManager(object):
         # print 'Check distances -- ', self.skimsMatrix.get_travel_distances(array([1,2,3,4]), array([1,2,3,4]))
         # print 'Check generalized cost tt + dist*2 -- ', self.skimsMatrix.get_generalized_time(array([1,2,3,4]), array([1,2,3,4]))
         #raw_input("Check values -- ")
-
+    """
     def save_configFile(self, configParser, partId):
+        return
+        """"
         if partId is not None:
             fileLoc = '%s_par_%s.xml' % (self.fileLoc[:-4], partId)
         else:
@@ -601,6 +589,7 @@ class SimulationManager(object):
         configFile = open(fileLoc, 'w')
         configParser.configObject.write(configFile, pretty_print=True)
         configFile.close()
+        """
 
     def reflectFromDatabaseToCache(self, queryBrowser, tableName, partId=None):
         print 'Backing table - ', tableName

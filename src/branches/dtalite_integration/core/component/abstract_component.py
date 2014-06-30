@@ -754,7 +754,7 @@ class AbstractComponent(object):
 
         return location_subset_filter
 
-    def sample_location_choices(self, data, skimsMatrix2, spatialconst):
+    def sample_location_choices(self, data, skimsMatrix, spatialconst):
         # extract destinations subject to the spatio-temporal
         # constraints
 
@@ -830,30 +830,40 @@ class AbstractComponent(object):
         # print 'Time Available - ', timeAvailable[:,0].astype(int)
 
         # print spatialconst.countChoices, data.rows
-        skimsMatrix2.create_location_array(data.rows)
+        #skimsMatrix.create_location_array(data.rows)
         seed = self.analysisInterval
-        locationChoices = skimsMatrix2.get_location_choices(originLocColVals[:, 0], destinationLocColVals[:, 0],
-                                                            timeAvailable[:, 0], votdColVals[
-                                                                :, 0], spatialconst.countChoices,
-                                                            uniqueIds, seed)
+        #print "Inside location choices-", self.analysisInterval
+        #print "seed",  seed,  type(seed)
+
+        locationChoices = skimsMatrix.modes["auto"]["historic"].get_locations(self.analysisInterval, 
+                                                            originLocColVals[:, 0], 
+                                                            destinationLocColVals[:, 0],
+                                                            timeAvailable[:, 0], 
+                                                            uniqueIds, 
+                                                            spatialconst.countChoices,
+                                                            seed, 
+                                                            votdColVals[:, 0])
 
         # print 'count of valid locations - ', (locationChoices <> 0).sum(-1)
         locValidCount = (locationChoices <> 0).sum(-1)
         data.setcolumn('count', locValidCount)
 
-        # print locationChoices
+        #print "Origin", originLocColVals[:, 0]
+        #print "Dest", destinationLocColVals[:, 0]
+        #print "Available time",  timeAvailable[:, 0]
+        #print locationChoices
 
         for i in range(spatialconst.countChoices):
             sampleLocColVals = locationChoices[:, i].astype(int)
 
-            tt_to = skimsMatrix2.get_generalized_time(
+            tt_to = skimsMatrix.modes["auto"]["historic"].get_tt(self.analysisInterval,
                 originLocColVals[:, 0], sampleLocColVals, votdColVals[:, 0])
-            tt_from = skimsMatrix2.get_generalized_time(
+            tt_from = skimsMatrix.modes["auto"]["historic"].get_tt(self.analysisInterval,
                 sampleLocColVals, destinationLocColVals[:, 0], votdColVals[:, 0])
 
-            # print 'Sampled locations - ', sampleLocColVals
-            # print 'Travel time to - ', tt_to
-            # print 'Travel time from - ', tt_from
+            #print 'Sampled locations - ', sampleLocColVals
+            #print 'Travel time to - ', tt_to
+            #print 'Travel time from - ', tt_from
 
             # Updating the location columns
             colName = '%s%s' % (sampleVarName, i + 1)
@@ -884,6 +894,7 @@ class AbstractComponent(object):
                     data.setcolumn(locationVarName, locVarVals)
                     # print locVarVals
 
+        #raw_input("Check Locations")
         return data
 
     def extract_skims(self, data, skimsMatrix, spatialconst):
@@ -912,11 +923,18 @@ class AbstractComponent(object):
         # print data.columns(['houseid','personid']).data[:5,:].astype(int)
 
         #tt = skimsMatrix.get_travel_times(originLocColVals[:,0], destinationLocColVals[:,0])
-        dist = skimsMatrix.get_travel_distances(
+        #print "-->", originLocColVals.shape, destinationLocColVals.shape
+        #print "-->", data.columns([destinationLocColName]).data.shape
+        #print self.analysisInterval
+        #TODO:Need to generalize this to all modes
+        dist = skimsMatrix.modes["auto"]["historic"].get_dist(self.analysisInterval, 
             originLocColVals[:, 0], destinationLocColVals[:, 0])
-        tt = skimsMatrix.get_generalized_time(
+        tt = skimsMatrix.modes["auto"]["historic"].get_tt(self.analysisInterval,
             originLocColVals[:, 0], destinationLocColVals[:, 0], votdColVals[:, 0])
-
+        #print "Origin", originLocColVals[:, 0]
+        #print "Dest", destinationLocColVals[:, 0]
+        #print "TT", tt
+        #print "Dist", dist        
         # if (tt < 3).any():
         # print 'TTS', tt[tt<3]
         # print 'IDS', data.columns(['houseid','personid']).data.astype(int)[tt<3]
@@ -924,8 +942,8 @@ class AbstractComponent(object):
         # print 'Destination', destinationLocColVals[tt<3]
         #raw_input('Travel time less 3')
 
-        # print 'gen tt', tt
-        # print 'distance', dist
+        #print 'gen tt', tt
+        #print 'distance', dist
 
         if spatialconst.asField:
             colName = spatialconst.asField
@@ -948,58 +966,6 @@ class AbstractComponent(object):
         # print tt
 
         return data
-
-    def sample_choices(self, data, destLocSetInd, zoneLabels, count, sampleVarName, seed):
-        destLocSetInd = destLocSetInd[:, 1:]
-        # print 'number of choices - ', destLocSetInd.shape
-        # raw_input()
-        ti = time.time()
-        for i in range(count):
-            destLocSetIndSum = destLocSetInd.sum(-1)
-            # print 'Number of choices', destLocSetIndSum
-
-            probLocSet = (
-                destLocSetInd.transpose() / destLocSetIndSum).transpose()
-
-            zeroChoices = destLocSetIndSum.mask
-            # print 'zero choices', zeroChoices
-            if (~zeroChoices).sum() == 0:
-                continue
-
-            #probLocSet = probLocSet[zeroChoices,:]
-            # print probLocSet.shape, len(zoneLabels), 'SHAPES -- <<'
-            probDataArray = DataArray(probLocSet, zoneLabels)
-
-            # seed is the count of the sampled destination starting with 1
-            probModel = AbstractProbabilityModel(
-                probDataArray, self.projectSeed + seed + i)
-            res = probModel.selected_choice()
-
-            # Assigning the destination
-            # We subtract -1 from the results that were returned because the
-            # abstract probability model returns results indexed at 1
-            # actual location id = choice returned - 1
-
-            colName = '%s%s' % (sampleVarName, i + 1)
-            nonZeroRows = where(res.data <> 0)
-            # print 'SELECTED LOCATIONS FOR COUNT - ', i+1
-            # print res.data[:,0]
-            #actualLocIds = res.data[nonZeroRows]
-            #actualLocIds[nonZeroRows] -= 1
-            # print actualLocIds
-            data.setcolumn(colName, res.data)
-            # print data.columns([colName]).data[:,0]
-            # raw_input()
-
-            # Retrieving the row indices
-            dataCol = data.columns([colName]).data
-
-            rowIndices = array(xrange(dataCol.shape[0]), int)
-            #rowIndices = 0
-            colIndices = res.data.astype(int)
-
-            destLocSetInd.mask[rowIndices, colIndices - 1] = True
-        # print "\t\t -- Sampling choices took - %.4f" %(time.time()-ti)
 
     def check_sampled_choices(self, data, sampledVarNames):
         for i in range(len(sampledVarNames)):

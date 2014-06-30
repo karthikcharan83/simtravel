@@ -33,6 +33,9 @@ class TravelSkimsInfo(object):
 
     def __init__(self):
         self.table_lookup = {}
+        self.ttIndexLookup = {}
+        self.ttIntervalEnd=[]
+        self.count = 0
         self.table_ttLocationLookup = {}
         self.table_distLocationLookup = {}
         self.tableDBInfoList = []
@@ -43,8 +46,9 @@ class TravelSkimsInfo(object):
                             tt_skim_var, tt_fileLocation, tt_delimiter,
                             dist_skim_var, dist_fileLocation, dist_delimiter):
 
-        if tableName not in self.tableNamesList:
-            dbInfoObject = TravelSkimsPeriodDBInfo(tableName, origin_var,
+        if tableName in self.tableNamesList:
+            return
+        dbInfoObject = TravelSkimsPeriodDBInfo(tableName, origin_var,
                                                    destination_var,
                                                    intervalStart,
                                                    intervalEnd,
@@ -56,16 +60,22 @@ class TravelSkimsInfo(object):
                                                    dist_skim_var,
                                                    dist_fileLocation,
                                                    dist_delimiter)
-            print 'Skim added - ', dbInfoObject
+        print 'Skim added - ', dbInfoObject
 
-            self.tableDBInfoList.append(dbInfoObject)
-            self.tableNamesList.append(tableName)
+        self.tableDBInfoList.append(dbInfoObject)
+        self.tableNamesList.append(tableName)
         self.add_tableLookup(intervalStart, intervalEnd, tableName)
         self.add_ttTableLocationLookup(
             intervalStart, intervalEnd, tt_fileLocation)
         self.add_distTableLocationLookup(
             intervalStart, intervalEnd, dist_fileLocation)
+        self.add_tableIndexLookup(intervalStart, intervalEnd)
+        self.count = self.count + 1
+        self.ttIntervalEnd.append(intervalEnd)
 
+    def add_tableIndexLookup(self, intervalStart, intervalEnd):
+        self.ttIndexLookup[(intervalStart, intervalEnd)] = self.count
+        
     def add_tableLookup(self, intervalStart, intervalEnd, tableName):
         self.table_lookup[(intervalStart, intervalEnd)] = tableName
         # print '\tSkims table name - %s applies for interval starting at %s and ending at %s' %(tableName, intervalStart,
@@ -91,6 +101,15 @@ class TravelSkimsInfo(object):
 
         return None
 
+    def lookup_ttIndex(self, period):
+        period_boundaries = self.table_ttIndexLookup.keys()
+
+        for boundary in period_boundaries:
+            if period >= boundary[0] and period <= boundary[1]:
+                return self.ttIndexLookup[boundary]
+
+        return None
+
     def lookup_ttTableLocation(self, period):
         period_boundaries = self.table_ttLocationLookup.keys()
         period_boundaries.sort()
@@ -100,6 +119,17 @@ class TravelSkimsInfo(object):
                 return self.table_ttLocationLookup[boundary]
 
         return None
+
+    def return_tablelocdict(self):
+        tablelocdict = {}
+        period_boundaries = self.table_ttLocationLookup.keys()
+        period_boundaries.sort()
+        
+        for i in range(len(period_boundaries)):
+            boundary = period_boundaries[i]
+            loc = self.table_ttLocationLookup[boundary]
+            tablelocdict[i]=loc
+        return tablelocdict
 
     def lookup_distTableLocation(self, period):
         period_boundaries = self.table_distLocationLookup.keys()

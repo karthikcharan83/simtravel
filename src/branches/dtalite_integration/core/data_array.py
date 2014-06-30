@@ -125,7 +125,7 @@ class DataArray(object):
         """
         ti = time.time()
         result = zeros((self.rows,))
-        print '\tCoefficients vector', coefficients
+        #print '\tCoefficients vector', coefficients
         for i in coefficients.keys():
             if type(i) is tuple:
                 # print 'the interaction var expressed as tuple', i
@@ -134,8 +134,8 @@ class DataArray(object):
                     if k[:4].lower() == 'inv_':
                         k = k[4:]
                     prodCoeffDict[k] = 1.
-                print 'the interaction product coeff', prodCoeffDict
-                print 'inverse dict', inverseDict
+                #print 'the interaction product coeff', prodCoeffDict
+                #print 'inverse dict', inverseDict
                 temp = self.calculate_product(
                     prodCoeffDict, inverse=inverseDict)
                 # print '\tproduct', temp[:5], coefficients[i]
@@ -147,7 +147,7 @@ class DataArray(object):
             result = ne.evaluate(exprStr)
             # print '\tvar - %s and coeff - %.4f' %(i, coefficients[i])
             # print '\tmoving result value - ', result[:5]
-        print '\t\t\tNumexpr approach for linear combination - %.4f' % (time.time() - ti)
+        #print '\t\t\tNumexpr approach for linear combination - %.4f' % (time.time() - ti)
 
         if rows is not None:
             return result[rows]

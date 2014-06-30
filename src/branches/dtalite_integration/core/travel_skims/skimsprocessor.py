@@ -1,22 +1,50 @@
 import numpy as np
 import time as t
-import skimsquery_new as sk
+import bisect
+import skimsquery as sk
 
-from openamos.core.errors import ModalOptionsError
+from collections import defaultdict
+from openamos.core.errors import NetworkError
 
-class ModalOptions(object):
+class NetworkConditions(object):
     def __init__(self):
-        self.modes = {}
+        self.modes = defaultdict(dict)
 
-    def add_mode(self, nodes, count_skims, desc):
-        self.modes[desc] = Mode(nodes, count_skims)
+    def add_mode(self, nodes, count_skims, mode, mode_value,  
+                   information_type,  information_type_value, enIntTrigger):
+        modeObj = Mode(nodes, count_skims, mode, enIntTrigger)
+        self.modes[mode][information_type] = modeObj
+        self.modes[mode_value][information_type_value] = modeObj
+    
+    def read_skims(self, loc_dict, mode=None, information_type=None, mode_value=None, information_type_value=None):
+        errorMsg = ("""Invalid inputs for reading skims
+                   mode - %s, information_type - %s, mode_value - %s, 
+                   information_type - %s. Enter valid values for 
+                   either mode and information_type or mode_value and 
+                    information_type_value""" %(mode, information_type, 
+                                                       mode_value, 
+                                                       information_type_value))
+        if mode == None and information_type == None:
+            if mode_value == None | information_type == None:
+                raise NetworkError, errorMsg
+            self.modes[mode_value][information_type_value].read_skims(loc_dict)
+        elif mode == None or information_type == None:
+            raise NetworkError, errorMsg
+        else:
+            self.modes[mode][information_type].read_skims(loc_dict)
+    
+    def __del__(self):
+        for mode, modedict in self.modes.iteritems():
+            for information_type, modeObj in modedict.iteritems():
+                del(modeObj)
 
 class Mode(object):
-    def __init__(self, nodes, count_skims, desc):
+    def __init__(self, nodes, count_skims, desc, enIntTrigger):
         self.nodes = nodes
         self.count_skims = count_skims
         self.desc = desc
         self._create_mode_object()
+        self.enIntTrigger = enIntTrigger
 
     def _create_mode_object(self):
         mode = sk.Mode()
@@ -24,6 +52,12 @@ class Mode(object):
         mode.count_skims = self.count_skims
         mode.desc = self.desc
         self._c_mode = sk.alloc_mode(mode)
+
+    def lookup_skim_index(self, interval):
+        if interval == None:
+            interval = 240
+        skim_index = bisect.bisect_left(self.enIntTrigger, interval)
+        return skim_index
 
     def read_skims(self, loc_dict):
         for key, value in loc_dict.iteritems():
@@ -35,23 +69,28 @@ class Mode(object):
                                    is not a valid integer - %s""" %(str))
             sk.populate_skim(self._c_mode, key, value)
 
-    def get_tt(self, skim_index,  origin,  dest,  votd=None):
+    def get_tt(self, interval,  origin,  dest,  votd=None):
+        skim_index = self.lookup_skim_index(interval)
         size = origin.shape[0]
         tt = np.zeros(size, dtype=np.double)
         if votd == None:
             votd = np.zeros(size, dtype=np.double)
-        sk.get_tt_w(self._c_mode,  skim_index,  origin,  dest,  tt, votd,  size)
+        sk.get_tt_w(self._c_mode,  skim_index,  origin,  dest,  tt, votd,  size)        
         return tt
 
-    def get_dist(self, skim_index,  origin,  dest):
+    def get_dist(self, interval,  origin,  dest):
+        skim_index = self.lookup_skim_index(interval)
         size = origin.shape[0]
         dist = np.zeros(size, dtype=np.double)
         sk.get_dist_w(self._c_mode,  skim_index,  origin,  dest,  dist, size)
         return dist
 
-    def get_locations(self, skim_index, origin, dest, available_tt,
+    def get_locations(self, interval, origin, dest, available_tt,
                         nodes_available, count, seed, votd=None):
+        #TODO: Seed is a int value, need to fix it to array at some point
+        skim_index = self.lookup_skim_index(interval)
         size = origin.shape[0]
+        seed = np.zeros(size, dtype=int) + seed
         locations = np.zeros((size, count), dtype=int)
         if votd == None:
             votd = np.zeros(size, dtype=np.double)
@@ -60,8 +99,9 @@ class Mode(object):
                               locations, count, seed)
         return locations
 
-    def check_locations(self, skim_index, origin, dest, locations,
+    def check_locations(self, interval, origin, dest, locations,
                            count, available_tt, votd=None):
+        skim_index = self.lookup_skim_index(interval)
         size = origin.shape[0]
         if votd == None:
             votd = np.zeros(size, dtype=np.double)
@@ -77,6 +117,7 @@ class Mode(object):
                 print "\tDestination with issue - ", dest[index_incorrect]
                 print "\ttt_from with issue - ", tt_from[index_incorrect]
                 print "\ttt_to with issue - ", tt_to[index_incorrect]
+                raise Exception,  "This is wrong"
 
         #Checking for count of locations sampled
         count_locations = (locations == 0).sum(axis=1)
@@ -88,11 +129,9 @@ class Mode(object):
             print "\tThese are the corresponding origins - ", origin[index]
             print "\tThese are the corresponding destinations - ", dest[index]
 
-
-
 if __name__ == "__main__":
     t_s = t.time()
-    mode = Mode(175, 2, "Historic Skims")
+    mode = Mode(175, 2, "auto", [720, 1440])
     size = 10000
     count = 100
 
@@ -101,6 +140,8 @@ if __name__ == "__main__":
     available_tt = np.zeros(size, dtype = np.double) + 50
     nodes_available = np.array(range(175)) + 1
     seed = np.array(range(size)) + 1
+
+    print origin.shape, dest.shape
 
     loc_dict = {0:"C:\\workspace\\openamos\\core\\travel_skims\\test_data\\skim1_175.csv",
                   1:"C:\\workspace\\openamos\\core\\travel_skims\\test_data\\skim2_175.csv"}

@@ -57,5 +57,5 @@ class SpatioTemporalConstraintError(Exception):
 class PrismConstraintError(Exception):
     pass
 
-class ModalOptionsError(Exception):
+class NetworkError(Exception):
     pass
