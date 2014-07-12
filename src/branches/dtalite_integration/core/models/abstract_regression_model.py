@@ -3,6 +3,7 @@ from scipy import exp
 from openamos.core.models.abstract_model import Model
 from openamos.core.errors import SpecificationError, ErrorSpecificationError
 
+from pandas import DataFrame as df
 
 class AbstractRegressionModel(Model):
 

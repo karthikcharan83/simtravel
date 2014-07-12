@@ -7,7 +7,7 @@ import sys
 import csv
 import subprocess
 from lxml import etree
-from numpy import array, ma, ones, zeros, vstack, where
+from numpy import array, ma, ones, zeros, vstack, where, save
 
 from openamos.core.component.config_parser import ConfigParser
 from openamos.core.database_management.cursor_query_browser import QueryBrowser
@@ -95,18 +95,35 @@ class SimulationManager(object):
         queryBrowser.dbcon_obj.new_connection()
         return queryBrowser
 
-    def setup_cacheDatabase(self, partId=None, mode='w'):
+    def setup_cacheDatabase(self, partId=None):
         print "-- Creating a hdf5 cache database --"
         fileLoc = self.projectConfigObject.location
-        if mode == 'w':
-            self.db = DB(fileLoc)
-            """
-            if partId is not None:
-                self.db = DB(fileLoc, partId)
-            else:
-                self.db = DB(fileLoc)
-            #self.db.create()
-            """
+        self.db = DB()
+
+    def setup_location_information(self):
+        print "-- Processing Location Information --"
+        t = time.time()
+        queryBrowser = self.setup_databaseConnection()
+        colsList = ([self.projectLocationsObject.location_id_var] + 
+                          self.projectLocationsObject.locations_varsList)
+
+        tableName = self.projectLocationsObject.tableName
+        data = queryBrowser.select_all_from_table(tableName, colsList)
+        data.create_index_using_cols([self.projectLocationsObject.location_id_var])
+        #print data.data.head()
+        #raw_input("location data")
+        print '\tTotal time taken to retrieve records from the database %.4f' % (time.time() - t)
+
+        fileLoc = self.projectConfigObject.location
+
+        # the new numpy doesn't work with masked array and hence the conversion
+        # ...
+        #dataCp = array(data.data)
+        file = os.path.join(fileLoc, "%s.csv"%tableName)
+        data.data.to_csv(file, index=False)
+        #save('%s/%s.npy' % (fileLoc, tableName), dataCp)
+        self.close_database_connection(queryBrowser)
+        print '\tTime taken to write to numpy cache format %.4f' % (time.time() - t)
 
     def setup_resultsBackup(self):
         print "-- Creating a hdf5 backup of all results --"
@@ -299,13 +316,6 @@ class SimulationManager(object):
         self.close_cache_connection()
         self.close_database_connection(queryBrowser)
 
-    def read_cacheDatabase(self):
-        fileLoc = self.projectConfigObject.location
-        self.db = DB(fileLoc, mode='a')
-
-    def setup_inputCacheTables(self):
-        self.db.create_inputCache()
-
     def setup_outputCacheTables(self, partId=None):
         self.db.create_outputCache(partId)
 
@@ -396,11 +406,6 @@ class SimulationManager(object):
         f.close()
         return arr
 
-    def setup_location_information(self, queryBrowser):
-        print "-- Processing Location Information --"
-        self.db.createLocationsTableFromDatabase(self.projectLocationsObject,
-                                                 queryBrowser)
-
     def parse_config(self):
         print "-- Parsing components and model specifications --"
         self.componentList = self.configParser.parse_models(
@@ -435,7 +440,6 @@ class SimulationManager(object):
 
     def clean_database_tables(self, partId=None):
         queryBrowser = self.setup_databaseConnection(partId)
-
         tableNamesDelete = []
         for comp in self.componentList:
             if comp.skipFlag:
@@ -486,39 +490,20 @@ class SimulationManager(object):
                     print '\tSkipping the run for this component'
                     continue
 
-                data = comp.pre_process(queryBrowser,
+                preProcessFlag = comp.pre_process(queryBrowser,
                                         self.networkConditions,
-                                        self.db, self.projectConfigObject.seed)
+                                        self.db,  
+                                        self.projectConfigObject.location, 
+                                        self.projectConfigObject.seed)
 
-                if data is not None:
+                if preProcessFlag is True:
                     # Call the run function to simulate the chocies(models)
                     # as per the specification in the configuration file
                     # data is written to the hdf5 cache because of the faster
                     # I/O
-                    nRowsProcessed, nRowsProcessed2 = comp.run(
-                        data, self.networkConditions, partId)
+                    fileLoc = self.projectConfigObject.location
+                    result = comp.run(queryBrowser, fileLoc, self.networkConditions, partId)
 
-                    # Write the data to the database from the hdf5 results cache
-                    # after running each component because the subsequent components
-                    # are often dependent on the choices generated in the previous components
-                    # run
-
-                    if comp.analysisInterval is not None:
-                        createIndex = False
-                        deleteIndex = False
-
-                    else:
-                        createIndex = True
-                        deleteIndex = True
-
-                    self.reflectToDatabase(queryBrowser, comp.writeToTable, comp.keyCols,
-                                           nRowsProcessed, partId, createIndex, deleteIndex)
-                    if comp.writeToTable2 is not None:
-                        self.reflectToDatabase(queryBrowser, comp.writeToTable2, comp.keyCols2,
-                                               nRowsProcessed2, partId, createIndex, deleteIndex)
-
-                    # if nRowsProcessed > 0:
-                    #   raw_input('Check outputs for this component --- ')
                 configParser.update_completedFlag(
                     comp.component_name, comp.analysisInterval)
 
@@ -546,26 +531,6 @@ class SimulationManager(object):
         configFile.close()
         """
 
-    def reflectFromDatabaseToCache(self, queryBrowser, tableName, partId=None):
-        print 'Backing table - ', tableName
-        fileLoc = self.projectConfigObject.location
-        tableRef = self.db.returnTableReference(tableName, partId)
-
-        colsToWrite = tableRef.colnames
-
-        data = queryBrowser.select_all_from_table(tableName, cols=colsToWrite)
-        if data is None:
-            # print '\tNo result returned for the table ... '
-            return
-
-        convType = self.db.returnTypeConversion(tableName, partId)
-        dtypesInput = tableRef.coldtypes
-        data_to_write = data.columnsOfType(colsToWrite, colTypes=dtypesInput)
-
-        ti = time.time()
-        tableRef.append(data_to_write.data)
-        tableRef.flush()
-        print '\t\tData backed up for table %s in - %.4f' % (tableName, time.time() - ti)
 
     def reflectFromDatabaseToLoc(self, queryBrowser, tableName, fileLoc, partId=None):
         ti = time.time()
@@ -588,46 +553,9 @@ class SimulationManager(object):
 
         print '\t\tData backed up for table %s in - %.4f' % (tableName, time.time() - ti)
 
-    def reflectToDatabase(self, queryBrowser, tableName, keyCols=[], nRowsProcessed=0, partId=None, createIndex=True, deleteIndex=True, restore=False):
-        """
-        This will reflect changes for the particular component to the database
-        So that future queries can fetch appropriate run-time columns as well
-        because the output is currently cached on the hard drive and the queries
-        are using tables in the database which only contain the input tables
-        and hence the need to reflect the run-time caches to the database
-        """
-
-        fileLoc = self.projectConfigObject.location
-        table = self.db.returnTableReference(tableName, partId)
-
-        t = time.time()
-
-        # print 'Create index - %s and Delete Index - %s' %(createIndex,
-        # deleteIndex)
-
-        # print '\tNumber of rows processed for this component - ',
-        # nRowsProcessed
-        if nRowsProcessed == 0 and restore == False:
-            return
-
-        resArr = table[-nRowsProcessed:]
-        # print """\t    creating the array object to insert into table - %s took - %.4f""" %(tableName,
-        # time.time()-t)
-
-        if resArr.shape[0] == 0:
-            print '\tNo rows to write ...'
-            return
-        colsToWrite = table.colnames
-
-        #self.queryBrowser.insert_into_table(resArr, colsToWrite, tableName, keyCols, chunkSize=100000)
-        queryBrowser.copy_into_table(
-            resArr, colsToWrite, tableName, keyCols, fileLoc, partId, createIndex, deleteIndex)
-
     def close_database_connection(self, queryBrowser):
         queryBrowser.dbcon_obj.close_connection()
 
-    def close_cache_connection(self):
-        self.db.close()
 
 if __name__ == '__main__':
 

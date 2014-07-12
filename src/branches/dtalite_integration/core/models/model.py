@@ -23,7 +23,8 @@ class SubModel(object):
                  values=None,
                  seed=1,
                  filter_type=[],
-                 run_filter_type=[]):
+                 run_filter_type=[], 
+                 number_processes=1):
 
         if not isinstance(model, Model):
             raise ModelError, 'the model input is not a valid Model object'
@@ -70,6 +71,7 @@ class SubModel(object):
         self.values = values
         self.filter_type = filter_type
         self.run_filter_type = run_filter_type
+        self.number_processes = number_processes
         # print model.choices, values
 
     def check_string(self, value, valid_values):
@@ -103,13 +105,16 @@ class SubModel(object):
 
         if self.model_type == 'choice':
             result = self.model.calc_chosenalternative(data, choiceset, seed)
+            #print "Result inside model.py"
+            #print result.head()
             if self.values is not None:
                 resultCp = copy.deepcopy(result)
                 for i in range(len(self.values)):
                     rows = resultCp == i + 1
-                    result.data[rows] = self.values[i]
+                    result[rows] = self.values[i]
+            #print result.head()
         if self.model_type == 'consistency':
-            result = self.model.resolve_consistency(data, seed)
+            result = self.model.resolve_consistency(data, seed, self.number_processes)
 
         if self.model_type == 'create_scalar':
             result = self.model.calc_scalar(data, seed)
@@ -126,7 +131,6 @@ class SubModel(object):
         # that contains the correspondence between the values and the
         # chosen alternative or should we fix the values and categories?
         # in the next step how are values identified?
-
         return result
 
     def __repr__(self):

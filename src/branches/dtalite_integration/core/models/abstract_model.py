@@ -3,6 +3,7 @@ from scipy import exp
 from openamos.core.data_array import DataArray
 from openamos.core.models.model_components import Specification
 
+from pandas import DataFrame as df
 
 class Model(object):
 
@@ -28,14 +29,15 @@ class Model(object):
         data - DataArray object
         """
         num_choices = self.specification.number_choices
-        expected_value_array = DataArray(zeros((data.rows, num_choices)),
-                                         self.choices)
+        expected_value = df(columns=self.choices,  index=data.index)
+        #expected_value_array = DataArray(zeros((data.rows, num_choices)), 
+        #                                 self.choices, data.index)
 
         for i in range(num_choices):
             coefficients = self.coefficients[i]
-            expected_value_array.data[
-                :, i] = data.calculate_equation(coefficients)
-        return expected_value_array
+            choice = self.choices[i]
+            expected_value.loc[:, choice] = data.calculate_equation(coefficients)
+        return expected_value
 
     def calculate_exp_expected_values(self, data):
         """
@@ -46,16 +48,17 @@ class Model(object):
         data - DataArray object
         """
         num_choices = self.specification.number_choices
-        exp_expected_value_array = DataArray(zeros((data.rows, num_choices)),
-                                             self.choices)
+        exp_expected_value = df(columns=self.choices,  index=data.index)
+        #exp_expected_value_array = DataArray(zeros((data.rows, num_choices)), 
+        #                                     self.choices, data.index)
         for i in range(num_choices):
             coefficients = self.coefficients[i]
-            exp_expected_value_array.data[
-                :, i] = data.exp_calculate_equation(coefficients)
+            choice = self.choices[i]
+            exp_expected_value.loc[:, choice] = data.exp_calculate_equation(coefficients)
 
         #exp_expected_values = self.calculate_expected_values(data)
         #exp_expected_values.data = exp(exp_expected_values.data)
-        return exp_expected_value_array
+        return exp_expected_value
 
 
 import unittest

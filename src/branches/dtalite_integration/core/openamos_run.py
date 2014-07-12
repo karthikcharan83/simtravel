@@ -77,24 +77,17 @@ def run(argsGFromFuncCall=None):
             return
 
         queryBrowser = simulationManagerObject.setup_databaseConnection()
-        if create_cache == 1:
-            #raw_input('creating new cache')
-            simulationManagerObject.setup_cacheDatabase()
-            simulationManagerObject.setup_inputCacheTables()
-            simulationManagerObject.setup_outputCacheTables()
-        else:
-            #raw_input('reading old cache')
-            simulationManagerObject.read_cacheDatabase()
+
         simulationManagerObject.setup_tod_skims()
         simulationManagerObject.setup_network_conditions()
-        simulationManagerObject.setup_location_information(queryBrowser)
+        simulationManagerObject.setup_location_information()        
+        simulationManagerObject.setup_cacheDatabase()
         simulationManagerObject.close_database_connection(queryBrowser)
 
         simulationManagerObject.parse_config()
         simulationManagerObject.clean_database_tables()
         simulationManagerObject.run_components()
-        simulationManagerObject.close_cache_connection()
-        
+
         if backup_results == 1:
             simulationManagerObject.setup_resultsBackup()
 

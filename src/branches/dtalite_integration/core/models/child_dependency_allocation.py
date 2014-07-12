@@ -160,7 +160,7 @@ class ChildDependencyAllocation(Model):
             #   or hhldIndex[0] == 1353601 or hhldIndex[0] == 149978 or hhldIndex[0] == 155946):
             #   householdObject.persons[1].print_activity_list()
             # raw_input()
-                pass
+            pass
 
         # return DataArray(actList, self.colNames), DataArray(actListJoint,
         # self.colNames)

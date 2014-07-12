@@ -20,10 +20,14 @@ from sqlalchemy.types import Integer, SmallInteger, \
 from numpy import array, ma, savetxt
 from database_configuration import DataBaseConfiguration
 from openamos.core.data_array import DataArray
+from openamos.core.errors import DataError
+import pandas.io.sql as sql
 
 
 class QueryBrowser(object):
     # initialize the class
+    #TODO: fix exceptions
+    #TODO: clean the dbconn_obj, connection etc.
 
     def __init__(self, dbconfig):
 
@@ -44,41 +48,32 @@ class QueryBrowser(object):
     # select all rows from the table
     def select_all_from_table(self, table_name, cols=None):
         """
-        This method is used to fetch all rows from the table specified.
-
-        Input:
-        Class name corresponding to the table
-
-        Output:
-        Returns all the rows in the table
-        """
+     This method is used to fetch all rows from the table specified.
+     Input:
+     Name of the table
+     
+     Output:
+     Returns all the rows in the table
+     """
         colsStr = ""
         if cols == None:
-            colsStr = "*"
-        else:
-            for i in cols:
-                colsStr += "%s," % (i)
-            colsStr = colsStr[:-1]
+            cols = self.dbcon_obj.get_column_list(table_name)
+        for i in cols:
+            colsStr += "%s," % (i)
+        colsStr = colsStr[:-1]
 
         # check if table exists
         tab_flag = self.dbcon_obj.check_if_table_exists(table_name)
         if tab_flag:
             # print 'Table %s exists.'%table_name
             try:
-                self.dbcon_obj.cursor.execute(
+                sql_string = (
                     "SELECT %s FROM %s" % (colsStr, table_name))
-                result = self.dbcon_obj.cursor.fetchall()
-                if cols is None:
-                    cols_list = self.dbcon_obj.get_column_list(table_name)
-                else:
-                    cols_list = cols
-
-                data = self.createResultArray(result, cols_list)
-
-                # return data, cols_list ##changes made here
+                result = sql.frame_query(sql_string, self.dbcon_obj.connection)
+                data = DataArray(result,  cols)
                 return data
             except Exception, e:
-                print '\tError while retreiving the data from the table'
+                raise Exception, '\tError while retreiving the data from the table: %s'%e
                 print e
         else:
             print '\tTable %s does not exist.' % table_name
@@ -86,21 +81,21 @@ class QueryBrowser(object):
     # select rows based on a selection criteria
     def fetch_selected_rows(self, table_name, column_name, value):
         """
-        This method is used to fetch selected rows fom the table in the database.
+     This method is used to fetch selected rows fom the table in the database.
 
-        Input:
-        Database configuration object, class name and selection criteria.
+     Input:
+     Database table name and selection criteria specified using column name and value.
 
-        Output:
-        Returns the rows that satisfy the selection criteria
-        """
+     Output:
+     Returns the rows that satisfy the selection criteria
+     """
         fin_flag = None
         # check if table exists and then if columns exists
         tab_flag = self.dbcon_obj.check_if_table_exists(table_name)
         if tab_flag:
             # check for columns
-            get_cols = self.dbcon_obj.get_column_list(table_name)
-            if column_name in get_cols:
+            cols = self.dbcon_obj.get_column_list(table_name)
+            if column_name in cols:
                 fin_flag = True
             else:
                 fin_flag = False
@@ -109,20 +104,11 @@ class QueryBrowser(object):
 
         if fin_flag:
             try:
-                self.dbcon_obj.cursor.execute(
+                sql_string = (
                     "SELECT * FROM %s where %s = '%s'" % (table_name, column_name, value))
-                data = self.dbcon_obj.cursor.fetchall()
-
-                row_list = []
-                counter = 0
-                for each in data:
-                    counter = counter + 1
-                    row_list.append(each)
-
-                if counter == 0:
-                    print 'No rows selected.\n'
-                print 'Select query successful.\n'
-                return self.dbcon_obj.cursor, row_list
+                result = sql.frame_query(sql_string, self.dbcon_obj.connection)
+                data = DataArray(result, cols)
+                return data
             except Exception, e:
                 print 'Error retrieving the information. Query failed.\n'
                 print e
@@ -135,16 +121,19 @@ class QueryBrowser(object):
                     analysisIntervalFilter=None, analysisIntervalCondition=None,
                     history_info=None,
                     aggregate_variable_dict={},
-                    delete_dict={}):
+                    delete_dict={}, 
+                    indexCols=None):
         """
-        This method is used to select the join of tables and display them.
+     This method is used to select the join of tables and display them.
 
-        Input:
-        Database configuration object, table names, columns and values.
+     Input:
+     Database configuration object, table names, columns and values.
 
-        Output:
-        Displays the rows based on the join and the selection criterion.
-        """
+     Output:
+     Displays the rows based on the join and the selection criterion.
+     """
+        #print "\nthis is the index-->",  indexCols
+        #raw_input()
         # db_dict = {'households': ['urb', 'numchild', 'inclt35k', 'ownhome', 'one', 'drvrcnt', 'houseid'],
         #           'vehicles_r': ['vehtype', 'vehid'],
         #           'households_r': ['numvehs']}
@@ -291,8 +280,8 @@ class QueryBrowser(object):
         # print max_dict
         if max_dict is not None:
             for maxTable in max_dict:
-                print '---max', maxTable, mainTable, 'main---'
-                print 'table list here ------->', table_list
+                #print '---max', maxTable, mainTable, 'main---'
+                #print 'table list here ------->', table_list
                 maxColumn = max_dict[maxTable][0]
                 try:
                     if maxTable <> mainTable:
@@ -462,8 +451,9 @@ class QueryBrowser(object):
         # Spatial TSP identification
         if len(spatialConst_list) > 0:
             for i in spatialConst_list:
+                #print "spatial const",  i
                 # if i.countChoices is not None:
-                if i.startConstraint.table == i.endConstraint.table:
+                if i.buildTSPrism is True: #countChoices == i.endConstraint.table:
                     # substring for the inner join
                     stTable = i.startConstraint.table
                     #stLocationField = 'st_' + i.startConstraint.locationField
@@ -716,40 +706,40 @@ class QueryBrowser(object):
             colStr, mainTable, allJoinStr, aggStr)
 
         #sql_string += ' and (persons.houseid = 35802 or persons.houseid = 90971  or persons.houseid = 119866)'
-        print 'SQL string for query - ', sql_string
+        #print 'SQL string for query - ', sql_string
         # print cols_list
         # raw_input()
 
         try:
             ti = time.time()
-            self.dbcon_obj.cursor.execute(sql_string)
-            result = self.dbcon_obj.cursor.fetchall()
-            # print '\t Retrieved from the database in %.4f' %(time.time()-ti)
-            data = self.createResultArray(result, cols_list)
-            print '\tRetrieved from the database and processed to remove "None" values in %.4f' % (time.time() - ti)
+            result = sql.frame_query(sql_string, self.dbcon_obj.connection) 
+            result.fillna(0,  inplace=True)
+            data = DataArray(result, cols_list, indexCols=indexCols)
+
+            print '\tRetrieved from the database using Pandas in %.4f' % (time.time() - ti)
             # print cols_list
-            # print primCols
             # Sort with respect to primary columns
-            data.sort(primCols)
 
+            print "\tNumber of rows - %d and cols - %d" %(data.rows, data.cols)
+            #print "\tFirst five rows of data retrieved"
+            #print data.data.head()
             # print primCols
-            # raw_input()
+            #raw_input("Check data")
 
-        except AttributeError, e:
-            # print '\t\tQuery returned None since no records were found.
-            # Hence, nothing to sort'
-            pass
+        #except AttributeError, e:
+        #    raise DataError,  'AttributeError occurred with text - %s' %e
         except Exception, e:
-            print e
-            print 'Error retrieving the information. Query failed.'
+            raise DataError,  'Other error occurred with text - %s' %e
+
 
         if len(delete_dict) > 0:
+            #TODO: Fold this delete in to the two other delete functions implemented in cursor_query_browser
             table = delete_dict.keys()[0]
             var = delete_dict[table]
 
             delete_sql_string = ('delete from %s where %s in (select %s from (%s) as foo)'
                                  % (table, var, var, sql_string))
-            print 'Delete string - ', delete_sql_string
+            #print 'Delete string - ', delete_sql_string
 
             # print 'delete records after select'
 
@@ -762,38 +752,6 @@ class QueryBrowser(object):
                 print 'Error deleting records. Query failed - ', e
 
         return data
-
-    def createResultArray(self, result, cols_list, fillValue=0):
-        t = time.time()
-
-        # Create list of records
-        #data = [i[:] for i in result]
-        # print '\tLooping through results took - %.4f' %(time.time()-t),
-        # len(data)
-
-        # Converting the none values returned into a zero value
-        # using the ma library in numpy
-        # - retrieve mask for None
-        # - then assign the fillValue to those columns
-        data = array(result)
-        mask = ma.masked_equal(data, None).mask
-
-        # print cols_list
-
-        if mask.any():
-            data[mask] = fillValue
-            data = ma.array(data, dtype=float)
-        # Sorting the array by primary cols identifying the agent as
-        # postgres seems to return queries without any order
-
-        # Convert it back to a regular array to enable all the other processing
-        print '\tSize of the data set that was retrieved - ', data.shape
-        print '\tRecords were processed after query in %.4f' % (time.time() - t)
-
-        if data.shape[0] == 0:
-            return None
-
-        return DataArray(data, cols_list)
 
     ########## methods for select query end ##########
 
@@ -925,7 +883,49 @@ class QueryBrowser(object):
             print 'Table %s does not exist.'  # %table_name
         self.create_index(table_name, keyCols)
 
-    def copy_into_table(self, arr, cols_list, table_name, keyCols, loc, partId=None, createIndex=True, deleteIndex=True, delimiter=','):
+    def copy_into_table(self, data, cols_list, table_name, keyCols, 
+                                         loc, partId=None, createIndex=True, 
+                                         deleteIndex=True, delimiter=','):
+        """
+     Output:
+     Inserts all the rows from data array in the table
+     """
+        t_d = time.time()
+        if deleteIndex:
+            # Delete index before inserting
+
+            index_cols = self.delete_index(table_name)
+        print '\t\tDeleting index took - %.2f' % (time.time() - t_d)
+
+        self.file_write(data, loc, partId)
+
+        cols_listStr = ""
+        for i in cols_list:
+            cols_listStr += "%s," % i
+        cols_listStr = "(%s)" % cols_listStr[:-1]
+
+        tab_flag = self.dbcon_obj.check_if_table_exists(table_name)
+        if tab_flag:
+            # print 'Table %s exists.'%table_name
+            try:
+                ti = time.time()
+                insert_stmt = ("""copy %s %s from '%s/tempData_%s.csv' """
+                               """ delimiters '%s'""" % (table_name, cols_listStr, loc,
+                                                         partId, delimiter))
+
+                #print '\t\t', insert_stmt
+                result = self.dbcon_obj.cursor.execute(insert_stmt)
+                self.dbcon_obj.connection.commit()
+            except Exception, e:
+                print e
+        else:
+            print 'Table %s does not exist.'  # %table_name
+        t_c = time.time()
+        if createIndex:
+            self.create_index(table_name, keyCols)
+        print '\t\tCreating index took - %.2f' % (time.time() - t_c)
+
+    def copy_into_table_old(self, arr, cols_list, table_name, keyCols, loc, partId=None, createIndex=True, deleteIndex=True, delimiter=','):
         """
         self, arr, cols_list, table_name, keyCols, chunkSize=None):
         This method is used to insert rows into the table.
@@ -1123,7 +1123,20 @@ class QueryBrowser(object):
     ########## methods for creating and deleting index##########
 
     ########### file function #################
-    def file_write(self, data_arr, loc, partId, fileName=None):
+    def file_write(self, data, loc, partId, fileName=None):
+        """
+     This method is used to write the result to a file
+     in a csv format.
+     """
+        ti = time.time()
+        if fileName is not None:
+            loc = os.path.join(loc, "%s.csv"%fileName)
+        else:
+            loc = os.path.join(loc, "tempData_%s.csv" %(partId))
+        data.to_csv(loc, header=False, index=False)
+        print '\t\tTime to write to file Pandas implementation - %.4f' % (time.time() - ti)
+
+    def file_write_old(self, data_arr, loc, partId, fileName=None):
         """
         This method write the resultset to a file.
 
@@ -1372,35 +1385,6 @@ class QueryBrowser(object):
                 print 'Query execution failed. Failed to reset sequences'
                 print e
                 return False
-
-    """
-    def copy_table(self, cols_list, table_name, partId = None, delimiter=','):
-        tab_flag = True
-        if partId == None:
-                partId = ""
-        cols_listStr = ""
-        for i in cols_list:
-            cols_listStr += "%s,"%i
-        cols_listStr = "(%s)" %cols_listStr[:-1]
-        loc = "/home/namrata/Documents/data/temp_data.csv"
-        if tab_flag:
-            #print 'Table %s exists.'%table_name
-            try:
-                insert_stmt = (""copy %s %s from '%s' ""
-                               "" with delimiter as '%s' csv header"" %(table_name, cols_listStr, loc,
-                                                       delimiter))
-
-                #print '\t\t', insert_stmt
-                #print table_name, cols_listStr, loc, partId, delimiter
-                result = self.dbcon_obj.cursor.execute(insert_stmt)
-                self.dbcon_obj.connection.commit()
-                #print '\t\tTime after insert query - %.4f' %(time.time() - ti)
-                #print '\t\tTime to insert - %.4f' %(time.time()-ti)
-            except Exception, e:
-                print e
-        else:
-           print 'Table %s does not exist.'##%table_name
-    """
 
     def cluster_index(self, table_name, index_name):
         """

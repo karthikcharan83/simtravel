@@ -718,7 +718,7 @@ class Household(object):
                     self.hid, pid)
 
         return self._collate_results()
-
+    """
     def clean_schedules(self, seed):
         # print '\tPerson Ids with dependencies - ', self.dependencyPersonIds
         # print '\tPerson Ids with fixed activities - ', self.dailyFixedActPersonIds
@@ -749,7 +749,7 @@ class Household(object):
     def remove_school_episodes(self, person):
         person.extract_school_episodes()
         person.remove_episodes(person.schoolEpisodes)
-
+   """
     def resolve_conflicts_for_dependency_activities(seed):
         return self._collate_results()
 
@@ -3751,3 +3751,4 @@ class Household(object):
         # print '\t\t\tDropOff ACTIVITY -', dummyDropOffAct
 
         return dummyPickUpAct, dummyDropOffAct
+

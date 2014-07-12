@@ -11,6 +11,7 @@ from openamos.core.models.abstract_probability_model import AbstractProbabilityM
 from openamos.core.errors import SpecificationError
 from openamos.core.data_array import DataArray
 
+from pandas import DataFrame as df
 
 class ProbabilityModel(AbstractChoiceModel):
 
@@ -31,14 +32,15 @@ class ProbabilityModel(AbstractChoiceModel):
 
     def calc_probabilities(self, data):
         expected_utilities = self.validchoiceutilities(data)
-        utility_sum = expected_utilities.data.cumsum(-1)
-        utility_sum_max = utility_sum.max(-1)
-        probabilities = (
-            expected_utilities.data.transpose() / utility_sum_max).transpose()
+        # in Pandas dataframe cumsum across columns is 1
+        utility_sum = expected_utilities.cumsum(1) 
+        utility_sum_max = utility_sum.max(1)
+        probabilities = expected_utilities.div(utility_sum_max, axis=0)
         return probabilities
 
     def calc_chosenalternative(self, data, choiceset=None, seed=1):
-        probabilities = DataArray(self.calc_probabilities(data),
-                                  self.specification.choices)
-        prob_model = AbstractProbabilityModel(probabilities, seed)
+        pred_prob = self.calc_probabilities(data)
+        #probabilities = DataArray(pred_prob, 
+        #                          self.specification.choices, data.index)
+        prob_model = AbstractProbabilityModel(pred_prob, seed)
         return prob_model.selected_choice()

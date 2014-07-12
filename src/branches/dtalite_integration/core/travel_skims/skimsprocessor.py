@@ -132,18 +132,26 @@ class Mode(object):
 if __name__ == "__main__":
     t_s = t.time()
     mode = Mode(175, 2, "auto", [720, 1440])
-    size = 10000
-    count = 100
+    size = 12
+    count = 5
 
-    origin = np.random.randint(1,175,size)
-    dest = np.random.randint(1,175,size)
-    available_tt = np.zeros(size, dtype = np.double) + 50
+    #origin = np.random.randint(1,175,size)
+    #dest = np.random.randint(1,175,size)
+    #available_tt = np.zeros(size, dtype = np.double) + 50
+    #nodes_available = np.array(range(175)) + 1
+    #seed = np.array(range(size)) + 1
+
+    origin = np.array([129,131,158,39,127,20,59,73,35,70,84,173])
+
+    dest = np.array([129,131,158,39,127,20,59,73,35,70,84,173])
+    available_tt =  np.array([586,1,508,664,613,763,746,684,700,791,780,493])
     nodes_available = np.array(range(175)) + 1
-    seed = np.array(range(size)) + 1
+    seed = np.array(range(12)) + 162
+
 
     print origin.shape, dest.shape
 
-    loc_dict = {0:"C:\\workspace\\openamos\\core\\travel_skims\\test_data\\skim1_175.csv",
+    loc_dict = {0:"C:\\DTALite\\New_PHXsubarea\\skims\\skim10.csv",
                   1:"C:\\workspace\\openamos\\core\\travel_skims\\test_data\\skim2_175.csv"}
     mode.read_skims(loc_dict)
 
@@ -152,6 +160,8 @@ if __name__ == "__main__":
     dist = mode.get_dist(0, origin, dest)
     locations = mode.get_locations(0, origin, dest, available_tt, nodes_available,
                                 count, seed)
+    print "\n",locations
+    """
     print "Travel time - ",  tt
     print "Travel distance - ",dist
     print "Locations given 50 min availability - ", locations
@@ -167,3 +177,4 @@ if __name__ == "__main__":
     print "Locations given 50 min availability st VOT- ", locations
     mode.check_locations(0, origin, dest, locations, count, available_tt)
     print "Time taken - %.4f" %(t.time()-t_s)
+    """

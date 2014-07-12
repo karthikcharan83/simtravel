@@ -6,6 +6,7 @@ from openamos.core.models.abstract_probability_model import AbstractProbabilityM
 from openamos.core.models.count_regression_model_components import CountSpecification
 from openamos.core.errors import SpecificationError
 
+from pandas import DataFrame as df
 
 class CountRegressionModel(Model):
 
@@ -74,9 +75,10 @@ class CountRegressionModel(Model):
         Inputs:
         data - DataArray object
         """
-
-        probabilities = DataArray(self.calc_probabilities(data),
-                                  self.specification.choices)
+        pred_prob = self.calc_probabilities(data)
+        probabilities = DataArray(pred_prob,
+                                  self.specification.choices, 
+                                  data.index)
         prob_model = AbstractProbabilityModel(probabilities,
                                               self.specification.seed)
         return prob_model.selected_choice()

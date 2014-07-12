@@ -1,3 +1,54 @@
+from openamos.core.agents.activity import ActivityEpisode
+
+import multiprocessing
+import numpy as np
+
+
+def split_df(df,  houseidCol,  workers):
+    hid = df[houseidCol]
+    uniqueHidSplits = np.array_split(hid.unique(), workers)
+    uniqueHidMaxs = [hidSplit.max() for hidSplit in uniqueHidSplits]
+    split = []
+    for i in range(len(uniqueHidSplits)):
+        uniqueMax = uniqueHidMaxs[i]
+        if i == 0:
+            rowIndex = (hid <= uniqueMax)
+            df_split = df[rowIndex]
+        else:
+            uniqueMin = uniqueHidMaxs[i-1]
+            rowIndex = (hid > uniqueMin) & (hid <= uniqueMax)
+            df_split = df[rowIndex]
+        print "Size of split - %d" %(df_split.shape[0])
+        split.append(df_split)
+    return split
+
+
+def resolve_by_multiprocessing(func, args,  workers):
+    result_list = []
+
+    pool = multiprocessing.Pool(processes=workers)
+    results = pool.map(func, args)
+    pool.close()
+    
+    for result in results:
+        result_list += result
+    return result_list
+
+def return_act(schedule,  activityAttributes):
+    hid = schedule[activityAttributes.hidName]
+    pid = schedule[activityAttributes.pidName]
+
+    scheduleid = schedule[activityAttributes.scheduleidName]
+    activitytype = schedule[activityAttributes.activitytypeName]
+    locationid = schedule[activityAttributes.locationidName]
+    starttime = schedule[activityAttributes.starttimeName]
+    endtime = schedule[activityAttributes.endtimeName]
+    duration = schedule[activityAttributes.durationName]
+    depPersonId = schedule[activityAttributes.dependentPersonName]
+    
+    act = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
+                                         starttime, endtime, duration, depPersonId)
+    return act
 
 
 class ReconcileSchedulesSpecification(object):

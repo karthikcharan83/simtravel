@@ -39,7 +39,7 @@ class PrismConstraints(object):
                  sampleField=None,
                  countChoices=None, activityTypeFilter=None, threshold=None,
                  seed=1, afterModel=None, beforeModel=None, locationInfoTable=None,
-                 locationIdVar=None, locationVariables=[], locationFilterList=[], locationFilterType="or"):
+                 locationIdVar=None, locationVariables=[], locationFilterList=[], locationFilterType="or", buildTSPrism=None):
 
         if not isinstance(table, str):
             raise PrismConstraintError, """The destination locations table name is """\
@@ -119,6 +119,7 @@ class PrismConstraints(object):
         self.locationVariables = locationVariables
         self.locationFilterList = locationFilterList
         self.locationFilterType = locationFilterType
+        self.buildTSPrism = buildTSPrism
 
     def __repr__(self):
         return ("""\nTable - %s; Field - %s\n"""
@@ -132,6 +133,7 @@ class PrismConstraints(object):
                 """\n\t\tLocation Variables = %s"""
                 """\n\t\tLocation Filter List = %s"""
                 """\n\t\tLocation Filter Type = %s"""
+                """\n\t\tBuild TSP = %s"""
                 % (self.table, self.skimField, self.originField, self.destinationField,
                    self.sampleField, self.startConstraint,
                    self.endConstraint, self.countChoices,
@@ -140,7 +142,8 @@ class PrismConstraints(object):
                    self.beforeModel,
                    self.locationVariables,
                    self.locationFilterList,
-                   self.locationFilterType))
+                   self.locationFilterType, 
+                   self.buildTSPrism))
 
 
 # class PrismLocationChoicesConstraints(PrismConstraints):

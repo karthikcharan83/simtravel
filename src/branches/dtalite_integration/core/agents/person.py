@@ -139,6 +139,7 @@ class Person(object):
             self.reconciledActivityEpisodes)
         for actStart, act in self.listOfActivityEpisodes:
             self._update_schedule_conflict_indicator(act, add=True)
+        return self._collate_results_aslist()
 
     def print_activity_list(self):
         print '\t--> ACTIVITY LIST for person - ', self.hid, self.pid
@@ -176,13 +177,12 @@ class Person(object):
             try:
                 self.listOfActivityEpisodes.remove(
                     (activity.startTime, activity))
-                hp.heapify(self.listOfActivityEpisodes)
             except ValueError, e:
                 print 'Warning: Trying to remove a copy of the activityObject: %s and removing - %s' % (e, activity)
                 raise ValueError, 'Warning: Trying to remove a copy of the activityObject: %s and removing - %s' % (
                     e, activity)
-
             self._update_schedule_conflict_indicator(activity, add=False)
+        hp.heapify(self.listOfActivityEpisodes)
 
     def retrieve_fixed_activity_ends(self, seed):
         minStart = 1440
@@ -417,8 +417,21 @@ class Person(object):
                 depActsList.append(act)
         return ownActsList, depActsList
 
-    def clean_schedules_for_in_home_episodes(self, actType=101, inHomeActThreshold=1440):
+    def clean_schedules(self):
+        episodesToRemove = []
+        if self.workstatus <> 0 and self.schoolstatus <> 0:
+            return self._collate_results_aslist()
+        if self.workstatus == 0:
+            self.extract_work_episodes()
+            episodesToRemove += self.workEpisodes
+        if self.schoolstatus == 0:
+            self.extract_school_episodes()
+            #print self.schoolEpisodes
+            episodesToRemove += self.schoolEpisodes
+        self.remove_episodes(episodesToRemove)
+        return self._collate_results_aslist()
 
+    def clean_schedules_for_in_home_episodes(self, actType=101, inHomeActThreshold=1440):
         consequentInHomeActs = []
         lengthOfConseqActs = 0
 
@@ -426,15 +439,19 @@ class Person(object):
         # for i in self.listOfActivityEpisodes:
         #    print i
 
+        #self.print_activity_list()
+        #raise Exception,  "Error"
         newActsList = []
 
         for i in range(len(self.listOfActivityEpisodes)):
             startTime, act = hp.heappop(self.listOfActivityEpisodes)
             if act.actType == actType and lengthOfConseqActs < inHomeActThreshold:
+                #print "is it finding any act with acttype 101"
                 consequentInHomeActs.append(act)
                 lengthOfConseqActs += act.duration
             else:
                 if len(consequentInHomeActs) > 0:
+                    #print "is it finding anything"
                     newIHAct = self.createNewInHomeAct(consequentInHomeActs)
                     hp.heappush(newActsList, (newIHAct.startTime, newIHAct))
 
@@ -453,6 +470,7 @@ class Person(object):
         self.listOfActivityEpisodes = newActsList
 
         #raw_input ('Inside aggregating acts')
+        return self._collate_results_aslist()
 
     def createNewInHomeAct(self, consequentInHomeActs):
         #print ('\tAggregating all in-home acts between subsequent OH acts')

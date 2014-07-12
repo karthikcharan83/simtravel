@@ -3,6 +3,7 @@ from openamos.core.models.abstract_regression_model import AbstractRegressionMod
 from openamos.core.models.abstract_random_distribution_model import RandomDistribution
 from openamos.core.errors import ErrorSpecificationError
 
+from pandas import DataFrame as df
 
 class LinearRegressionModel(AbstractRegressionModel):
 
@@ -68,24 +69,28 @@ class LinearRegressionModel(AbstractRegressionModel):
 
         expected_value = self.calc_expected_value(data)
         variance = self.error_specification.variance[0, 0]
-        vertex = self.error_specification.vertex
-        #threshold = self.error_specification.threshold
-        pred_value = self.calc_errorcomponent(size=(data.rows, 1),
-                                              mean=expected_value.data,
+        err = self.calc_errorcomponent(size=(data.rows, 1),
+                                              mean=0,
                                               sd=variance ** 0.5, seed=seed)
+        pred_value = expected_value + err
 
         # upper threshold - lower threshold is assumed to be 2 sd
         # scattering the points at lower threshold/upper threshold dispersed by
         # a half normal distribution with a sd as calculated above as the size
 
+        if (self.error_specification.lower_threshold == 0 or
+             self.error_specification.upper_threshold == 0):
+                 return pred_value
+
         standDev = (self.error_specification.upper_threshold -
                     self.error_specification.lower_threshold) / 2
-        # print 'lower threshold - ', self.error_specification.lower_threshold
-        # print 'upper threshold - ', self.error_specification.upper_threshold
+        #print 'lower threshold - ', self.error_specification.lower_threshold
+        #print 'upper threshold - ', self.error_specification.upper_threshold
+        #raw_input()
         # print 'sd - ', self.error_specification.upper_threshold
-
+        
         lowerLimit = self.error_specification.lower_threshold - standDev
-        upperLimit = self.error_specification.lower_threshold + standDev
+        upperLimit = self.error_specification.upper_threshold + standDev
 
         if lowerLimit < 5:
             lowerLimit = 5
@@ -99,31 +104,28 @@ class LinearRegressionModel(AbstractRegressionModel):
 
         if self.error_specification.lower_threshold > 0:
             threshold = self.error_specification.lower_threshold
-            predValue_lessThresholdInd = pred_value < threshold
-            numRows = predValue_lessThresholdInd.sum()
-
+            predValue_lessThresholdInd = (pred_value < threshold).values
             pred_value[predValue_lessThresholdInd] = threshold
 
-            if numRows > 0:
+            if predValue_lessThresholdInd.any():
+                numRows = predValue_lessThresholdInd.sum()
                 size = (numRows, 1)
                 smoothingErr = self.calc_halfnormal_error(
                     threshold, lowerLimit, seed, size)
-                pred_value[predValue_lessThresholdInd] -= smoothingErr[:, 0]
+                pred_value[predValue_lessThresholdInd] -= smoothingErr
 
         if self.error_specification.upper_threshold > 0:
             threshold = self.error_specification.upper_threshold
-            predValue_moreThresholdInd = pred_value > threshold
-            numRows = predValue_moreThresholdInd.sum()
-
+            predValue_moreThresholdInd = (pred_value > threshold).values
             pred_value[predValue_moreThresholdInd] = threshold
 
-            if numRows > 0:
+            if predValue_moreThresholdInd.any():
+                numRows = predValue_moreThresholdInd.sum()
                 size = (numRows, 1)
                 smoothingErr = self.calc_halfnormal_error(
                     threshold, upperLimit, seed, size)
-                pred_value[predValue_moreThresholdInd] += smoothingErr[:, 0]
-
-        return DataArray(pred_value, self.specification.choices)
+                pred_value[predValue_moreThresholdInd] += smoothingErr
+        return pred_value
 
 
 import unittest
@@ -164,3 +166,4 @@ class TestLinearRegressionModel(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

@@ -8,6 +8,8 @@ from openamos.core.models.abstract_probability_model import AbstractProbabilityM
 from openamos.core.models.ordered_choice_model_components import OLSpecification
 from openamos.core.errors import SpecificationError
 
+from pandas import DataFrame as df
+
 
 class OrderedModel(AbstractChoiceModel):
 
@@ -50,7 +52,7 @@ class OrderedModel(AbstractChoiceModel):
         [shape_param] = [1, ] * genlogistic.numargs
         observed_utility = self.calc_observed_utilities(data)
         num_choices = self.specification.number_choices
-        probabilities = zeros((data.rows, num_choices))
+        probabilities = df(columns=self.choices,  index=data.index)
         lower_bin = 0
         for i in range(num_choices - 1):
             value = self.thresholds[i] - observed_utility
@@ -58,11 +60,11 @@ class OrderedModel(AbstractChoiceModel):
                 upper_bin = genlogistic.cdf(value, shape_param)
             else:
                 upper_bin = norm.cdf(value)
-
-            probabilities[:, i] = upper_bin - lower_bin
+            choice = self.choices[i]
+            probabilities.loc[:, choice] = upper_bin - lower_bin
             lower_bin = upper_bin
-
-        probabilities[:, i + 1] = 1 - upper_bin
+        choice = self.choices[i+1] #Last ordered choice 
+        probabilities.loc[:, choice] = 1 - upper_bin
         return probabilities
 
     def calc_chosenalternative(self, data, choiceset=None, seed=1):
@@ -74,14 +76,17 @@ class OrderedModel(AbstractChoiceModel):
         data = DataArray object
         """
         #ti = time.time()
-        probabilities = DataArray(self.calc_probabilities(data),
-                                  self.specification.choices)
+        pred_prob = self.calc_probabilities(data)
+        #probabilities = DataArray(pred_prob, 
+        #                          self.specification.choices, 
+        #                          data.index)
         # print "\t\t\tprobabilities calculated in %.4f" %(time.time()-ti)
-        prob_model = AbstractProbabilityModel(probabilities, seed)
+        prob_model = AbstractProbabilityModel(pred_prob, seed)
         #ti = time.time()
         choice = prob_model.selected_choice()
         # print "\t\t\tsimulated completed in %.4f" %(time.time()-ti)
-
+        #print "Inside ordered model"
+        #print choice.head()
         return choice
 
 

@@ -1,538 +1,497 @@
-from numpy import ndarray, array, zeros, ones, hstack, rec, lexsort, where
-from scipy import exp
-import numexpr as ne
 import re
 import time
+import pandas as pd
+from pandas import DataFrame as df
+from pandas import Series
+
+import numpy as np
 
 from openamos.core.errors import DataError
 
-
 class DataArray(object):
 
-    """
-    This is the base class for data objects in OpenAMOS.
-
-    Inputs:
-    data - ndarray object
-    varnames - list of strings (columnames)
-    """
-
-    def __init__(self, data, varnames):
-        if not isinstance(data, ndarray):
-            self.data = array(data)
+    def __init__(self, data=None, varnames=None, index=None, indexCols=None):
+        # TODO:index
+        if varnames is not None:
+            for varname in varnames:
+                self.check_varname(varname)
         else:
-            self.data = data
+            varnames = []
+        try:
+            self.data = df(data, columns=varnames, index=index)
+        except Exception, e:
+            raise DataError, ("""Error creating the data frame object
+                              with the dataset:%s""" % e)
+        if index is not None and indexCols is not None:
+            raise DataError,  ("""Conflicting indexes specified. Both
+            index and indexCol inputs cannot be specified.""")
+        self.update_meta_data()
+        if indexCols is not None:
+            self.create_index_using_cols(indexCols)
 
-        if len(self.data.shape) > 2:
-            raise DataError, 'data should be only two dimensional'
+    def create_index_using_cols(self, columnameList):
+        if len(columnameList) == 0:
+            raise DataError("""No valid column names specified.""")
 
-        elif len(self.data.shape) == 2:
-            self.cols = self.data.shape[-1]
+        for columname in columnameList:
+            self.check_varname_exists(columname)
 
-        else:
-            self.cols = 0
+        self.data.set_index(columnameList, inplace=True,  drop=False)
+        #print self.data.head()
+        self.data.sort(columnameList, inplace=True)
+        #print self.data.head()
+        self.update_meta_data()
+        #raw_input("--check sort--")
 
+    def update_meta_data(self):
+        self.varnames = list(self.data.columns.values)
         self.rows = self.data.shape[0]
-
-        if self.cols <> len(varnames):
-            raise DataError, """the number of columns in the data """\
-                """are not the same as the number of variable names"""
-
-        self._colnames = {}
-
-        for i in range(self.cols):
-            varname = varnames[i]
-            self.check_varname(varname)
-            self._colnames[varname.lower()] = i
-
-        self.varnames = [i.lower() for i in varnames]
+        self.cols = self.data.shape[1]
+        self.index = self.data.index
 
     def check_varname(self, varname):
-        firstchar = str(varname)[0]
+        if type(varname) is not str:
+            raise DataError, ("Variable name is not a valid string")
+        firstchar = varname[0]
         match = re.match('[0-9]', firstchar)
         if match is not None:
-            raise DataError, """variable name is not a valid string - first """\
-                """character is invalid"""
-
-        # print type(varname) ,"<----"
-        if type(varname) is not str:
-            raise DataError, 'variable name is not a valid string'
+            raise DataError, ("""Variable name is not a valid string -
+                              first character is invalid""")
 
     def sort(self, columnames):
-
-        columnames.reverse()
-
         if not isinstance(columnames, list):
-            raise DataError, """the column names input must be of """\
-                """list type"""
+            raise DataError, ("""The column names argument must be a
+                              python list object""")
+        self.data.sort(columnames, inplace=True)
+        self.update_meta_data()
 
-        cols = []
-        for i in columnames:
-            try:
-                colnum = self._colnames[i]
-                cols.append(self.data[:, colnum])
-            except KeyError, e:
-                print 'Column %s does not exist; not sorted' % i
-                return 0
+    def check_varname_exists(self, varname):
+        if not isinstance(varname,  str):
+            print varname,  "--<"
+            raise DataError, ("Variable name is not a valid string - %s")
+        firstchar = varname[0]
+        match = re.match('[0-9]', firstchar)
+        if match is not None:
+            raise DataError, ("""Variable name is not a valid string -
+                              first character is invalid""")
+        if varname not in self.varnames:
+            raise DataError, ("""Reference to a column - %s that does
+                              not exist in the dataset""" % varname)
 
-        cols = tuple(cols)
+    def calculate_equation1(self, coefficients, rows=None):
+        t = time.time()
+        res = self.calculate_equation_eval(coefficients, rows)
+        print res.head()
+        print "Result calculated with eval in %.6f" % (time.time() - t)
 
-        sortedIndex = lexsort(cols)
+        t = time.time()
+        res = self.calculate_equation_noeval(coefficients, rows)
+        print res.head()
+        print "Result calculated without eval in %.6f" % (time.time() - t)
 
-        self.data = self.data[sortedIndex, :]
+    def calculate_equation_eval(self, coefficients, rows=None):
+        evalStr = ""
+        for var in coefficients.keys():
+            coeff = coefficients[var]
+            print var,  type(var)
+            if isinstance(var,  tuple):
+                print "product found"
+                prod="1"
+                for k in var:
+                    if k[:4] == 'inv_':
+                        k = k[4:]
+                        prod +="/%s"%k
+                    else:
+                        prod += "*%s"%k
+                var = prod
+            evalStr += "%s * %s+" %(var,  coeff)
+        evalStr = evalStr[:-1]
+        print evalStr
+        return self.data.eval(evalStr)
 
-        """
-        for i in columnames:
-            colnum = self._colnames[i]
-            colsIndex = self.data[:,colnum].argsort(0)
 
-            self.data = self.data[colsIndex,:]
-        """
 
     def calculate_equation(self, coefficients, rows=None):
-        inverseDict = {}
+        #print coefficients
+        t = time.time()
+
+        res = Series(np.zeros(self.rows), index=self.index)
         if not isinstance(coefficients, dict):
-            raise DataError, """coefficient input is invalid - should be of """\
-                """dictionary type"""
+            raise DataError, ("""Coefficient argument should be a
+                              python dictionary type""")
+        #print "These are the coefficients", coefficients
+        for coeff in coefficients.keys():
+            # Checking coefficient name
+            if type(coeff) is str:
+                #self.check_varname_exists(coeff)
+                varCol = self.data[coeff]
 
-        for i in coefficients.keys():
-            if type(i) is str:
-                if i.lower() not in self._colnames.keys():
-                    raise DataError, 'coefficient refers to a column - %s not in the dataset' % (
-                        i.lower())
-            if type(i) is tuple:
-                for k in i:
-                    if k[:4].lower() == 'inv_':
+            # Checking and storing derived variables with inverse calculation
+            prodCoeffDict = {}
+            inverseDict = {}
+            if type(coeff) is tuple:
+                for k in coeff:
+                    if k[:4] == 'inv_':
                         k = k[4:]
-                        inverseDict[k.lower()] = True
-                    if k.lower() not in self._colnames.keys():
-                        raise DataError, 'coefficient refers to a column - %s not in the dataset' % (
-                            i.lower())
-
-        for i in coefficients.values():
-            try:
-                float(i)
-            except ValueError, e:
-                raise DataError, 'enter valid values for coefficients'
-
-        """
-        ti = time.time()
-        result = zeros((self.rows,))
-        for i in coefficients.keys():
-            colnum = self._colnames[i.lower()]
-            result += self.data[:,colnum] * coefficients[i]
-        print '\t\t\tNumpy approach for linear combination - %.4f' %(time.time()-ti)
-        """
-        ti = time.time()
-        result = zeros((self.rows,))
-        #print '\tCoefficients vector', coefficients
-        for i in coefficients.keys():
-            if type(i) is tuple:
-                # print 'the interaction var expressed as tuple', i
-                prodCoeffDict = {}
-                for k in i:
-                    if k[:4].lower() == 'inv_':
-                        k = k[4:]
+                        #self.check_varname_exists(k)
+                        inverseDict[k] = True
                     prodCoeffDict[k] = 1.
-                #print 'the interaction product coeff', prodCoeffDict
-                #print 'inverse dict', inverseDict
-                temp = self.calculate_product(
+                varCol = self.calculate_product(
                     prodCoeffDict, inverse=inverseDict)
-                # print '\tproduct', temp[:5], coefficients[i]
-            elif type(i) is str:
-                colnum = self._colnames[i.lower()]
-                temp = self.data[:, colnum]
-                # print '\tno-product', temp[:5], coefficients[i]
-            exprStr = "%s*temp + result" % coefficients[i]
-            result = ne.evaluate(exprStr)
-            # print '\tvar - %s and coeff - %.4f' %(i, coefficients[i])
-            # print '\tmoving result value - ', result[:5]
-        #print '\t\t\tNumexpr approach for linear combination - %.4f' % (time.time() - ti)
 
+            # Checking value of coefficient
+            try:
+                coeffval = coefficients[coeff]
+                float(coeffval)
+            except ValueError, e:
+                raise DataError, ("""Enter valid value for coefficient -
+                                  %s - %s""" (coeff, coeffval))
+            #print "before coeff", coeff, "coeffval-", coeffval, res.head()
+            #print "variable Col", varCol.head()
+            res = res + varCol * coeffval
+            #print "variable Col", varCol
         if rows is not None:
-            return result[rows]
+            res = res[rows]
+        #print "Sum calculated in %.4f" % (time.time() - t)
+        #print "Result", res
+        return res
 
-        # print '\t---->final result - ', result[:5]
-        return result
+    def calculate_product_(self, coefficients, rows=None, inverse={}):
+        t = time.time()
+        res = self.calculate_product_eval(coefficients, rows)
+        print "Product calculated with eval in %.6f" % (time.time() - t)
+        
+        t = time.time()
+        res = self.calculate_product_noeval(coefficients, rows)
+        print "Product calculated without eval in %.6f" % (time.time() - t)
+
+
+    def calculate_product_eval_(self, coefficients, rows=None, inverse={}):
+        print coefficients
+        evalStr = ""
+        for var in coefficients.keys():
+            if isinstance(var,  tuple):
+                pass
+            evalStr += "%s * %s+" %(var,  coefficients[var])
+        evalStr = evalStr[:-1]
+        print evalStr
+
 
     def calculate_product(self, coefficients, rows=None, inverse={}):
+        t = time.time()
+        res = Series(np.ones(self.rows), index=self.index)
         if not isinstance(coefficients, dict):
-            raise DataError, """coefficient input is invalid - should be of """\
-                """dictionary type"""
+            raise DataError, ("""Coefficient argument should be a
+                              python dictionary type""")
 
-        for i in coefficients.keys():
-            if i.lower() not in self._colnames.keys():
-                raise DataError, 'coefficient refers to a column - %s not in the dataset' % (
-                    i.lower())
+        for coeff in coefficients.keys():
+            # Checking coefficient name
+            #self.check_varname_exists(coeff)
+            varCol = self.data[coeff]
 
-        for i in coefficients.values():
+            # Checking value of coefficient
             try:
-                float(i)
+                coeffval = coefficients[coeff]
+                float(coeffval)
             except ValueError, e:
-                raise DataError, 'enter valid values for coefficients'
-        """
-        ti = time.time()
-        result = ones((self.rows,))
-        for i in coefficients.keys():
-            colnum = self._colnames[i.lower()]
-            result = result * self.data[:,colnum] * coefficients[i]
-        print '\t\t\tNumpy approach for product - %.4f' %(time.time()-ti)
-        """
+                raise DataError, ("""Enter valid value for coefficient -
+                                  %s - %s""" (coeff, coeffval))
+            if coeff in inverse:
+                # Checking for rows where value is zero and converting the
+                # inverse to 1 and the corresponding derived product value
+                # to zero because we cannot calculate 1 over zero
+                nanRows = varCol == 0
+                varCol = 1 / varCol
+                if nanRows.any():
+                    varCol[nanRows] = 0
 
-        ti = time.time()
-        result = ones((self.rows,))
-        for i in coefficients.keys():
-            colnum = self._colnames[i.lower()]
-            temp = self.data[:, colnum]
-            # print '\tfirst five rows of product for var %s-'%i, temp[:5]
-            if i.lower() in inverse:
-                inverseFlag = inverse[i]
+            res = res * varCol * coeffval
 
-                if inverseFlag:
-                    nanRows = temp == 0
-                    if any(nanRows):
-                        result[nanRows] = 0
-                        temp[nanRows] = 1
-                    exprStr = "%s*1/temp * result" % coefficients[i]
-                else:
-                    exprStr = "%s*temp * result" % coefficients[i]
-            else:
-                exprStr = "%s*temp * result" % coefficients[i]
-
-            result = ne.evaluate(exprStr)
-        # print '\t\t\tNumexpr approach for product - %.4f' %(time.time()-ti)
 
         if rows is not None:
-            return result[rows]
-        return result
+            res = res[rows]
+        #print "Product calculated in %.4f" % (time.time() - t)
+        return res
 
     def exp_calculate_equation(self, coefficients):
-        result = self.calculate_equation(coefficients)
-        result = ne.evaluate("exp(result)")
-        return result
+        res = self.calculate_equation(coefficients)
+        res = res.apply(np.exp)
 
-    def __repr__(self):
-        return repr(self.data)
+        return res
 
     def column(self, columname):
-        self.check_varname(columname)
-        if not isinstance(columname, str):
-            raise DataError, 'not a valid column name'
-        try:
-            colnum = self._colnames[columname.lower()]
-            return self.data[:, colnum]
-        except KeyError, e:
-            raise DataError, 'not a recognized column name'
+        self.check_varname_exists(columname)
+        return self.data[columname]
 
-    def setcolumn(self, columname, values, rows=None, start=None, end=None):
+    def setcolumn1(self, columname, values, rows=None, start=None, end=None):
+        #print "\n--->Before setting values for ",  columname
+        #print self.data[columname].head()
+        t = time.time()
 
-        try:
-            if len(values.shape) > 1:
-                # converting the array to one dimensional
-                values.shape = (values.shape[0],)
-        except AttributeError, e:
-            print "AttributeError:%s; Assigning scalar to the column" % e
+        self.check_varname_exists(columname)
+        if isinstance(values, df) and rows is not None:
+            self.data.loc[rows, columname] = values.values
+        elif isinstance(values, np.ndarray) and rows is not None:
+            self.data.loc[rows, columname] = values
+        elif isinstance(values, df) and rows is None:
+            self.data.loc[:, columname] = values.values
+        elif isinstance(values, np.ndarray) and rows is None:
+            self.data.loc[:, columname] = values
+        elif rows is not None:
+            self.data.loc[rows, columname] = values
+        else:
+            self.data.loc[:, columname] = values            
 
-        self.check_varname(columname)
-        colnum = self._colnames[columname.lower()]
-        try:
-            if rows is None and start is None and end is None:
-                self.data[:, colnum] = values
-            elif rows is None and start is not None and end is not None:
-                self.data[start:end, colnum] = values
-            elif rows is not None and start is None and end is None:
-                self.data[rows, colnum] = values
-        except ValueError, e:
-            raise DataError, e
+        #print "\n--->After setting values for ",  columname
+        #print self.data[columname].head()
+        print "Column set in %.4f" %(time.time()-t)
 
-    def insertcolumn(self, columnnameList, values):
+
+    def insertcolumn(self, columnameList, values):
         if self.rows <> values.shape[0]:
-            raise DataError, """the number of rows in the dataset and the values """\
-                """column are not the same"""
+            raise DataError, ("""The number of rows in the dataset and
+                              the values column are not the same""")
 
-        self.data = hstack((self.data, values))
-        for i in columnnameList:
-            self.check_varname(i)
-            self.varnames.append(i.lower())
-            self._colnames[i.lower()] = len(self.varnames) - 1
+        if type(columnameList) == str:
+            columnameList = [columnameList]
+
+        for i in range(len(columnameList)):
+            columname = columnameList[i]
+            self.data[columname] = values[:, i]
+        self.update_meta_data()
 
     def scaledowncolumn(self, columname, scale):
-        self.check_varname(columname)
+        self.check_varname_exists(columname)
         if type(scale) not in [int, float]:
-            raise DataError, 'the scale values is not a valid number'
-        colnum = self._colnames[columname.lower()]
-        self.data[:, colnum] = self.data[:, colnum] / scale
+            raise DataError, "The scale value is not a valid number"
+        self.data[columname] = self.data[columname] / scale
 
     def addtocolumn(self, columname, values):
-        self.check_varname(columname)
-        colnum = self._colnames[columname.lower()]
+        self.check_varname_exists(columname)
         try:
-            self.data[:, colnum] = self.data[:, colnum] + values
-        except ValueError, e:
-            raise DataError, e
+            self.data[columname] = self.data[columname] + values
+        except Exception, e:
+            raise DataError, ("""Error adding values - %s""" % e)
 
     def expofcolumn(self, columname):
-        self.check_varname(columname)
-        colnum = self._colnames[columname.lower()]
-        try:
-            self.data[:, colnum] = exp(self.data[:, colnum])
-        except ValueError, e:
-            raise DataError, e
+        self.check_varname_exists(columname)
+        self.data[columname].apply(np.exp)
 
     def deleterows(self, rows=None):
-        """
-        the method returns a dataarray of columns with the rows removed
-        """
-
         if rows.shape == (0,):
             return
-
         self.data = self.data[rows]
-        self.rows = self.data.shape[0]
-        # return DataArray(self.data, self.varnames)
+        self.update_meta_data()
 
-    def columns(self, columnames, rows=None):
-        """
-        the method retrieves and returns a dataarray of columnames that
-        were passed to the method.
-        """
-        if not isinstance(columnames, list):
-            return DataError, """the column names input should be a list"""\
-                """ of variable names"""
-        missingColumnNames = []
-        for i in columnames:
-            try:
-                self.check_varname(i)
-            except DataError, e:
-                print "Model for %s not specified for this particular component" % i
-
-        columnums = []
-        for i in columnames:
-            try:
-                columnums.append(self._colnames[i.lower()])
-            except KeyError, e:
-                raise DataError, '%s not a recognized column name' % i
+    def columns(self, columnameList, rows=None):
+        ti = time.time()
+        if not isinstance(columnameList, list):
+            raise DataError, ("""The column names attribute should be a python
+                        list of variable names - %s
+                        """%columnameList)
+        for columname in columnameList:
+            self.check_varname_exists(columname)
 
         if rows is not None:
-            #dataSubset = self.data[rows,:][:,columnums]
-            dataSubset = self.data[rows, :][:, columnums]
-            return DataArray(dataSubset, columnames)
-        dataSubset = self.data[:, columnums]
-        return DataArray(dataSubset, columnames)
+            colData = DataArray(self.data[rows][columnameList], columnameList, self.index[rows])
+        else:
+            colData = DataArray(self.data[columnameList], columnameList, self.index)
+        print "Time taken to extract and create DataArray obj is %.6f" %(time.time()-ti)
+        return colData
 
     def columnsOfType(self, columnames, rows=None, colTypes=None):
         if colTypes == None:
             return self.columns(columnames, rows)
 
         dataSubset = self.columns(columnames, rows)
-        dataCols = []
-
-        dtypeInput = []
         for i in range(len(columnames)):
             colName = columnames[i]
             colType = colTypes[colName]
-            dataCols.append(dataSubset.data[:, i].astype(colType))
-        dataSubset.data = rec.array(dataCols)
-
+            dataSubset.data[colName] = dataSubset.data[colName].astype(colType, copy=True)
         return dataSubset
 
+
     def rowsof(self, rows):
-        """
-        the method retrieves and returns a dataarray of rows that
-        were passed to the method.
-        """
+        return DataArray(self.data.ix[rows, :], self.data.columns.values, self.index[rows])
 
-        if isinstance(rows, ndarray):
-            if rows.size <> self.rows:
-                raise DataError, """the number of rows is inconsistent with """\
-                    """the number of rows in the data"""
-            if len(rows.shape) > 1:
-                rows = array([i[0] for i in rows])
-
-        rows_type = type(rows)
-        if rows_type in [tuple, list]:
-            if len(rows) <> self.rows:
-                raise DataError, """the number of rows is inconsistent with """\
-                    """the number of rows in the data"""
-            rows = array(rows)
-
-        return DataArray(self.data[rows, :], self.varnames)
+    def __repr__(self):
+        return repr(self.data)
 
     def __lt__(self, value):
+        if value is None:
+            raise DataError, "Cannot compare when value is None"
         return self.data < value
 
     def __gt__(self, value):
+        if value is None:
+            raise DataError, "Cannot compare when value is None"
         return self.data > value
 
     def __le__(self, value):
+        if value is None:
+            raise DataError, "Cannot compare when value is None"
         return self.data <= value
 
     def __ge__(self, value):
+        if value is None:
+            raise DataError, "Cannot compare when value is None"
         return self.data >= value
 
     def __eq__(self, value):
-        if value is not None:
-            return self.data == value
+        if value is None:
+            raise DataError, "Cannot compare when value is None"
+        return self.data == value
 
     def __ne__(self, value):
-        if value is not None:
-            return self.data <> value
+        if value is None:
+            raise DataError, "Cannot compare when value is None"
+        return self.data <> value
 
 
 class DataFilter(object):
 
-    """
-    This is the base class for specifying data filtering criterion.
-
-    Inputs:
-    varname - string
-    filter_string - string (less than, greater than, less than equals,
-    greater than equals, equals, not equals)
-    value - numeric value (used for filtering)
-    coefficients - dictionary (used for recalculating the varname after say some
-    a certain choice process was simulated)
-    """
-
-    def __init__(self, varname, filter_string, value, filter_type=None):
-
+    def __init__(self, varname, filterString, value, filterType=None):
         if not isinstance(varname, str):
-            raise DataError, """variable input has to be a valid """\
-                """ string object"""
+            raise DataError, ("""Variable name input has to be
+                              a string object""")
         self.varname = varname
 
-        if not isinstance(filter_string, str):
-            raise DataError, """the data filter string has to be a valid """\
-                """ string object"""
-
-        self.filter_string = filter_string
+        if not isinstance(filterString, str):
+            raise DateError, ("""Filter string has to be a valid
+                              string object""")
+        self.filterString = filterString
 
         value_type = type(value)
-
         if value_type in [int, float, str]:
             self.value = value
         else:
-            raise DataError, """the value has to be a valid numeric object or ; """\
-                """ a valid column name string object """\
-                """only 'float', 'int', 'str' objects are accepted checking to see """\
-                """if a column was specified instead for the value to check against. """
-
-        if not isinstance(filter_type, str) and (filter_type is not None):
-            raise DataError, """the data filter type has to be whether it is a logical """\
-                """ or/and keywords"""
-        self.filter_type = filter_type
+            raise DataError, ("""the value has to be a valid numeric object or ;
+                              a valid column name string object
+                              only 'float', 'int', 'str' objects are accepted checking to see
+                              if a column was specified instead for the value to check against. """)
 
     def compare(self, data):
-        #ti = time.time()
         if type(self.value) == str:
-            valueCheck = data.columns([self.value]).data
+            valueToCompareAgainst = data.column(self.value)
         else:
-            valueCheck = self.value
+            valueToCompareAgainst = self.value
 
-        if self.filter_string == 'less than':
-            valid_rows = data.columns([self.varname]) < valueCheck
+        if self.filterString == "less than":
+            valid_rows = data.column(self.varname) < valueToCompareAgainst
 
-        if self.filter_string == 'greater than':
-            valid_rows = data.columns([self.varname]) > valueCheck
+        if self.filterString == "greater than":
+            valid_rows = data.column(self.varname) > valueToCompareAgainst
 
-        if self.filter_string == 'less than equals':
-            valid_rows = data.columns([self.varname]) <= valueCheck
+        if self.filterString == "less than equals":
+            valid_rows = data.column(self.varname) <= valueToCompareAgainst
 
-        if self.filter_string == 'greater than equals':
-            valid_rows = data.columns([self.varname]) >= valueCheck
+        if self.filterString == "greater than equals":
+            valid_rows = data.column(self.varname) >= valueToCompareAgainst
 
-        if self.filter_string == 'equals':
-            valid_rows = data.columns([self.varname]) == valueCheck
+        if self.filterString == "equals":
+            valid_rows = data.column(self.varname) == valueToCompareAgainst
 
-        if self.filter_string == 'not equals':
-            valid_rows = data.columns([self.varname]) <> valueCheck
+        if self.filterString == "not equals":
+            valid_rows = data.column(self.varname) <> valueToCompareAgainst
 
-        valid_rows.shape = (valid_rows.shape[0], )
-        # print "\t\t\t\tExtracting for one filter took - %.4f"
-        # %(time.time()-ti)
         return valid_rows
 
-    # Add by Dae to find index of rows on which information type value is 1
-    def row_indice(self, data):
-
-        valueCheck = self.value
-        return where(data.columns([self.varname]) == valueCheck)[0]
-
     def __repr__(self):
-        return '%s %s %s' % (self.varname, self.filter_string, self.value)
+        return ('Data Filter Object %s %s %s'
+                % (self.varname, self.filterString, self.value))
 
 
-import unittest
+if __name__ == "__main__":
+    from numpy import random
+
+    random.seed(1)
+
+    darr = DataArray(
+        random.random_integers(0, 10, (10000, 3)), ["first", "second", "third"])
+    print "Original"
+    print darr.data.head()
+
+    ti = time.time()
+    coefficients = {'first': 1.0, 'second': 1.0, 'first': 1.0, 'second': 1.0, 
+                            'first': 1.0, 'second': 1.0, 'first': 1.0, 'second': 1.0, 
+                            'first': 1.0, 'second': 1.0}
+    res = darr.calculate_equation(coefficients)
+    print "Addition in %.8f\n" %(time.time()-ti)
+
+    ti = time.time()
+    coefficients = {'first': 1.0, ('second', 'inv_third'): 1.0, 'first': 1.0, ('second', 'inv_third'): 1.0, 
+                            'first': 1.0, ('second', 'inv_third'): 1.0, 'first': 1.0, ('second', 'inv_third'): 1.0}
+    res = darr.calculate_equation(coefficients)
+    print "Addition with inverse (uses product) in %.8f\n" %(time.time()-ti)
+    
+    ti = time.time()
+    for i in range(5):
+        darr.data.loc[:,"res%s"%i] = res
+    print "Assigning in %.8f\n" %(time.time()-ti)
+
+    ti = time.time()
+    for i in range(5):
+        darr.data.ix[:,"res2%s"%i] = res
+    print "Assigning in %.8f\n" %(time.time()-ti)
+
+    darr.update_meta_data()
+    ti = time.time()
+    for i in range(5):
+        res = darr.columns(['res0', 'res1', 'res2', 'res3'], darr.data["first"]>4)
+        print res.rows,  (darr.data["first"]>4).sum()
+    print "Columns in in %.8f\n" %(time.time()-ti)
 
 
-class TestBadInputsDataArray(unittest.TestCase):
+    """
+    ti = time.time()
+    res = darr.data.eval("first*1 + second*1")
+    print "Addition eval in %.8f\n" %(time.time()-ti)
 
-    def setUp(self):
-        self.data = array([[1, 1.1], [1, 2.]])
-        self.data1 = zeros((3, 4, 1))
+    ti = time.time()
+    res = darr.data.eval("first*1+second/third*1")
+    print "Addition with inverse (uses product) eval in %.8f\n" %(time.time()-ti)
+    """
 
-        self.varnames = ['constant', 'var1']
-        self.varnames1 = [1, 'var2']
-        self.varnames2 = ['1wer', 'var2']
-        self.varnames3 = ['constant', 'var1', 'var2']
+    """
+    print "Sorted by first and third"
+    darr.sort(["first", "third"])
+    print darr
+    raw_input("Check")
 
-        self.coefficients = {'constant': 2.0, 'var1': 1.5}
-        self.coefficients1 = {'constant1': 2.0, 'var1': 1.5}
-        self.coefficients2 = {'constant': 'w2.0', 'var1': 1.5}
+    print "Addition"
+    coefficients = {'first': 1.0, 'second': 1.0}
+    res = darr.calculate_equation(coefficients)
+    print res
+    raw_input("Check")
 
-    def testdata(self):
-        self.assertRaises(DataError, DataArray, self.data1, self.varnames)
+    print "Addition with one column"
+    coefficients = {'first': 1.0}
+    res = darr.calculate_equation(coefficients)
+    print res
+    raw_input("Check")
+    
+    print "exponent"
+    res = darr.exp_calculate_equation(coefficients)
+    print res
+    raw_input("Check")
+    
+    print "Product"
+    coefficients = {'first': 1.0, 'second': 1.0}
+    res = darr.calculate_product(coefficients, inverse={'second': True})
+    print res
+    raw_input("Check")
+    
+    print "Retrieve Column"
+    print darr.column("third")
+    raw_input("Check")
 
-    def testvarnames(self):
-        self.assertRaises(DataError, DataArray, self.data, self.varnames1)
-        self.assertRaises(DataError, DataArray, self.data, self.varnames2)
-        self.assertRaises(DataError, DataArray, self.data, self.varnames3)
-
-    def testcoefficients(self):
-        data_array = DataArray(self.data, self.varnames)
-        self.assertRaises(DataError, data_array.calculate_equation,
-                          self.coefficients1)
-        self.assertRaises(DataError, data_array.calculate_equation,
-                          self.coefficients2)
-
-
-class TestDataArray(unittest.TestCase):
-
-    def setUp(self):
-        self.data = array([[1, 1.1], [1, 2.]])
-        self.data1 = [[1, 1.1], [1, 2.]]
-        self.varnames = ['constant', 'var1']
-        self.coefficients = {'constant': 2.0, 'var1': 1.5}
-
-    def testdata(self):
-        data_array = DataArray(self.data1, self.varnames)
-        self.assertEqual(type(self.data), type(data_array.data))
-
-        self.assertEqual(self.data.shape[0], data_array.rows)
-        self.assertEqual(self.data.shape[-1], data_array.cols)
-
-        result = data_array.calculate_equation(self.coefficients)
-        result_actual = self.data[:, 0] * 2.0 + self.data[:, 1] * 1.5
-        diff_result = any(result == result_actual)
-        self.assertEqual(True, diff_result)
-
-        result_exp = data_array.exp_calculate_equation(self.coefficients)
-        result_exp_actual = exp(result_actual)
-        diff_result = any(result_exp_actual == result_exp)
-        self.assertEqual(True, diff_result)
-
-    def testretrievecolumns(self):
-        data_array = DataArray(self.data1, self.varnames)
-        columnames = ['Var1', 'constant']
-        result = data_array.columns(columnames)
-
-        columnames_lower = [i.lower() for i in columnames]
-        self.assertEqual(columnames_lower, result.varnames)
-
-        rows = data_array.columns(['constant']) == 2
-        result = data_array.rowsof(rows)
-        print result.varnames
-        print result.data.shape[0]
-
-
-if __name__ == '__main__':
-    unittest.main()
+    print "Add Column"
+    print darr.insertcolumn("fifth", random.random_integers(0, 10, (10, 1)))
+    print darr
+    raw_input("Check")
+    
+    print "Add Columns"
+    print darr.insertcolumn(["sixth", "seventh"], random.random_integers(0, 10, (10, 2)))
+    print darr
+    raw_input("Check")
+    """

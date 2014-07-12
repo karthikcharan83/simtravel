@@ -60,7 +60,7 @@ class TravelSkimsInfo(object):
                                                    dist_skim_var,
                                                    dist_fileLocation,
                                                    dist_delimiter)
-        print 'Skim added - ', dbInfoObject
+        #print 'Skim added - ', dbInfoObject
 
         self.tableDBInfoList.append(dbInfoObject)
         self.tableNamesList.append(tableName)

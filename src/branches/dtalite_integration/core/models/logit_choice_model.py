@@ -5,6 +5,7 @@ from openamos.core.models.abstract_choice_model import AbstractChoiceModel
 from openamos.core.models.abstract_probability_model import AbstractProbabilityModel
 from openamos.core.errors import SpecificationError
 
+from pandas import DataFrame as df
 
 class LogitChoiceModel(AbstractChoiceModel):
 
@@ -30,7 +31,7 @@ class LogitChoiceModel(AbstractChoiceModel):
         data - DataArray object
         """
         values = self.calculate_expected_values(data)
-        values.data = ma.array(values.data)
+        #values.data = ma.array(values.data)
         return values
 
     def validchoiceutilities(self, data, choiceset):
@@ -43,12 +44,15 @@ class LogitChoiceModel(AbstractChoiceModel):
         choiceset - DataArray object
         """
         valid_values = self.calc_observed_utilities(data)
+        #print "utilities", valid_values
+        return valid_values
+        """
         for i in choiceset.varnames:
             mask = choiceset.column(i) == 0
             if any(mask == True):
                 valid_values.setcolumn(i, ma.masked, mask)
         return valid_values
-
+    """
     def calc_exp_choice_utilities(self, data, choiceset):
         """
         The method returns the exponent of the observed portion of the
@@ -58,8 +62,8 @@ class LogitChoiceModel(AbstractChoiceModel):
         data - DataArray object
         choiceset - DataArray object
         """
-        values = self.validchoiceutilities(data, choiceset)
-        values.data = exp(values.data)
+        #values = self.validchoiceutilities(data, choiceset)
+        #values.data = exp(values.data)
         return self.calculate_exp_expected_values(data)
 
     def calc_probabilities(self, data, choiceset):
@@ -73,10 +77,12 @@ class LogitChoiceModel(AbstractChoiceModel):
         """
         exp_expected_utilities = self.calc_exp_choice_utilities(
             data, choiceset)
-        exp_utility_sum = exp_expected_utilities.data.cumsum(-1)
-        exp_utility_sum_max = exp_utility_sum.max(-1)
-        probabilities = (exp_expected_utilities.data.transpose()
-                         / exp_utility_sum_max).transpose()
+        #print "exp util",  exp_expected_utilities
+        exp_utility_sum = exp_expected_utilities.cumsum(1)
+        #print "exp util sum",  exp_utility_sum
+        exp_utility_sum_max = exp_utility_sum.max(1)
+        probabilities = exp_expected_utilities.div(exp_utility_sum_max, axis=0)
+        #print "prob",  probabilities
         return probabilities
 
     def calc_chosenalternative(self, data, choiceset=None, seed=1):
@@ -89,10 +95,11 @@ class LogitChoiceModel(AbstractChoiceModel):
         choiceset = DataArray object
         """
         if choiceset is None:
-            choiceset = DataArray(array([]), [])
-        probabilities = DataArray(self.calc_probabilities(data, choiceset),
-                                  self.specification.choices)
-        prob_model = AbstractProbabilityModel(probabilities, seed)
+            choiceset = DataArray()
+        pred_prob = self.calc_probabilities(data, choiceset)
+        #probabilities = DataArray(pred_prob, self.specification.choices, 
+        #                                        data.index)
+        prob_model = AbstractProbabilityModel(pred_prob, seed)
         return prob_model.selected_choice()
 
 import unittest

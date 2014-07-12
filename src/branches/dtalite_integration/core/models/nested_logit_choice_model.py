@@ -5,6 +5,8 @@ from openamos.core.models.abstract_choice_model import AbstractChoiceModel
 from openamos.core.models.abstract_probability_model import AbstractProbabilityModel
 from openamos.core.errors import SpecificationError
 
+from pandas import DataFrame as df
+
 
 class NestedLogitChoiceModel(AbstractChoiceModel):
 
@@ -52,6 +54,8 @@ class NestedLogitChoiceModel(AbstractChoiceModel):
         choiceset - DataArray object
         """
         valid_values = self.calc_observed_utilities(data)
+        return valid_values
+        """
         for i in choiceset.varnames:
             mask = choiceset.column(i) == 0
             if any(mask == True):
@@ -59,7 +63,7 @@ class NestedLogitChoiceModel(AbstractChoiceModel):
                 for i in child_choices + [i]:
                     valid_values.setcolumn(i, ma.masked, mask)
         return valid_values
-
+     """
     def calc_exp_choice_utilities(self, data, choiceset):
         """
         The method returns the exponent of the observed portion of the
@@ -192,9 +196,11 @@ class NestedLogitChoiceModel(AbstractChoiceModel):
                                                  parent_column)
 
         self.specification.actual_choices.sort()
-        probabilities = DataArray(ma.zeros((exp_expected_utilities.rows,
-                                            len(self.specification.actual_choices))),
-                                  self.specification.actual_choices)
+        rows = exp_expected_utilities.rows
+        cols = len(self.specification.actual_choices)
+        probabilities = DataArray(zeros((rows, cols)),
+                                                self.specification.actual_choices, 
+                                                data.index)
 
         for choice in self.specification.actual_choices:
             probabilities.setcolumn(
@@ -212,7 +218,7 @@ class NestedLogitChoiceModel(AbstractChoiceModel):
         choiceset = DataArray object
         """
         if choiceset is None:
-            choiceset = DataArray(array([]), [])
+            choiceset = DataArray()
         probabilities = self.calc_probabilities(data, choiceset)
         prob_model = AbstractProbabilityModel(probabilities, seed)
         return prob_model.selected_choice()

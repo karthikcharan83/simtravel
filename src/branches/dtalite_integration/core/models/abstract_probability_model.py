@@ -3,6 +3,9 @@ from openamos.core.errors import ProbabilityError, DataError
 from openamos.core.data_array import DataArray
 from openamos.core.models.abstract_random_distribution_model import RandomDistribution
 
+from pandas import DataFrame as df
+from pandas import Series
+
 
 class AbstractProbabilityModel(object):
 
@@ -15,16 +18,13 @@ class AbstractProbabilityModel(object):
     """
 
     def __init__(self, probabilities, seed=1):
-        if not isinstance(probabilities, DataArray):
-            raise DataError, 'probability input is not a valid DataArray object'
-
         if seed == None:
             raise Exception, "probability"
-        self.seed = seed
 
-        self.probabilities = ma.array(probabilities.data)
+        self.seed = seed
+        self.probabilities = probabilities
         self.check()
-        self.choices = probabilities.varnames
+        self.choices = list(probabilities.columns.values)
 
     def check(self):
         """
@@ -35,7 +35,9 @@ class AbstractProbabilityModel(object):
         None
         """
         self.check_probabilities()
+        #self.check_valid_probabilities()
         self.check_sum()
+
 
     def check_probabilities(self):
         """
@@ -45,8 +47,10 @@ class AbstractProbabilityModel(object):
         Inputs:
         None
         """
-        if not isinstance(self.probabilities, ndarray):
-            raise ProbabilityError, 'probability input is not a valid array object'
+        if not isinstance(self.probabilities, df):
+            raise ProbabilityError, ("""Probability input is not a valid 
+                                Pandas DataFrame object. Instead provided
+                                %s"""%(type(self.probabilities)))
 
     def check_sum(self):
         """
@@ -62,20 +66,41 @@ class AbstractProbabilityModel(object):
         #cumsum_across_rows = self.probabilities.cumsum(-1)[:,-1]
         # print cumsum_across_rows
         # print 'NEW CUM SUM'
-        cumsum_across_rows = self.probabilities.sum(-1)
-        # print cumsum_across_rows
-        diff_from_unity = abs(cumsum_across_rows - 1)
-        # print self.probabilities
-        # print diff_from_unity
-        # print diff_from_unity
-        #rowsId = diff_from_unity < 1e-6
-        #a = array(range(self.probabilities.shape[0]))+1
-
-        # print self.probabilities[~rowsId], a[~rowsId]
-
-        if not ma.all(diff_from_unity < 1e-6):
+        cumsum_across_rows = self.probabilities.sum(1)
+        #print self.probabilities.head()
+        #print cumsum_across_rows.head()
+        cumsum_zeros_ind = cumsum_across_rows.isnull()
+        
+        diff_from_unity = Series.abs(cumsum_across_rows - 1)
+        if cumsum_zeros_ind.any():
+            check_sum_across = diff_from_unity[~cumsum_zeros_ind] < 1e-6
+            #self.error = True
+            #raw_input("Cumulative sum is zero")
+        else:
+            check_sum_across = diff_from_unity < 1e-6
+            #self.error = False
+        if not check_sum_across.all():
             raise ProbabilityError, """probability values do not add up """ \
                 """to one across rows"""
+
+
+    def check_valid_probabilities(self):
+        """
+        The method checks to make sure that the probabilities are not
+        Nan.
+
+        Inputs:
+        None
+        """
+        nullProb = self.probabilities.isnull()
+        if not nullProb.any().any():
+            return
+        else:
+            #self.probabilities[nullProb] = 0
+            print nullProb
+            print self.probabilities
+            #raise ProbabilityError,  "Some probabilities are not valid"
+            raw_input("Some probabilities are not valid")
 
     def generate_random_numbers(self):
         """
@@ -104,7 +129,7 @@ class AbstractProbabilityModel(object):
         Inputs:
         None
         """
-        return self.probabilities.cumsum(-1)
+        return self.probabilities.cumsum(1)
 
     def selected_choice(self):
         """
@@ -113,36 +138,48 @@ class AbstractProbabilityModel(object):
         Inputs:
         None
         """
-        choice = zeros(self.num_agents)
+        choice = Series(zeros(self.num_agents), name="selected choice",  
+                                index=self.probabilities.index)
+
+        #choice = DataArray(zeros((self.num_agents, 1)), ["selected choice"], 
+        #                             self.probabilities.index)
         random_numbers = self.generate_random_numbers()
 
-        self.prob_cumsum = self.cumprob().filled(-1)
+        #self.prob_cumsum = self.cumprob().filled(-1)
+        self.prob_cumsum = self.cumprob()
+        
+        self.prob_cumsum.fillna(-1,  inplace=True)
 
         for i in range(self.num_choices):
             # Indicator for the zero cells in the choice array
             #indicator_zero_cells = ones(self.num_agents)
-            indicator = array([True] * self.num_agents)
+            ##indicator = array([True] * self.num_agents)
 
-            zero_indices = choice == 0
+            #zero_indices = choice == 0
             #indicator_zero_cells[~zero_indices] = ma.masked
-            indicator[~zero_indices] = False
+            ##indicator[~zero_indices] = False
 
             # Indicator for the cells where the random number
             # is less than the probability
             #indicator_less_cells = ones(self.num_agents)
             #indicator_less_cells = array([True]*self.num_agents)
-            less_indices = random_numbers < self.prob_cumsum[:, i]
+            if i == 0:
+                indices = random_numbers < self.prob_cumsum.ix[:, i]
+            else:
+                indices = ((random_numbers < self.prob_cumsum.ix[:, i]) &
+                                (random_numbers >= self.prob_cumsum.ix[:, i-1]))
+
             #indicator_less_cells[~less_indices] = ma.masked
             # indicator_less_cells
-            indicator[~less_indices] = False
+            #indicator[~less_indices] = False
 
             #indicator_less_zero_cells = indicator_zero_cells + indicator_less_cells
 
             #indicator_less_zero_cells = indicator_less_zero_cells == 2
+            #choice.setcolumn("selected choice", i + 1, indices)
+            choice.loc[indices] = i+1
 
-            choice[indicator] = i + 1
-
-        choice.shape = (self.num_agents, 1)
+        #choice.shape = (self.num_agents, 1)
 
         #alt_text = []
         # for i in choice:
@@ -151,8 +188,12 @@ class AbstractProbabilityModel(object):
         #alt_text.shape = (self.num_agents, 1)
 
         # return alt_text
-        # print choice
-        return DataArray(choice, ['selected choice'])
+        #return DataArray(choice, ['selected choice'], self.probabilities.index)
+        #if self.error:
+        #    print "choice is "
+        #    print choice
+        #    raw_input("check choice for invalid sum of prob")
+        return choice
 
 import unittest
 

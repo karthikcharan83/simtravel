@@ -218,6 +218,8 @@ class ConfigParser(object):
     def parse_tableHierarchy(self, component_element):
         # print "-- Parse table hierarchy --"
         dbTables_element = component_element.find('DBTables')
+        index = dbTables_element.get("index")
+        index = re.split('[,]', index)
         tableIterator = dbTables_element.getiterator("Table")
         tableOrderDict = {}
         tableNamesKeyDict = {}
@@ -236,7 +238,7 @@ class ConfigParser(object):
                 tableOrder = int(tableOrder)
                 tableOrderDict[tableOrder] = [tableName, tableKeys]
             tableNamesKeyDict[tableName] = [tableKeys, countKeys]
-        return tableOrderDict, tableNamesKeyDict
+        return tableOrderDict, tableNamesKeyDict, index
 
     def parse_network_tables(self):
         print "-- Parse skims tables' Time of Day information --"
@@ -409,7 +411,8 @@ class ConfigParser(object):
         deleteCriterion = self.return_delete_records_criterion(
             component_element)
 
-        tableOrder, tableKeys = self.parse_tableHierarchy(component_element)
+        tableOrder, tableKeys,  index = self.parse_tableHierarchy(component_element)
+                
         if comp_write_table is not None:
             comp_keys = tableKeys[comp_write_table]
         else:
@@ -537,6 +540,7 @@ class ConfigParser(object):
                                       delete_dict=delete_dict,
                                       writeToTable2=comp_write_to_table2,
                                       key2=key2,
+                                      index=index, 
                                       pre_run_filter=pre_run_filter,
                                       writeToLocFlag=writeToLocFlag)
         return component
@@ -690,6 +694,14 @@ class ConfigParser(object):
         else:
             return 1
 
+    def process_number_processes(self, model_element):
+        seed = model_element.get('number_processes')
+        if seed is not None:
+            return int(seed)
+        else:
+            return 1
+
+
     def create_regression_object(self, model_element, projectSeed=0):
         # model type
         model_type = model_element.get('type')
@@ -807,6 +819,7 @@ class ConfigParser(object):
         # model type
         model_type = model_element.get('type')
         seed = self.process_seed(model_element) + projectSeed
+        
         # variable list required for running the model
         variable_list = []
 
@@ -1404,6 +1417,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1438,7 +1452,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1451,6 +1466,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1494,7 +1510,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1552,6 +1569,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1595,7 +1613,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1615,6 +1634,7 @@ class ConfigParser(object):
         #    model_type == 'Processing'
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1660,7 +1680,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1798,6 +1819,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1834,7 +1856,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1845,6 +1868,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1883,7 +1907,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1894,6 +1919,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1932,7 +1958,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1945,6 +1972,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element)
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -1983,7 +2011,8 @@ class ConfigParser(object):
 
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         self.model_list.append(model_object)
 
@@ -1994,6 +2023,7 @@ class ConfigParser(object):
         variable_list = []
 
         seed = self.process_seed(model_element) + projectSeed
+        number_processes = self.process_number_processes(model_element)
 
         depvariable_element = model_element.find('DependentVariable')
         dep_varname = depvariable_element.get('var')
@@ -2035,7 +2065,8 @@ class ConfigParser(object):
         model_type = 'create_scalar'
         model_object = SubModel(model, model_type, dep_varname, dataFilter,
                                 runUntilFilter, seed=seed, filter_type=filter_type,
-                                run_filter_type=run_filter_type)
+                                run_filter_type=run_filter_type, 
+                                number_processes=number_processes)
 
         # return model_object, variable_list
         self.model_list.append(model_object)
@@ -2769,6 +2800,15 @@ class ConfigParser(object):
         sampleField = spatial_query_element.get('sample_var')
 
         countChoices = spatial_query_element.get('count')
+        buildTSPrism = spatial_query_element.get("build_tsp")
+        if buildTSPrism is None:
+            buildTSPrism = False 
+        elif buildTSPrism == "True":
+            buildTSPrism = True
+        else:
+            buildTSPrism = False
+        #print "this is the value of buildTSPrism",  type(buildTSPrism),  buildTSPrism
+        #raw_input()
         if countChoices is not None:
             countChoices = int(countChoices)
         thresholdTimeConstraint = spatial_query_element.get('threshold')
@@ -2809,8 +2849,8 @@ class ConfigParser(object):
         else:
             votdField = None
 
-        # if sampleField is None:
-        #    self.component_variable_list = self.component_variable_list + [startTableVar, endTableVar]
+        if not buildTSPrism:
+            self.component_variable_list = self.component_variable_list + [startTableVar, endTableVar]
 
         locationVariables = []
         locationInfoTable = None
@@ -2854,7 +2894,8 @@ class ConfigParser(object):
                                            locationIdVar,
                                            locationVariables,
                                            locationFilterList,
-                                           locationFilterType)
+                                           locationFilterType, 
+                                           buildTSPrism)
 
         # print prismConstraint
         return prismConstraint

@@ -43,7 +43,7 @@ struct Skim alloc_skim_memory(int nodes)
 	skim.tt_matrix[x] = (float *)malloc(matrix_size*sizeof(float));
 	skim.dist_matrix[x] = (float *)malloc(matrix_size*sizeof(float));
     }
-    printf("\nC--> Graph created");
+    //printf("\nC--> Graph created");
     return skim;
 }
 
@@ -74,7 +74,7 @@ void populate_skim(struct Mode mode, int index, char *loc)
         //error if file is null
         perror(loc);
     }
-    printf("\nC--> Travel time matrix populated");
+    //printf("\nC--> Travel time matrix populated");
 }
 /*
 void get_tt(struct Mode mode, int skim_index, int *origin, int *dest, double *tt, int size)
@@ -177,7 +177,7 @@ void get_locations(struct Mode mode, int skim_index, int *origin, int *dest, dou
     int* nodes_checked_copy;
     int* nodes_checked;
 
-    srand(0);
+    srand(seed[0]);
 
     nodes_checked_copy = (int *)malloc(nodes_available_size*sizeof(int));
  

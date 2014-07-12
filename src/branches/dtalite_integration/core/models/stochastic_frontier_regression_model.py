@@ -4,6 +4,7 @@ from openamos.core.models.abstract_regression_model import AbstractRegressionMod
 from openamos.core.errors import ErrorSpecificationError
 from openamos.core.models.abstract_random_distribution_model import RandomDistribution
 
+from pandas import DataFrame as df
 
 class StocFronRegressionModel(AbstractRegressionModel):
 
@@ -91,7 +92,11 @@ class StocFronRegressionModel(AbstractRegressionModel):
         err = self.calc_errorcomponent(variance_norm, variance_halfnorm,
                                        vertex, size, seed)
 
-        pred_value = expected_value.data + err
+        pred_value = expected_value + err
+        
+        if (self.error_specification.lower_threshold == 0 or
+             self.error_specification.upper_threshold == 0):
+                 return pred_value
 
         # upper threshold - lower threshold is assumed to be 2 sd
         # scattering the points at lower threshold/upper threshold dispersed by
@@ -104,7 +109,7 @@ class StocFronRegressionModel(AbstractRegressionModel):
         # print 'sd - ', self.error_specification.upper_threshold
 
         lowerLimit = self.error_specification.lower_threshold - standDev
-        upperLimit = self.error_specification.lower_threshold + standDev
+        upperLimit = self.error_specification.upper_threshold + standDev
 
         if lowerLimit < 5:
             lowerLimit = 5
@@ -118,31 +123,29 @@ class StocFronRegressionModel(AbstractRegressionModel):
 
         if self.error_specification.lower_threshold > 0:
             threshold = self.error_specification.lower_threshold
-            predValue_lessThresholdInd = pred_value < threshold
-            numRows = predValue_lessThresholdInd.sum()
-
+            predValue_lessThresholdInd = (pred_value < threshold).values
             pred_value[predValue_lessThresholdInd] = threshold
 
-            if numRows > 0:
+            if predValue_lessThresholdInd.any():
+                numRows = predValue_lessThresholdInd.sum()
                 size = (numRows, 1)
                 smoothingErr = self.calc_halfnormal_error(
                     threshold, lowerLimit, seed, size)
-                pred_value[predValue_lessThresholdInd] -= smoothingErr[:, 0]
+                pred_value[predValue_lessThresholdInd] -= smoothingErr
 
         if self.error_specification.upper_threshold > 0:
             threshold = self.error_specification.upper_threshold
-            predValue_moreThresholdInd = pred_value > threshold
-            numRows = predValue_moreThresholdInd.sum()
-
+            predValue_moreThresholdInd = (pred_value > threshold).values
             pred_value[predValue_moreThresholdInd] = threshold
 
-            if numRows > 0:
+            if predValue_moreThresholdInd.any():
+                numRows = predValue_moreThresholdInd.sum()
                 size = (numRows, 1)
                 smoothingErr = self.calc_halfnormal_error(
                     threshold, upperLimit, seed, size)
-                pred_value[predValue_moreThresholdInd] += smoothingErr[:, 0]
+                pred_value[predValue_moreThresholdInd] += smoothingErr
 
-        return DataArray(pred_value, self.specification.choices)
+        return pred_value
 
 
 import unittest

@@ -1,10 +1,42 @@
 from openamos.core.agents.person import Person
 from openamos.core.agents.activity import ActivityEpisode
 from openamos.core.models.abstract_model import Model
+from openamos.core.data_array import DataArray
 
-from numpy import array, logical_and, zeros, histogram
+from openamos.core.models.schedules_model_components import split_df
+from openamos.core.models.schedules_model_components import resolve_by_multiprocessing
+from openamos.core.models.schedules_model_components import return_act
 
 import time
+
+def reconcile_schedules(args):
+    data = args[0]
+    seed = args[1]
+    activityAttribs = args[2]
+    
+    t = time.time()
+    data["actobjects"] = data.apply(lambda x: return_act(x,  activityAttribs),  axis=1)
+    
+    pschedulesGrouped = data.groupby(level=[0,1], sort=False)    
+    print "Size is %d and time taken to run the df apply - %.4f" %(data.shape[0], time.time()-t)
+    
+    t = time.time()
+    actList = []
+    for (hid,pid), pidSchedules in pschedulesGrouped:
+        personObject = Person(hid, pid)
+        
+        activityList = list(pidSchedules["actobjects"].values)
+        personObject.add_episodes(activityList)
+
+        reconciledSchedules = personObject.reconcile_activity_schedules(seed)
+
+        if not personObject._check_for_conflicts():
+            raise Exception, "THE SCHEDULES ARE STILL MESSED UP"
+
+        actList += reconciledSchedules
+
+    print "Time taken to loop through all schedules - %.4f" %(time.time()-t)
+    return actList
 
 
 class ReconcileSchedules(Model):
@@ -14,116 +46,83 @@ class ReconcileSchedules(Model):
         self.specification = specification
         self.activityAttribs = self.specification.activityAttribs
 
-    def create_indices(self, data):
-        idCols = data.columns([self.activityAttribs.hidName,
-                               self.activityAttribs.pidName]).data
-        combId = idCols[:, 0] * 100 + idCols[:, 1]
+        self.hidName = self.activityAttribs.hidName
+        self.pidName = self.activityAttribs.pidName
+        self.scheduleidName = self.activityAttribs.scheduleidName
+        self.activitytypeName = self.activityAttribs.activitytypeName
+        self.locationidName = self.activityAttribs.locationidName
+        self.starttimeName = self.activityAttribs.starttimeName
+        self.endtimeName = self.activityAttribs.endtimeName
+        self.durationName = self.activityAttribs.durationName
+        self.dependentPersonName = self.activityAttribs.dependentPersonName
+        self.tripCountName = self.activityAttribs.tripCountName        
 
-        # print idCols[:20,:]
-        # print 'comid', combId[:20]
-        # print 'comid', combId[-20:]
+        self.colNames = [self.hidName,
+                                  self.pidName,
+                                  self.scheduleidName,
+                                  self.activitytypeName,
+                                  self.starttimeName,
+                                  self.endtimeName,
+                                  self.locationidName,
+                                  self.durationName,
+                                  self.dependentPersonName,
+                                  self.tripCountName]
 
-        comIdUnique, comId_reverse_indices = unique(
-            combId, return_inverse=True)
 
-        # print 'unique', comIdUnique[:20]
-        # print 'unique records', comIdUnique.shape
-        # print 'reverse indices', comId_reverse_indices[:20]
-        # print 'reverse indices', comId_reverse_indices[-20:]
+    def resolve_consistency(self, data, seed, numberProcesses):
+        #TODO: add the number of workers/processes as an input in the config file
 
-        binsIndices = array(range(comId_reverse_indices.max() + 2))
+        splits = split_df(data.data, houseidCol=self.hidName, 
+                                   workers=numberProcesses)
+        args = [(split,seed,  self.activityAttribs) for split in splits]        
+        
+        resultList = []
+        resultList += resolve_by_multiprocessing(func=reconcile_schedules, 
+                                                                        args=args,  
+                                                                        workers=numberProcesses)
 
-        histIndices = histogram(comId_reverse_indices, bins=binsIndices)
-        # print histIndices[0][:20]
-        # print histIndices[0][-20:]
-
-        indicesRowCount = histIndices[0]
-
-        indicesRow = indicesRowCount.cumsum()
-        # print 'Row Count', indicesRowCount[:20]
-        # print 'Row Index Low', indicesRow[:20]
-        # print 'Row Index Hig', indicesRowHigh[:20]
-
-        self.indices = zeros((comIdUnique.shape[0], 4), dtype=int)
-
-        # print self.indices.shape
-        # print idCols.shape
-        # print indicesRow.shape
-        # print binsIndices.shape
-
-        self.indices[:, 0] = comIdUnique / 100
-        self.indices[:, 1] = comIdUnique - self.indices[:, 0] * 100
-
-        self.indices[1:, 2] = indicesRow[:-1]
-        self.indices[:, 3] = indicesRow
-
-        # print self.indices[:20, :]
-        # print self.indices[-20:, :]
-
-        #raw_input('New implementation of indics -')
-
+        return DataArray(resultList,  self.colNames)
+        
+    """
     def resolve_consistency(self, data, seed):
+        print "seed",  seed
         actList = []
-        data.sort([self.activityAttribs.hidName,
-                   self.activityAttribs.pidName,
-                   self.activityAttribs.scheduleidName])
-        ti = time.time()
-        # Create Index Matrix
-        self.create_indices(data)
-
-        print 'Indices created in %.4f' % (time.time() - ti)
-        hidCol = data._colnames[self.activityAttribs.hidName]
-        pidCol = data._colnames[self.activityAttribs.pidName]
-
-        schidCol = data._colnames[self.activityAttribs.scheduleidName]
-        actTypeCol = data._colnames[self.activityAttribs.activitytypeName]
-        locidCol = data._colnames[self.activityAttribs.locationidName]
-        sttimeCol = data._colnames[self.activityAttribs.starttimeName]
-        endtimeCol = data._colnames[self.activityAttribs.endtimeName]
-        durCol = data._colnames[self.activityAttribs.durationName]
-
-        colNames = [self.activityAttribs.hidName,
-                    self.activityAttribs.pidName,
-                    self.activityAttribs.scheduleidName,
-                    self.activityAttribs.activitytypeName,
-                    self.activityAttribs.starttimeName,
-                    self.activityAttribs.endtimeName,
-                    self.activityAttribs.locationidName,
-                    self.activityAttribs.durationName,
-                    self.activityAttribs.dependentPersonName,
-                    self.activityAttribs.tripCountName]
-
-        row = 0
-
-        for perIndex in self.indices:
-            schedulesForPerson = data.data[perIndex[2]:perIndex[3], :]
-
-            activityList = []
-            for sched in schedulesForPerson:
-                hid = sched[hidCol]
-                pid = sched[pidCol]
-
-                scheduleid = sched[schidCol]
-                activitytype = sched[actTypeCol]
-                locationid = sched[locidCol]
-                starttime = sched[sttimeCol]
-                endtime = sched[endtimeCol]
-                duration = sched[durCol]
-
-                actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
-                                             starttime, endtime, duration)
-                activityList.append(actepisode)
-
-            personObject = Person(perIndex[0], perIndex[1])
+        grpByCols = [self.hidName, self.pidName]
+        for (hid, pid), pidSchedules in data.data.groupby(grpByCols,  sort=False):
+            #for pid,  pidSchedules in hidSchedules.groupby(level=1, axis=0):
+            personObject = Person(hid, pid)                
+            activityList = self.return_activity_list_for_person(pidSchedules)
             personObject.add_episodes(activityList)
-            personObject.reconcile_activity_schedules(seed)
-            reconciledSchedules = personObject._collate_results_aslist()
+        
+            reconciledSchedules = personObject.reconcile_activity_schedules(seed)
 
             if not personObject._check_for_conflicts():
                 raise Exception, "THE SCHEDULES ARE STILL MESSED UP"
 
             actList += reconciledSchedules
-        return DataArray(actList, colNames)
+            #personObject.print_activity_list()
+        #raw_input("Completed reconciling schedules in %.4f" %(time.time()-ti))
+        return DataArray(actList, self.colNames)
+   """
+    def return_activity_list_for_person(self, pidSchedules):
+        # Updating activity list
+        activityList = []
+        for index, schedule in pidSchedules.iterrows():
+            hid = schedule[self.hidName]
+            pid = schedule[self.pidName]
+
+            scheduleid = schedule[self.scheduleidName]
+            activitytype = schedule[self.activitytypeName]
+            locationid = schedule[self.locationidName]
+            starttime = schedule[self.starttimeName]
+            endtime = schedule[self.endtimeName]
+            duration = schedule[self.durationName]
+
+            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
+                                         starttime, endtime, duration)
+            activityList.append(actepisode)
+        return activityList
+
 
 import unittest
 from numpy import genfromtxt, unique

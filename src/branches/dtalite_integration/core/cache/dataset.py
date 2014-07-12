@@ -1,402 +1,220 @@
-import tables as t
 import time
+import os
 
-from numpy import unique
+from pandas import DataFrame as df
+from numpy import unique, int64, int, float32, float, load
 from numpy.ma import zeros, masked_equal, ones
-from openamos.core.cache.dataset_table_layouts import *
 from openamos.core.data_array import DataArray
 
 
 class DB(object):
 
-    def __init__(self, fileLoc, mode='w', fileName=None):
+    def __init__(self):
 
-        if fileName == None:
-            fileName = "amosdb"
+        # TODO: where do we get the table definitions and relationships from
+        # for now this is static
 
-        self.fileh = t.openFile("%s/%s.h5" % (fileLoc, fileName), mode=mode)
+        self.tableCols = {'travel_skims': ['origin', 'destination', 'tt'],
+                          'locations': ['locationid', 'retail_employment', 'office_employment', 'public_employment',
+                                        'industrial_employment', 'other_employment',
+                                        'retail_employment_density', 'office_employment_density', 'public_employment_density',
+                                        'other_employment_density',
+                                        'total_area', 'low_income', 'lowest_income', 'high_income',
+                                        'institutional_population', 'groupquarter_households',
+                                        'residential_households'],
+                          'households_r': ['houseid', 'vehcount', 'vehdefi', 'avratio', 'informationtype', 'ecoflag'],
+                          'vehicles_r': ['houseid', 'vehid', 'vehtype'],
+                          'schedule_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                         'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_ltrec_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                               'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_allocterm_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                               'endtime', 'duration', 'dependentpersonid'],
 
-        """
-        if partId is None:
-            self.fileh = t.openFile("%s/amosdb.h5" %(fileLoc), mode=mode)
-        else:
-            self.fileh = t.openFile("%s/amosdb_part_%s.h5" %(fileLoc, partId), mode=mode)
+                          'schedule_cleanfixedactivityschedule_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                                    'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_childreninctravelrec_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                              'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_childrenlastprismadj_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                              'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_cleanaggregateactivityschedule_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                              'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_skeleton_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                              'endtime', 'duration', 'dependentpersonid'],
 
-        """
+                          'schedule_conflictrec_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                     'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_inctravelrec_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                      'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_dailyallocrec_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                       'endtime', 'duration', 'dependentpersonid'],
+                          'schedule_final_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                               'endtime', 'duration', 'dependentpersonid', 'tripcount'],
+                          'schedule_elapsed_r': ['houseid', 'personid', 'activitytype', 'locationid', 'starttime',
+                                                 'endtime', 'duration', 'dependentpersonid', 'tripcount'],
 
-    def create_inputCache(self):
-        input_grp = self.fileh.createGroup(self.fileh.root, "input_grp")
+                          'trips_r': ['houseid', 'personid', 'vehid', 'tripmode', 'fromzone', 'tozone', 'starttime', 'endtime', 'trippurposefrom',
+                                      'trippurpose', 'duration', 'occupancy', 'tripind', 'dependentpersonid', 'tripwithhhmember',
+                                      'lasttripdependentpersonid', 'lastoccupancy', 'starttripcount', 'endtripcount',
+                                      'startdependentpersonid', 'enddependentpersonid', 'tripcount', 'lasttripcount'],
 
-        # Input Tables - Creatign the table
-        self.fileh.createTable(input_grp, "travel_skims_peak", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_offpeak", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_0", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_1", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_2", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_3", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_4", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_5", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_6", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_7", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_8", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_9", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_10", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_11", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_12", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_13", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_14", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_15", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_16", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_17", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_18", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_19", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_20", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_21", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_22", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_23", Travel_Skims)
+                          'trips_with_nonhh_r': ['houseid', 'personid', 'vehid', 'tripmode', 'fromzone', 'tozone', 'starttime', 'endtime', 'trippurposefrom',
+                                                 'trippurpose', 'duration', 'occupancy', 'dependentpersonid'],
 
-        self.fileh.createTable(input_grp, "locations", Locations)
+                          'trips_to_dta_r': ['tripid', 'houseid', 'personid', 'vehid', 'tripmode',
+                                             'fromzone', 'tozone', 'starttime', 'endtime', 'trippurpose', 'duration',
+                                             'dependentpersonid', 'persononnetworkflag', 'valueoftime', 'informationtype',
+                                             'pricingtype', 'vehicletype', 'vehicleage'],
+                          'current_occupancy_r': ['houseid', 'personid', 'tripid', 'occupancy', 'dependentpersonid', 'tripcount'],
+                          'trips_invalid_r': ['tripid', 'tripind'],
+                          'persons_r': ['houseid','personid','vehcount','vehdefi','avratio','informationtype','ecoflag','schdailystatus','wrkdailystatus',
+                          'dependency','valueoftimeperdist','episodes','hhwagerate','valueoftime','hhsize',
+                          'unittype','tenure','bldgsz','yrbuilt','yrmoved','vehicl','value','hht','noc','grent',
+                          'wif','hinc','msacmsa1','msacmsa5','msapmsa1','msapmsa5','areatyp1','areatyp5','homeown','inclt35k','incge35k','incge50k',
+                          'incge75k','incge100k','inc35t50','inc50t75','inc75t100','withchild','numadlt','sparent','numwrkr','nwrkcnt','zonetidi4',
+                          'htaz','drvrcnt','urb','rur','own','twnhouse','serialno','personuniqueid','state',
+                          'pumano','hhid','relate','sex','hispan','race1','marstat','enroll','grade','educ','esr','trvmns',
+                          'indnaics','occcen5','clwkr','wrklyr','hours','earns','trvtime','lvtime','coled','male','female','age','ag5t10',
+                          'ag11t14','ag15t17','ag18t24','ag25t34','ag35t44','ag45t54','ag55t64','agge65','fulltim','parttim','white','hispanic',
+                          'timetowk','isemploy','schtazi8','wtazi8','schtaz','wtaz','wrkr','presch','nadlt','ag12t17','ag5t14','schstat','agge15'],
+                          'persons_fixed_activity_vertices_r': ['houseid', 'personid', 'starttime', 'endtime'],
+                          'trips_arrival_from_dta_r': ['tripid', 'arrivaltime', 'distance'],
+                          'trips_arrival_from_openamos_r': ['tripid', 'arrivaltime'],
+                          'persons_arrived_r': ['houseid', 'personid', 'tripid', 'expectedstarttime',
+                                                'expectedarrivaltime', 'actualarrivaltime', 'tripdependentpersonid', 'fromzone', 'tozone', 'tripcount'],
+                          'persons_arrived_from_openamos_r': ['houseid', 'personid', 'tripid', 'expectedstarttime',
+                                                              'expectedarrivaltime', 'actualarrivaltime', 'tripdependentpersonid', 'fromzone', 'tozone', 'tripcount'],
+                          'persons_arrived_id_r': ['houseid', 'personid', 'actualarrivaltime', 'expectedarrivaltime',
+                                                   'tripdependentpersonid', 'tozone', 'personuniqueid', 'tripcount'],
+                          #'persons_leaving_id_r':['tripid', 'houseid', 'personid', 'personuniqueid', 'starttime', 'fromzone', 'tripcount'],
+                          'persons_leaving_id_r': ['tripid', 'houseid', 'personid', 'starttime', 'fromzone', 'tripcount'],
+                          'persons_leaving_valid_trips_id_r': ['tripid', 'houseid', 'personid', 'starttime', 'tripcount'],
+                          'persons_location_r': ['houseid', 'personid', 'personuniqueid', 'location', 'lasttripcount'],
+                          'trips_occupant_origin_invalid_r': ['tripid', 'tripvalid', 'tripstarttime'],
+                          'person_trips_occupant_origin_invalid_r': ['tripid', 'houseid', 'personid', 'tripvalid', 'tripstarttime'],
+                          'households_arrived_id_r': ['houseid', 'actualarrivaltime'],
+                          'persons_prism_activities_r': ['scheduleid', 'houseid', 'personid'],
+                          'workers_r': ['houseid', 'personid', 'episodes'],
+                          'child_dependency_r': ['houseid', 'personid', 'dependency'],
+                          'daily_school_status_r': ['houseid', 'personid', 'schdailystatus'],
+                          'daily_work_satus_r': ['houseid', 'personid', 'wrkdailystatus'],
+                          'persons_history_r': ['houseid', 'personid', 'personuniqueid', 'ih_history', 'discretionary_history', 'maintenance_history', 'fixed_history']
+                          }
+        #'valueoftime', 'informationtype'
 
-    def create_outputCache(self, partId=None):
-        if partId == None:
-            partId = ""
-        output_grp = self.fileh.createGroup(
-            self.fileh.root, "output_grp_%s" % (partId))
-        # Output Tables - Creating the table
-        self.fileh.createTable(
-            output_grp, "households_vehicles_count_r", Households_Vehicles_Count_R)
-        self.fileh.createTable(output_grp, "vehicles_r", Vehicles_R)
-        self.fileh.createTable(output_grp, "workers_r", Workers_R)
-        self.fileh.createTable(output_grp, "schedule_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_ltrec_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_allocterm_r", Schedule_Allocation_R)
-        #self.fileh.createTable(output_grp, "schedule_joint_allocterm_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "persons_fixed_activity_vertices_r", Persons_Fixed_Activity_Vertices_R)
+        self.colDef = {'houseid': int64, 'personid': int, 'dependency': int, 'schdailystatus': int,
+                       'wrkdailystatus': int, 'episodes': int, 'tripid': int, 'vehid': int,
+                       'expectedstarttime': int,
+                        
+                        'hhwagerate':float, 'valueoftime':float, 'valueoftimeperdist':float,'informationtype':int, 'ecoflag':int, 
+                       'expectedarrivaltime': int, 'actualarrivaltime': int,
+                       'tripmode': int, 'fromzone': int, 'tozone': int, 'starttime': int,
+                       'endtime': int, 'origin': int, 'destination': int, 'tt': float, 'locationid': int,
+                       'trippurpose': int, 'trippurposefrom': int, 'tripind': int, 'occupancy': int,
+                       'persononnetworkflag': int, 'personuniqueid': int, 'time': int, 'location': int, 'tripvalid': int,
+                       'arrivaltime': int, 'arrivedpersonid': int, 'tripdependentpersonid': int64, 'tripwithhhmember': int, 'tripstarttime': int,
+                       'lasttripdependentpersonid': int64, 'lastoccupancy': int,
+                       'population': int, 'public_employment': int, 'retail_employment': int,
+                       'office_employment': int, 'industrial_employment': int, 'other_employment': int,
+                       'public_employment_ind': int, 'retail_employment_ind': int,
+                       'office_employment_ind': int, 'industrial_employment_ind': int, 'other_employment_ind': int,
+                       'total_area': float, 'residential_population': int, 'single_family_dwelling': int,
+                       'institutional_population': int, 'multi_family_dwelling': int,
 
-        self.fileh.createTable(
-            output_grp, "schedule_cleanfixedactivityschedule_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_childrenlastprismadj_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_childreninctravelrec_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_cleanaggregateactivityschedule_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_dailyallocrec_r", Schedule_Allocation_R)
-        #self.fileh.createTable(output_grp, "schedule_joint_dailyallocrec_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_skeleton_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_inctravelrec_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_final_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_elapsed_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_inctrips_r", Schedule_Allocation_R1)
-        self.fileh.createTable(
-            output_grp, "schedule_full_r", Schedule_Allocation_R1)
-        self.fileh.createTable(
-            output_grp, "schedule_aggregatefinal_r", Schedule_Allocation_R)
-        self.fileh.createTable(
-            output_grp, "schedule_allocatedependent_r", Schedule_Allocation_R1)
+                       'retail_employment_density': float, 'public_employment_density': float,
+                       'office_employment_density': float, 'industrial_employment_density': float, 'other_employment_density': float,
+                       'total_area': float, 'lowest_income': int, 'low_income': int, 'high_income': int,
+                       'institutional_popultion': int, 'groupquarter_households': int,
+                       'residential_households': int,
 
-        self.fileh.createTable(output_grp, "persons_r", Persons_R)
-        #self.fileh.createTable(output_grp, "child_dependency_r", Child_Dependency_R)
-        #self.fileh.createTable(output_grp, "daily_school_status_r", Daily_School_Status_R)
-        #self.fileh.createTable(output_grp, "daily_work_status_r", Daily_Work_Status_R)
+                       'vehcount': int, 'vehdefi': int, 'avratio': float, 'informationtype': int, 
+                       'vehtype': int, 'scheduleid': int, 'activitytype': int, 'duration': int,
+                       'dependentpersonid': int64, 'ih_history': int, 'discretionary_history': int,
+                       'maintenance_history': int, 'fixed_history': int,
+                       'tripcount': int64, 'lasttripcount': int64, 'starttripcount': int64, 'endtripcount': int64,
+                       'startdependentpersonid': int64, 'enddependentpersonid': int64, 'tripcount': int64, 'lasttripcount': int64, 'distance': float,
+                       'valueoftime': float, 'informationtype': int, 'pricingtype': int, 'vehicletype': int, 'vehicleage': int, 
+                       
+                       'vehcount':int,'vehdefi':int,'avratio':float,'informationtype':int,
+                       'ecoflag':int,'hhsize':int,'unittype':int,'tenure':int,'bldgsz':int,
+                       'yrbuilt':int,'yrmoved':int,'vehicl':int,'value':int,'hht':int,
+                       'noc':int,'grent':int,'wif':int,'hinc':int,'msacmsa1':int,
+                       'msacmsa5':int,'msapmsa1':int,'msapmsa5':int,'areatyp1':int,'areatyp5':int,'homeown':int,'inclt35k':int,
+                       'incge35k':int,'incge50k':int,'incge75k':int,'incge100k':int,'inc35t50':int,'inc50t75':int,'inc75t100':int,
+                       'withchild':int,'numadlt':int,'sparent':int,'numwrkr':int,'nwrkcnt':int,'zonetidi4':int,'htaz':int,'drvrcnt':int,
+                       'urb':int,'rur':int,'own':int,'twnhouse':int,'serialno':int64,'personuniqueid':int64,'state':int,'pumano':int,
+                       'hhid':int,'relate':int,'sex':int,'hispan':int,'race1':int,'marstat':int,'enroll':int,'grade':int,'educ':int,'esr':int,
+                       'trvmns':int,'indnaics':int,'occcen5':int,'clwkr':int,'wrklyr':int,'hours':int,'earns':int,'trvtime':int,'lvtime':int,
+                       'coled':int,'male':int,'female':int,'age':int,'ag5t10':int,'ag11t14':int,'ag15t17':int,'ag18t24':int,'ag25t34':int,
+                       'ag35t44':int,'ag45t54':int,'ag55t64':int,'agge65':int,'fulltim':int,'parttim':int,'white':int,'hispanic':int,
+                       'timetowk':int,'isemploy':int,'schtazi8':int,'wtazi8':int,'schtaz':int,'wtaz':int,'wrkr':int,'presch':int,
+                       'nadlt':int,'ag12t17':int,'ag5t14':int,'schstat':int,'agge15':int}
 
-        self.fileh.createTable(
-            output_grp, "persons_prism_activities_r", Persons_Prism_Activities_R)
-        self.fileh.createTable(output_grp, "trips_r", Trips_R)
-        self.fileh.createTable(output_grp, "trips_full_r", Trips_Full_R)
-        self.fileh.createTable(output_grp, "trips_purpose_r", Trips_Purpose_R)
-        self.fileh.createTable(output_grp, "trips_invalid_r", Trips_Invalid_R)
-        self.fileh.createTable(output_grp, "current_occupancy_r", Occupancy_R)
-        #self.fileh.createTable(output_grp, "current_occupancy_dup_r", Occupancy_R)
-        #self.fileh.createTable(output_grp, "trips_inc_expected_to_malta_r", Trips_R)
-        self.fileh.createTable(output_grp, "trips_to_dta_r", Trips_Final_R)
-        self.fileh.createTable(
-            output_grp, "persons_location_r", Persons_Location_R)
-        self.fileh.createTable(
-            output_grp, "persons_history_r", Persons_History_R)
-        self.fileh.createTable(output_grp, "gap_function_r", Gap_Function_R)
-        self.fileh.createTable(output_grp, "od_r", OD_R)
-        self.fileh.createTable(output_grp, "gap_before_r", Gap_Before_R)
-        self.fileh.createTable(output_grp, "gap_after_r", Gap_After_R)
+    def tableColTypes(self, tableName):
+        colTypes = {}
+        for col in self.tableCols[tableName]:
+            colTypes[col] = self.colDef[col]
+        return colTypes
 
-        self.fileh.createTable(
-            output_grp, "person_trips_occupant_origin_invalid_r", Person_Trips_Occupant_Origin_Invalid_R)
-        self.fileh.createTable(
-            output_grp, "persons_arrived_from_openamos_r", Persons_Arrived_R)
-        self.fileh.createTable(
-            output_grp, "persons_arrived_r", Persons_Arrived_R)
-        self.fileh.createTable(
-            output_grp, "persons_arrived_id_r", Persons_Arrived_Id_R)
-        self.fileh.createTable(
-            output_grp, "persons_leaving_id_r", Persons_Leaving_Id_R)
-        self.fileh.createTable(
-            output_grp, "persons_leaving_valid_trips_id_r", Persons_Leaving_Valid_Trips_Id_R)
-        self.fileh.createTable(
-            output_grp, "trips_arrival_from_dta_r", Trips_Arrival_R)
-        self.fileh.createTable(
-            output_grp, "trips_arrival_from_openamos_r", Trips_Arrival_R)
-        self.fileh.createTable(
-            output_grp, "trips_occupant_origin_invalid_r", Trips_Occupant_Origin_Invalid_R)
-
-        #self.fileh.createTable(output_grp, "odt_r", ODT_R)
-
-        self.fileh.createTable(output_grp, "mortality_r", Mortality_R)
-        self.fileh.createTable(output_grp, "birth_r", Birth_R)
-        self.fileh.createTable(output_grp, "aging_r", Aging_R)
-        self.fileh.createTable(
-            output_grp, "student_residence_choice_r", Student_Residence_Choice_R)
-        self.fileh.createTable(output_grp, "education_r", Education_R)
-        self.fileh.createTable(
-            output_grp, "education_continuation_r", Education_Forecast_R)
-        self.fileh.createTable(
-            output_grp, "labor_participation_r", Labor_Participation_R)
-        self.fileh.createTable(
-            output_grp, "marriage_decision_r", Marriage_Decision_R)
-        self.fileh.createTable(
-            output_grp, "divorce_decision_r", Divorce_Decision_R)
-        self.fileh.createTable(
-            output_grp, "household_forecast_population_r", Household_Forecast_Population_R)
-        self.fileh.createTable(
-            output_grp, "person_forecast_population_r", Person_Forecast_Population_R)
-        self.fileh.createTable(
-            output_grp, "household_emigration_population_r", Household_Population_R)
-        self.fileh.createTable(
-            output_grp, "person_emigration_population_r", Person_Moving_Population_R)
-        self.fileh.createTable(
-            output_grp, "household_immigration_population_r", Household_Population_R)
-        self.fileh.createTable(
-            output_grp, "person_immigration_population_r", Person_Moving_Population_R)
-        self.fileh.createTable(
-            output_grp, "household_population_r", Household_Population_R)
-        self.fileh.createTable(
-            output_grp, "person_population_r", Person_Population_R)
-        self.fileh.createTable(output_grp, "age_dist_r", Age_Dist_R)
-        self.fileh.createTable(output_grp, "sex_dist_r", Sex_Dist_R)
-        self.fileh.createTable(output_grp, "race_dist_r", Race_Dist_R)
-        self.fileh.createTable(output_grp, "persons_dist_r", Persons_Dist_R)
-        self.fileh.createTable(output_grp, "hht_dist_r", Hht_Dist_R)
-        self.fileh.createTable(output_grp, "noc_dist_r", Noc_Dist_R)
-        self.fileh.createTable(output_grp, "wif_dist_r", Wif_Dist_R)
-
-    def create(self, tableName=None):
-        # TODO: create output/input tables everytime?
-
-        # Output Tables - Creating groups
-        output_grp = self.fileh.createGroup(self.fileh.root, "output_grp")
-        # Input Tables - Creating groups
-        input_grp = self.fileh.createGroup(self.fileh.root, "input_grp")
-
-        # Output Tables - Creating the table
-        self.fileh.createTable(
-            output_grp, "households_vehicles_count_r", Households_Vehicles_Count_R)
-        self.fileh.createTable(output_grp, "vehicles_r", Vehicles_R)
-        self.fileh.createTable(output_grp, "workers_r", Workers_R)
-        self.fileh.createTable(output_grp, "schedule_r", Schedule_R)
-        self.fileh.createTable(output_grp, "schedule_ltrec_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "schedule_cleanfixedactivityschedule_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "schedule_childreninctravelrec_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "schedule_cleanaggregateactivityschedule_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "schedule_dailyallocrec_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "schedule_inctravelrec_r", Schedule_R)
-        self.fileh.createTable(output_grp, "schedule_final_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "schedule_aggregatefinal_r", Schedule_R)
-        self.fileh.createTable(
-            output_grp, "child_dependency_r", Child_Dependency_R)
-        self.fileh.createTable(
-            output_grp, "daily_school_status_r", Daily_School_Status_R)
-        self.fileh.createTable(
-            output_grp, "daily_work_status_r", Daily_Work_Status_R)
-        self.fileh.createTable(output_grp, "trips_r", Trips_R)
-        self.fileh.createTable(
-            output_grp, "trips_to_expected_to_dta_r", Trips_R)
-        self.fileh.createTable(output_grp, "trips_to_dta_r", Trips_Final_R)
-
-        # Input Tables - Creatign the table
-        self.fileh.createTable(input_grp, "travel_skims_peak", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_offpeak", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_0", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_1", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_2", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_3", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_4", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_5", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_6", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_7", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_8", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_9", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_10", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_11", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_12", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_13", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_14", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_15", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_16", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_17", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_18", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_19", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_20", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_21", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_22", Travel_Skims)
-        self.fileh.createTable(input_grp, "travel_skims_23", Travel_Skims)
-
-        self.fileh.createTable(input_grp, "locations", Locations)
-
-    def close(self):
-        self.fileh.close()
-
-    def returnGroup(self, tableName):
-        if tableName[-2:] == "_r":
-            return 'output'
-        else:
-            return 'input'
-
-    def returnTableReference(self, tableName, partId=None):
-        tableName = tableName.lower()
-        grp = self.returnGroup(tableName)
-        if partId == None:
-            partId = "_"
-        else:
-            partId = "_%s" % (partId)
-
-        if grp == 'input':
-            partId = ""
-
-        loc = '/%s_grp%s' % (grp, partId)
-        return self.fileh.getNode(loc, name=tableName)
-
-    def returnTypeConversion(self, tableName, partId=None):
-        tableRef = self.returnTableReference(tableName, partId)
-        colDtypes = tableRef.coldtypes
+    def returnTypeConversion(self, tableName):
+        colDtypes = self.tableColTypes(tableName)
 
         uniqColDtypes = list(set(colDtypes.values()))
 
-        convType = ""
-        for i in uniqColDtypes:
-            if i.kind in "iu":
-                convType = "int"
-            if i.kind in "f":
-                convType = "float"
-                return convType
+        #for i in uniqColDtypes:
+        #    if i in [int, int64]:
+        #        convType = "int"
+        #    if i in [float32, float]:
+        #        convType = "float"
+        #        return convType
         return convType
 
-    def list_of_outputtables(self):
-        tableList = []
+    def returnCols(self, tableName):
+        return self.tableCols[tableName]
 
-        for group in self.fileh.walkGroups():
-            for table in self.fileh.listNodes(group, classname='Table'):
-                if self.returnGroup(table.name) == 'output':
-                    tableList.append(table.name)
+    def returnColId(self, tableName, colName):
+        # print 'colId', colName
+        return self.tableCols[tableName].index(colName)
 
-        return tableList
+    def returnTable(self, tableName, id_var, colNames, fileLoc):
+        file = os.path.join(fileLoc, "%s.csv"%tableName)
+        data = df.from_csv(file)
+        return DataArray(data[colNames], colNames)
 
-    def createSkimsCache(self, tableName, data):
-        t = time.time()
-        cols = data.varnames
-        colIndices = range(data.cols)
+        """
+        colId = self.returnColId(tableName, id_var)
+        idVarColumn = data[:, colId]
 
-        tableRef = self.returnTableReference(tableName)
-        tableRow = tableRef.row
+        uniqueIds = unique(idVarColumn.astype(int))
 
-        for i in data.data:
-            for j in colIndices:
-                # if i[j] is not None:
-                #    tableRow[cols[j]] = i[j]
-                tableRow[cols[j]] = i[j]
-            tableRow.append()
-        tableRef.flush()
-        print '\tTime taken to write to hdf5 format %.4f' % (time.time() - t)
+        table = zeros((max(uniqueIds), len(colNames)))
 
-    def createSkimsTableFromDatabase(self, tableInfo, queryBrowser):
-        t = time.time()
+        # print data.shape, 'SHAPE OF THE LOCS TABLE'
+        # print len(uniqueIds)
 
-        tableName = tableInfo.tableName
-
-        colsList = []
-        colsList.append(tableInfo.origin_var)
-        colsList.append(tableInfo.destination_var)
-        colsList.append(tableInfo.skims_var)
-
-        data = queryBrowser.select_all_from_table(tableName, colsList)
-        print '\tTotal time taken to retrieve records from the database %.4f' % (time.time() - t)
-
-        cols = data.varnames
-        colIndices = range(data.cols)
-
-        tableRef = self.returnTableReference(tableName)
-        tableRow = tableRef.row
-
-        for i in data.data:
-            for j in colIndices:
-                # if i[j] is not None:
-                #    tableRow[cols[j]] = i[j]
-                tableRow[cols[j]] = i[j]
-            tableRow.append()
-        tableRef.flush()
-        print '\tTime taken to write to hdf5 format %.4f' % (time.time() - t)
-
-    def createLocationsTableFromDatabase(self, tableInfo, queryBrowser):
-        t = time.time()
-
-        colsList = tableInfo.locations_varsList + [tableInfo.location_id_var]
-
-        tableName = tableInfo.tableName
-        data = queryBrowser.select_all_from_table(tableName, colsList)
-        print '\tTotal time taken to retrieve records from the database %.4f' % (time.time() - t)
-
-        colsList = data.varnames
-        colIndices = range(data.cols)
-
-        tableRef = self.returnTableReference(tableInfo.referenceTableName)
-        tableRow = tableRef.row
-
-        for i in data.data:
-            for j in colIndices:
-                # if i[j] is not None:
-                #    tableRow[cols[j]] = i[j]
-                tableRow[colsList[j]] = i[j]
-            tableRow.append()
-        tableRef.flush()
-        print '\tTime taken to write to hdf5 format %.4f' % (time.time() - t)
-
-    def returnTable(self, tableName, id_var, colNames):
-        tableRef = self.returnTableReference(tableName)
-
-        idVarColumn = tableRef.col(id_var)
-
-        uniqueIds = unique(idVarColumn)
-
-        table = zeros((max(uniqueIds) + 1, len(colNames)))
+        print colNames
+        print data
+        print data.shape
 
         for i in range(len(colNames)):
-            table[uniqueIds, i] = tableRef.col(colNames[i])
+            colNum = self.returnColId(tableName, colNames[i])
+            # print i, colNum, colNames[i]
+            table[:, i] = data[:, colNum]
 
-        # print table
+        # print colNames
+    
         return DataArray(table, colNames), uniqueIds
+    """
+    def returnTableAsMatrix(self, tableName, originColName, destinationColName,
+                            skimColName, fileLoc, fillValue=9999):
 
-    def returnTableAsMatrix(self, tableName, originColName, destinationColName, skimColName, fillValue=9999):
-        tableRef = self.returnTableReference(tableName)
+        data = load('%s/%s.npy' % (fileLoc, tableName))
 
-        # print 'OLDER IMPLEMENTATION'
-        origin = tableRef.col(originColName)
-        destination = tableRef.col(destinationColName)
-        skims = tableRef.col(skimColName)
+        origin = data[:, 0].astype(int)
+        destination = data[:, 1].astype(int)
+        skims = data[:, 2]
 
-        skimsValues = tableRef[0:]
+        # print origin[:5]
 
         # Initialize matrix
         skimsMatrix = ones((max(origin) + 1, max(destination) + 1)) * fillValue
@@ -404,8 +222,7 @@ class DB(object):
         # Populate matrix
         skimsMatrix[origin, destination] = skims
         #skimsMatrix = masked_equal(skimsMatrix, 9999)
-        print 'Skims Values for O,D pair (1226, 896) and (1538, 1562)- ', skimsMatrix[1226, 896], skimsMatrix[1538, 1562]
-        # raw_input()
+
         return masked_equal(skimsMatrix, 9999), unique(origin)
 
 

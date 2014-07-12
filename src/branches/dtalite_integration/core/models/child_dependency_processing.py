@@ -2,11 +2,68 @@ from openamos.core.agents.person import Person
 from openamos.core.agents.household import Household
 from openamos.core.agents.activity import ActivityEpisode
 from openamos.core.models.abstract_model import Model
+from openamos.core.data_array import DataArray
 
-from numpy import array, logical_and, histogram, zeros
+from openamos.core.models.schedules_model_components import split_df
+from openamos.core.models.schedules_model_components import resolve_by_multiprocessing
+from openamos.core.models.schedules_model_components import return_act
 
 import time
 
+def process_dependency(args):
+    data = args[0]
+    seed = args[1]
+    activityAttribs = args[2]
+    dailyStatusAttribs = args[3]
+    dependencyAttribs = args[4]
+    specification = args[5]    
+
+    t = time.time()
+    data["actobjects"] = data.apply(lambda x: return_act(x,  activityAttribs),  axis=1)
+    
+    hschedulesGrouped = data.groupby(level=0, sort=False)
+    pschedulesGrouped = data.groupby(level=[0,1], sort=False)
+    
+    workStatus_df = pschedulesGrouped[dailyStatusAttribs.workStatusName].min()
+    schoolStatus_df = pschedulesGrouped[dailyStatusAttribs.schoolStatusName].min()
+    childDependency_df = pschedulesGrouped[dependencyAttribs.childDependencyName].min()
+    
+    #print workStatus_df.shape
+    #print workStatus_df
+    print "Size is %d and time taken to run the df apply - %.4f" %(data.shape[0], time.time()-t)
+
+    t = time.time()
+    actList = []
+    for hid,  hidSchedules in hschedulesGrouped:
+        householdObject = Household(hid)
+        for pid,  pidSchedules in hidSchedules.groupby(level=1, axis=0):
+            personObject = Person(hid, pid)                
+
+            activityList = list(pidSchedules["actobjects"].values)
+            personObject.add_episodes(activityList)
+            
+            workStatus = workStatus_df[(hid, pid)]
+            schoolStatus = schoolStatus_df[(hid, pid)]
+            childDependency = childDependency_df[(hid, pid)]
+            personObject.add_status_dependency(workStatus, schoolStatus,
+                                                    childDependency)
+            householdObject.add_person(personObject)
+
+        if specification.terminalEpisodesAllocation:
+            householdObject.allocate_terminal_dependent_activities(seed)
+        elif specification.childDepProcessingType == 'Allocation':
+            householdObject.allocate_dependent_activities(seed)
+        elif specification.childDepProcessingType == 'Resolution':
+            householdObject.lineup_activities(seed)
+        elif specification.childDepProcessingType == 'Fix Trip Purpose':
+            householdObject.fix_trippurpose(seed)
+        elif specification.childDepProcessingType == 'Extract Tour Attributes':
+            householdObject.extract_tripattributes(seed)            
+
+        reconciledSchedules = householdObject._collate_results()
+        actList += reconciledSchedules
+    print "Time taken to loop through all schedules - %.4f" %(time.time()-t)
+    return actList
 
 class ChildDependencyProcessing(Model):
 
@@ -17,122 +74,66 @@ class ChildDependencyProcessing(Model):
         self.activityAttribs = self.specification.activityAttribs
         self.dailyStatusAttribs = self.specification.dailyStatusAttribs
         self.dependencyAttribs = self.specification.dependencyAttribs
-        self.colNames = [self.activityAttribs.hidName,
-                         self.activityAttribs.pidName,
-                         self.activityAttribs.scheduleidName,
-                         self.activityAttribs.activitytypeName,
-                         self.activityAttribs.starttimeName,
-                         self.activityAttribs.endtimeName,
-                         self.activityAttribs.locationidName,
-                         self.activityAttribs.durationName,
-                         self.activityAttribs.dependentPersonName,
-                         self.activityAttribs.tripCountName]
+        
+        self.hidName = self.activityAttribs.hidName
+        self.pidName = self.activityAttribs.pidName
+        self.scheduleidName = self.activityAttribs.scheduleidName
+        self.activitytypeName = self.activityAttribs.activitytypeName
+        self.locationidName = self.activityAttribs.locationidName
+        self.starttimeName = self.activityAttribs.starttimeName
+        self.endtimeName = self.activityAttribs.endtimeName
+        self.durationName = self.activityAttribs.durationName
+        self.dependentPersonName = self.activityAttribs.dependentPersonName
+        self.tripCountName = self.activityAttribs.tripCountName        
+        
+        self.schoolStatusName = self.dailyStatusAttribs.schoolStatusName
+        self.workStatusName = self.dailyStatusAttribs.workStatusName
+        self.childDependencyName = self.dependencyAttribs.childDependencyName
 
-    def create_col_numbers(self, colnamesDict):
-        # print colnamesDict
-        self.hidCol = colnamesDict[self.activityAttribs.hidName]
-        self.pidCol = colnamesDict[self.activityAttribs.pidName]
+        self.colNames = [self.hidName,
+                                  self.pidName,
+                                  self.scheduleidName,
+                                  self.activitytypeName,
+                                  self.starttimeName,
+                                  self.endtimeName,
+                                  self.locationidName,
+                                  self.durationName,
+                                  self.dependentPersonName,
+                                  self.tripCountName]
 
-        self.schidCol = colnamesDict[self.activityAttribs.scheduleidName]
-        self.actTypeCol = colnamesDict[self.activityAttribs.activitytypeName]
-        self.locidCol = colnamesDict[self.activityAttribs.locationidName]
-        self.sttimeCol = colnamesDict[self.activityAttribs.starttimeName]
-        self.endtimeCol = colnamesDict[self.activityAttribs.endtimeName]
-        self.durCol = colnamesDict[self.activityAttribs.durationName]
-        self.depPersonCol = colnamesDict[
-            self.activityAttribs.dependentPersonName]
-        self.tripCountCol = colnamesDict[self.activityAttribs.tripCountName]
+    def resolve_consistency(self, data, seed, numberProcesses):
+        print "Number of splits - ",  numberProcesses
+        splits = split_df(data.data, houseidCol=self.hidName, 
+                                   workers=numberProcesses)
+        args = [(split,seed,  
+                     self.activityAttribs, 
+                     self.dailyStatusAttribs, 
+                     self.dependencyAttribs, 
+                     self.specification) for split in splits]        
+        
+        resultList = []
+        resultList += resolve_by_multiprocessing(func=process_dependency, 
+                                                                        args=args,  
+                                                                        workers=numberProcesses)
 
-        self.schoolStatusCol = colnamesDict[
-            self.dailyStatusAttribs.schoolStatusName]
-        self.workStatusCol = colnamesDict[
-            self.dailyStatusAttribs.workStatusName]
-
-        self.childDependencyCol = colnamesDict[
-            self.dependencyAttribs.childDependencyName]
-
-    def create_indices(self, data):
-        idCols = data.columns([self.activityAttribs.hidName,
-                               self.activityAttribs.pidName]).data
-        combId = idCols[:, 0] * 100 + idCols[:, 1]
-        comIdUnique, comId_reverse_indices = unique(
-            combId, return_inverse=True)
-
-        binsIndices = array(range(comId_reverse_indices.max() + 2))
-        histIndices = histogram(comId_reverse_indices, bins=binsIndices)
-
-        indicesRowCount = histIndices[0]
-        indicesRow = indicesRowCount.cumsum()
-
-        self.personIndicesOfActs = zeros((comIdUnique.shape[0], 4), dtype=int)
-
-        self.personIndicesOfActs[:, 0] = comIdUnique / 100
-        self.personIndicesOfActs[
-            :, 1] = comIdUnique - self.personIndicesOfActs[:, 0] * 100
-        self.personIndicesOfActs[1:, 2] = indicesRow[:-1]
-        self.personIndicesOfActs[:, 3] = indicesRow
-
-        # print self.personIndicesOfActs[:20, :]
-        # print self.personIndicesOfActs[-20:, :]
-
-        hid = self.personIndicesOfActs[:, 0]
-
-        hidUnique, hid_reverse_indices = unique(hid, return_inverse=True)
-
-        binsHidIndices = array(range(hid_reverse_indices.max() + 2))
-        histHidIndices = histogram(hid_reverse_indices, bins=binsHidIndices)
-
-        indicesHidRowCount = histHidIndices[0]
-        indicesHidRow = indicesHidRowCount.cumsum()
-
-        self.hhldIndicesOfPersons = zeros((hidUnique.shape[0], 3))
-
-        self.hhldIndicesOfPersons[:, 0] = hidUnique
-        self.hhldIndicesOfPersons[1:, 1] = indicesHidRow[:-1]
-        self.hhldIndicesOfPersons[:, 2] = indicesHidRow
-
-    def resolve_consistency(self, data, seed):
-        print data.varnames
+        return DataArray(resultList,  self.colNames)
+        
+        
+        
+        """
         actList = []
-        actListJoint = []
-
-        data.sort([self.activityAttribs.hidName,
-                   self.activityAttribs.pidName,
-                   self.activityAttribs.scheduleidName])
-
-        # Create Index Matrix
-        self.create_indices(data)
-        self.create_col_numbers(data._colnames)
-
-        # if self.childDepProcessingType == 'Dummy':
-        #    return data
-
-        for hhldIndex in self.hhldIndicesOfPersons:
-            ti = time.time()
-            firstPersonRec = hhldIndex[1]
-            lastPersonRec = hhldIndex[2]
-
-            persIndicesForActsForHhld = self.personIndicesOfActs[firstPersonRec:
-                                                                 lastPersonRec,
-                                                                 :]
-            # if hhldIndex[0] not in [8843,20008,20440,30985,48365,54850,60085,64006,68037,73093,77192,84903,84963]:
-            # 1047
-            #   continue
-            householdObject = Household(hhldIndex[0])
-
-            for perIndex in persIndicesForActsForHhld:
-                personObject = Person(perIndex[0], perIndex[1])
-                schedulesForPerson = data.data[perIndex[2]:perIndex[3], :]
-                activityList = self.return_activity_list_for_person(
-                    schedulesForPerson)
+        for hid,  hidSchedules in data.data.groupby(level=0, axis=0):
+            householdObject = Household(hid)
+            for pid,  pidSchedules in hidSchedules.groupby(level=1, axis=0):
+                personObject = Person(hid, pid)                
+                activityList = self.return_activity_list_for_person(pidSchedules)
                 personObject.add_episodes(activityList)
-                workStatus, schoolStatus, childDependency = self.return_status_dependency(
-                    schedulesForPerson)
-                personObject.add_status_dependency(workStatus, schoolStatus,
-                                                   childDependency)
-                householdObject.add_person(personObject)
 
-            # print 'household object created in - %.4f' %(time.time()-ti)
+                workStatus, schoolStatus, childDependency = self.return_status_dependency(
+                                                    pidSchedules)
+                personObject.add_status_dependency(workStatus, schoolStatus,
+                                                    childDependency)
+                householdObject.add_person(personObject)
             if self.specification.terminalEpisodesAllocation:
                 householdObject.allocate_terminal_dependent_activities(seed)
             elif self.childDepProcessingType == 'Allocation':
@@ -144,80 +145,35 @@ class ChildDependencyProcessing(Model):
             elif self.childDepProcessingType == 'Extract Tour Attributes':
                 householdObject.extract_tripattributes(seed)
 
-                #raw_input('extract tour attributes')
-
-                pass
-
             reconciledSchedules = householdObject._collate_results()
             actList += reconciledSchedules
             # print 'created and reconciled in - %.4f' %(time.time()-ti)
         return DataArray(actList, self.colNames)
-
-    def return_activity_list_for_person(self, schedulesForPerson):
+    """
+    def return_activity_list_for_person(self, pidSchedules):
         # Updating activity list
         activityList = []
-        for sched in schedulesForPerson:
-            hid = sched[self.hidCol]
-            pid = sched[self.pidCol]
-            scheduleid = sched[self.schidCol]
-            activitytype = sched[self.actTypeCol]
-            locationid = sched[self.locidCol]
-            starttime = sched[self.sttimeCol]
-            endtime = sched[self.endtimeCol]
-            duration = sched[self.durCol]
-            depPersonId = sched[self.depPersonCol]
-            tripCount = sched[self.tripCountCol]
+        for index, schedule in pidSchedules.iterrows():
+            hid = schedule[self.hidName]
+            pid = schedule[self.pidName]
 
-            actepisode = ActivityEpisode(hid, pid, scheduleid,
-                                         activitytype, locationid,
-                                         starttime, endtime, duration, depPersonId,
-                                         tripCount)
+            scheduleid = schedule[self.scheduleidName]
+            activitytype = schedule[self.activitytypeName]
+            locationid = schedule[self.locationidName]
+            starttime = schedule[self.starttimeName]
+            endtime = schedule[self.endtimeName]
+            duration = schedule[self.durationName]
+            depPersonId = schedule[self.dependentPersonName]
+
+            actepisode = ActivityEpisode(hid, pid, scheduleid, activitytype, locationid,
+                                         starttime, endtime, duration, depPersonId)
             activityList.append(actepisode)
-
         return activityList
 
-    def return_status_dependency(self, schedulesForPerson):
-        workStatus = schedulesForPerson[0, self.workStatusCol]
-        schoolStatus = schedulesForPerson[0, self.schoolStatusCol]
-        childDependency = schedulesForPerson[0, self.childDependencyCol]
-
-        # print 'wrkcol - %s, schcol - %s, depcol - %s' %(self.workStatusCol,
-        #                                                self.schoolStatusCol,
-        #                                                self.childDependencyCol)
-        # print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
-        #                                           childDependency)
-
-        # Checking for status and dependency
-        # whether the merge happened correctly
-        # this can be replaced with a simple extraction as opposed
-        # to identifying unique values, checking for single value
-        # and then updating the status variables
-        """
-        workStatusUnique = unique(schedulesForPerson.data[:, self.workStatusCol])
-        if workStatusUnique.shape[0] > 1:
-            print 'Work Status', workStatusUnique
-
-            raise Exception, "More than one values for status/dependency"
-        else:
-            workStatus = workStatusUnique[0]
-
-        schoolStatusUnique = unique(schedulesForPerson.data[:, self.schoolStatusCol])
-        if schoolStatusUnique.shape[0] > 1:
-            print 'School Status', schoolStatusUnique
-            raise Exception, "More than one values for status/dependency"
-        else:
-            schoolStatus = schoolStatusUnique[0]
-
-        childDependencyUnique = unique(schedulesForPerson.data[:, self.childDependencyCol])
-        if childDependencyUnique.shape[0] > 1:
-            print 'Child Dependency', childDependencyUnique
-            raise Exception, "More than one values for status/dependency"
-        else:
-            childDependency = childDependencyUnique[0]
-
-        #print 'wrkst - %s, schst - %s, dep - %s' %(workStatus, schoolStatus,
-        #                                           childDependency)
-        """
+    def return_status_dependency(self, pidSchedules):
+        workStatus = pidSchedules[self.workStatusName].min()
+        schoolStatus = pidSchedules[self.schoolStatusName].min()
+        childDependency = pidSchedules[self.childDependencyName].min()
         return workStatus, schoolStatus, childDependency
 
 
